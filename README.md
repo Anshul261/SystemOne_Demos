@@ -47,6 +47,21 @@ Omit `--headed` for headless execution. Run all demos with:
 uv run python run.py all
 ```
 
+## Demo UI
+
+Start the local visual control room:
+
+```bash
+./start-ui.sh
+```
+
+Open `http://127.0.0.1:7863`. The UI streams browser screenshots and shows each
+GLiNER field, business, and browser-action classification with its confidence.
+Runs are serialized so two browser sessions cannot alter the shared sandbox
+sites at the same time. Override the port with `DEMO_UI_PORT`.
+
+Stop it with `./stop-ui.sh`. Logs are written to `gradio.log`.
+
 Set `GLINER_URL` when the classifier is not listening at
 `http://127.0.0.1:8010`.
 

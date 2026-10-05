@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -22,10 +23,18 @@ class VisibleField:
 
 
 class AuditLog:
-    def __init__(self, demo: str, output_dir: str = "artifacts"):
+    def __init__(
+        self,
+        demo: str,
+        output_dir: str = "artifacts",
+        page: Page | None = None,
+        on_event: Callable[[dict[str, Any], bytes | None], None] | None = None,
+    ):
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         self.path = Path(output_dir) / f"{demo}-{stamp}.jsonl"
+        self.page = page
+        self.on_event = on_event
 
     def write(self, event: str, **details: Any) -> None:
         record = {
@@ -35,6 +44,11 @@ class AuditLog:
         }
         with self.path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, ensure_ascii=True) + "\n")
+        if self.on_event:
+            screenshot = (
+                self.page.screenshot(type="jpeg", quality=72) if self.page else None
+            )
+            self.on_event(record, screenshot)
 
 
 def form_controls(root: Locator) -> Locator:
@@ -95,13 +109,15 @@ def fill_classified_form(
             audit.write("field_ignored", field=asdict(field))
             continue
         decision = gliner.classify_field(field.label, candidates)
-        audit.write(
-            "field_classification",
-            field=asdict(field),
-            decision=decision.label,
-            confidence=decision.confidence,
-        )
         if decision.confidence is not None and decision.confidence < minimum_confidence:
+            audit.write(
+                "field_classification",
+                field=asdict(field),
+                decision=decision.label,
+                confidence=decision.confidence,
+                candidates=list(candidates),
+                executed=False,
+            )
             raise DecisionError(
                 f"Low-confidence mapping for '{field.label}': "
                 f"{decision.label} at {decision.confidence:.3f}"
@@ -116,6 +132,14 @@ def fill_classified_form(
                 control.select_option(value=value.casefold())
         else:
             control.fill(value)
+        audit.write(
+            "field_classification",
+            field=asdict(field),
+            decision=decision.label,
+            confidence=decision.confidence,
+            candidates=list(candidates),
+            executed=True,
+        )
 
 
 def page_state(page: Page, limit: int = 4000) -> str:

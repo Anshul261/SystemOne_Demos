@@ -6,7 +6,9 @@ import json
 import os
 import re
 import secrets
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 import httpx
 from openpyxl import load_workbook
@@ -62,8 +64,13 @@ RPA_DESCRIPTIONS = {
 }
 
 
-def run_rpa(page: Page, gliner: GlinerClient) -> Path:
-    audit = AuditLog("rpa-policyholder-intake")
+EventCallback = Callable[[dict[str, Any], bytes | None], None]
+
+
+def run_rpa(
+    page: Page, gliner: GlinerClient, on_event: EventCallback | None = None
+) -> Path:
+    audit = AuditLog("rpa-policyholder-intake", page=page, on_event=on_event)
     records = rpa_records()
     page.goto(RPA_URL, wait_until="networkidle")
     page.get_by_role("button", name="Start").click()
@@ -127,8 +134,10 @@ PAYMENT_DESCRIPTIONS = {
 }
 
 
-def run_parabank(page: Page, gliner: GlinerClient) -> Path:
-    audit = AuditLog("parabank-claim-payment")
+def run_parabank(
+    page: Page, gliner: GlinerClient, on_event: EventCallback | None = None
+) -> Path:
+    audit = AuditLog("parabank-claim-payment", page=page, on_event=on_event)
     customer = synthetic_customer()
     claim = load_fixture("claim.json")
 
@@ -152,6 +161,13 @@ def run_parabank(page: Page, gliner: GlinerClient) -> Path:
         claim_id=claim["claim_id"],
         decision=decision.label,
         confidence=decision.confidence,
+        candidates=[
+            "issue_payment",
+            "request_documents",
+            "manual_review",
+            "refer_fraud",
+            "stop",
+        ],
     )
     if decision.label != "issue_payment":
         raise DecisionError(f"Claim was not approved for payment: {decision}")
@@ -228,13 +244,16 @@ def choose_page_action(
         expected=expected,
         decision=decision.label,
         confidence=decision.confidence,
+        candidates=list(candidates),
     )
     if decision.label != expected:
         raise DecisionError(f"Expected {expected}, GLiNER selected {decision}")
 
 
-def run_piko(page: Page, gliner: GlinerClient) -> Path:
-    audit = AuditLog("piko-insured-onboarding")
+def run_piko(
+    page: Page, gliner: GlinerClient, on_event: EventCallback | None = None
+) -> Path:
+    audit = AuditLog("piko-insured-onboarding", page=page, on_event=on_event)
     insured = load_fixture("insured.json")
     page.goto(PIKO_URL, wait_until="networkidle")
     page.get_by_role("switch", name="Toggle unstable UI mode").click()
