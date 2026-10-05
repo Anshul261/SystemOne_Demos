@@ -1,0 +1,323 @@
+{
+  "measured_at": "2026-10-05T10:44:02.361735+00:00",
+  "system": {
+    "machine": "aarch64",
+    "python": "3.11.15"
+  },
+  "model": {
+    "status": "ready",
+    "model": "fastino/GLiNER2.5-Decide",
+    "revision": "5a7adf72a23b4d311abae6ce050d7f0012bb3416",
+    "device": "cuda",
+    "quantized": true
+  },
+  "micro": {
+    "requests": 50,
+    "warmup_requests": 5,
+    "wall_seconds": 0.947,
+    "requests_per_second": 52.81,
+    "latency": {
+      "mean_ms": 18.93,
+      "p50_ms": 18.35,
+      "p95_ms": 22.84,
+      "min_ms": 16.83,
+      "max_ms": 27.78
+    }
+  },
+  "browser_runs": [
+    {
+      "demo": "rpa",
+      "iteration": 1,
+      "success": true,
+      "artifact": "artifacts/rpa-policyholder-intake-20261005T104302Z.jsonl",
+      "decision_events": 70,
+      "field_requests": 70,
+      "field_cache_hits": 63,
+      "site_timer": null,
+      "end_to_end_seconds": 6.716,
+      "model_calls": 7,
+      "model_total_ms": 152.03,
+      "model_latency": {
+        "mean_ms": 21.72,
+        "p50_ms": 21.8,
+        "p95_ms": 22.73,
+        "min_ms": 20.15,
+        "max_ms": 22.88
+      }
+    },
+    {
+      "demo": "rpa",
+      "iteration": 2,
+      "success": true,
+      "artifact": "artifacts/rpa-policyholder-intake-20261005T104309Z.jsonl",
+      "decision_events": 70,
+      "field_requests": 70,
+      "field_cache_hits": 63,
+      "site_timer": null,
+      "end_to_end_seconds": 4.821,
+      "model_calls": 7,
+      "model_total_ms": 149.45,
+      "model_latency": {
+        "mean_ms": 21.35,
+        "p50_ms": 21.54,
+        "p95_ms": 22.02,
+        "min_ms": 20.43,
+        "max_ms": 22.13
+      }
+    },
+    {
+      "demo": "rpa",
+      "iteration": 3,
+      "success": true,
+      "artifact": "artifacts/rpa-policyholder-intake-20261005T104314Z.jsonl",
+      "decision_events": 70,
+      "field_requests": 70,
+      "field_cache_hits": 63,
+      "site_timer": null,
+      "end_to_end_seconds": 4.306,
+      "model_calls": 7,
+      "model_total_ms": 134.52,
+      "model_latency": {
+        "mean_ms": 19.22,
+        "p50_ms": 18.74,
+        "p95_ms": 21.62,
+        "min_ms": 17.21,
+        "max_ms": 22.33
+      }
+    },
+    {
+      "demo": "parabank",
+      "iteration": 1,
+      "success": true,
+      "artifact": "artifacts/parabank-claim-payment-20261005T104318Z.jsonl",
+      "decision_events": 21,
+      "field_requests": 20,
+      "field_cache_hits": 0,
+      "site_timer": null,
+      "end_to_end_seconds": 3.91,
+      "model_calls": 21,
+      "model_total_ms": 392.2,
+      "model_latency": {
+        "mean_ms": 18.68,
+        "p50_ms": 18.4,
+        "p95_ms": 21.43,
+        "min_ms": 16.75,
+        "max_ms": 22.93
+      }
+    },
+    {
+      "demo": "parabank",
+      "iteration": 2,
+      "success": true,
+      "artifact": "artifacts/parabank-claim-payment-20261005T104322Z.jsonl",
+      "decision_events": 21,
+      "field_requests": 20,
+      "field_cache_hits": 0,
+      "site_timer": null,
+      "end_to_end_seconds": 3.714,
+      "model_calls": 21,
+      "model_total_ms": 482.14,
+      "model_latency": {
+        "mean_ms": 22.96,
+        "p50_ms": 20.79,
+        "p95_ms": 26.48,
+        "min_ms": 19.09,
+        "max_ms": 58.1
+      }
+    },
+    {
+      "demo": "parabank",
+      "iteration": 3,
+      "success": true,
+      "artifact": "artifacts/parabank-claim-payment-20261005T104326Z.jsonl",
+      "decision_events": 21,
+      "field_requests": 20,
+      "field_cache_hits": 0,
+      "site_timer": null,
+      "end_to_end_seconds": 3.601,
+      "model_calls": 21,
+      "model_total_ms": 395.16,
+      "model_latency": {
+        "mean_ms": 18.82,
+        "p50_ms": 18.66,
+        "p95_ms": 20.41,
+        "min_ms": 17.04,
+        "max_ms": 22.16
+      }
+    },
+    {
+      "demo": "piko",
+      "iteration": 1,
+      "success": true,
+      "artifact": "artifacts/piko-insured-onboarding-20261005T104329Z.jsonl",
+      "decision_events": 16,
+      "field_requests": 12,
+      "field_cache_hits": 0,
+      "site_timer": null,
+      "end_to_end_seconds": 3.228,
+      "model_calls": 16,
+      "model_total_ms": 358.57,
+      "model_latency": {
+        "mean_ms": 22.41,
+        "p50_ms": 22.63,
+        "p95_ms": 25.02,
+        "min_ms": 18.78,
+        "max_ms": 25.58
+      }
+    },
+    {
+      "demo": "piko",
+      "iteration": 2,
+      "success": true,
+      "artifact": "artifacts/piko-insured-onboarding-20261005T104333Z.jsonl",
+      "decision_events": 16,
+      "field_requests": 12,
+      "field_cache_hits": 0,
+      "site_timer": null,
+      "end_to_end_seconds": 3.72,
+      "model_calls": 16,
+      "model_total_ms": 357.08,
+      "model_latency": {
+        "mean_ms": 22.32,
+        "p50_ms": 21.38,
+        "p95_ms": 28.81,
+        "min_ms": 18.35,
+        "max_ms": 45.45
+      }
+    },
+    {
+      "demo": "piko",
+      "iteration": 3,
+      "success": true,
+      "artifact": "artifacts/piko-insured-onboarding-20261005T104336Z.jsonl",
+      "decision_events": 16,
+      "field_requests": 12,
+      "field_cache_hits": 0,
+      "site_timer": null,
+      "end_to_end_seconds": 3.685,
+      "model_calls": 16,
+      "model_total_ms": 340.54,
+      "model_latency": {
+        "mean_ms": 21.28,
+        "p50_ms": 21.34,
+        "p95_ms": 23.14,
+        "min_ms": 19.15,
+        "max_ms": 23.28
+      }
+    },
+    {
+      "demo": "piko-excel",
+      "iteration": 1,
+      "success": true,
+      "artifact": "artifacts/piko-excel-challenge-20261005T104340Z.jsonl",
+      "decision_events": 90,
+      "field_requests": 90,
+      "field_cache_hits": 81,
+      "site_timer": "00:04",
+      "end_to_end_seconds": 7.5,
+      "model_calls": 9,
+      "model_total_ms": 180.9,
+      "model_latency": {
+        "mean_ms": 20.1,
+        "p50_ms": 19.88,
+        "p95_ms": 22.3,
+        "min_ms": 18.0,
+        "max_ms": 22.82
+      }
+    },
+    {
+      "demo": "piko-excel",
+      "iteration": 2,
+      "success": true,
+      "artifact": "artifacts/piko-excel-challenge-20261005T104348Z.jsonl",
+      "decision_events": 90,
+      "field_requests": 90,
+      "field_cache_hits": 81,
+      "site_timer": "00:05",
+      "end_to_end_seconds": 7.132,
+      "model_calls": 9,
+      "model_total_ms": 182.48,
+      "model_latency": {
+        "mean_ms": 20.28,
+        "p50_ms": 20.34,
+        "p95_ms": 22.41,
+        "min_ms": 17.83,
+        "max_ms": 22.51
+      }
+    },
+    {
+      "demo": "piko-excel",
+      "iteration": 3,
+      "success": true,
+      "artifact": "artifacts/piko-excel-challenge-20261005T104355Z.jsonl",
+      "decision_events": 90,
+      "field_requests": 90,
+      "field_cache_hits": 81,
+      "site_timer": "00:05",
+      "end_to_end_seconds": 7.041,
+      "model_calls": 9,
+      "model_total_ms": 176.65,
+      "model_latency": {
+        "mean_ms": 19.63,
+        "p50_ms": 19.29,
+        "p95_ms": 21.38,
+        "min_ms": 18.52,
+        "max_ms": 21.98
+      }
+    }
+  ],
+  "browser_summary": {
+    "rpa": {
+      "runs": 3,
+      "passed": 3,
+      "success_rate": 1.0,
+      "end_to_end_p50_seconds": 4.821,
+      "end_to_end_p95_seconds": 6.527,
+      "model_calls_p50": 7.0,
+      "model_total_p50_ms": 149.45,
+      "model_call_p50_ms": 21.54,
+      "field_cache_hits_p50": 63.0,
+      "site_timers": []
+    },
+    "parabank": {
+      "runs": 3,
+      "passed": 3,
+      "success_rate": 1.0,
+      "end_to_end_p50_seconds": 3.714,
+      "end_to_end_p95_seconds": 3.89,
+      "model_calls_p50": 21.0,
+      "model_total_p50_ms": 395.16,
+      "model_call_p50_ms": 18.66,
+      "field_cache_hits_p50": 0.0,
+      "site_timers": []
+    },
+    "piko": {
+      "runs": 3,
+      "passed": 3,
+      "success_rate": 1.0,
+      "end_to_end_p50_seconds": 3.685,
+      "end_to_end_p95_seconds": 3.717,
+      "model_calls_p50": 16.0,
+      "model_total_p50_ms": 357.08,
+      "model_call_p50_ms": 21.38,
+      "field_cache_hits_p50": 0.0,
+      "site_timers": []
+    },
+    "piko-excel": {
+      "runs": 3,
+      "passed": 3,
+      "success_rate": 1.0,
+      "end_to_end_p50_seconds": 7.132,
+      "end_to_end_p95_seconds": 7.463,
+      "model_calls_p50": 9.0,
+      "model_total_p50_ms": 180.9,
+      "model_call_p50_ms": 19.88,
+      "field_cache_hits_p50": 81.0,
+      "site_timers": [
+        "00:04",
+        "00:05",
+        "00:05"
+      ]
+    }
+  }
+}

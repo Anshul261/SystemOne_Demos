@@ -87,3 +87,18 @@ RUN_LIVE_GLINER_TESTS=1 uv run pytest tests/test_live_decisions.py
 
 The live browser demos are the end-to-end tests because the target sites are
 third-party sandboxes and can change independently of this repository.
+
+## Performance benchmarks
+
+Run sequential model latency checks and repeat every browser workflow three
+times:
+
+```bash
+uv run python benchmark.py --iterations 3 --micro-requests 50
+```
+
+The command writes `benchmarks/results.json` with every run and
+`benchmarks/RESULTS.md` with a compact summary. Measurements include raw model
+p50/p95 latency, throughput, end-to-end browser time, model calls, model time,
+and field-classification cache hits. Results depend on the network and the
+availability of the third-party sandbox sites.
