@@ -167,7 +167,7 @@ with gr.Blocks(css=CSS, title="GLiNER Browser Lab") as app:
     gr.HTML(
         """
         <div class="hero">
-          <div class="eyebrow">Local decision model / live browser execution</div>
+          <div class="eyebrow">SystemOne Demos / local GLiNER decisions</div>
           <h1>GLiNER Browser Lab</h1>
           <p>Watch a text classifier map form fields and choose bounded actions while Playwright executes the workflow.</p>
         </div>

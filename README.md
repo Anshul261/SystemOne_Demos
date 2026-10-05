@@ -1,6 +1,7 @@
-# GLiNER browser demos
+# SystemOne Demos
 
-Four small browser automations that treat forms as classification problems.
+Four browser automations that demonstrate GLiNER SystemOne-style decisions by
+treating forms as classification problems.
 They use the local `fastino/GLiNER2.5-Decide` service to select source fields,
 business actions, and recovery actions from explicit allowlists. Playwright
 executes the selected action. GLiNER never generates values or selectors.
