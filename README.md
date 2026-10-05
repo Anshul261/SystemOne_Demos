@@ -112,3 +112,5 @@ uv run python benchmark.py \
   --micro-requests 500 \
   --output-dir benchmarks/publish-10x
 ```
+
+Current publication report: [`benchmarks/publish-10x/RESULTS.md`](benchmarks/publish-10x/RESULTS.md).
