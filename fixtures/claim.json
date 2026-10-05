@@ -1,0 +1,14 @@
+{
+  "claim_id": "CLM-2026-1042",
+  "status": "approved",
+  "fraud_review": "clear",
+  "documents_complete": true,
+  "settlement_amount": "25.00",
+  "payee_name": "Jordan Lee",
+  "street_address": "17 Market Street",
+  "city": "Austin",
+  "state": "TX",
+  "zip_code": "78701",
+  "phone_number": "5550107",
+  "claim_account": "20261042"
+}

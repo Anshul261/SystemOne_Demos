@@ -1,0 +1,20 @@
+[project]
+name = "gliner-browser-demos"
+version = "0.1.0"
+description = "Three classification-driven browser automation demos using GLiNER2.5 Decide"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx==0.28.1",
+    "openpyxl==3.1.5",
+    "playwright==1.55.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.4.2"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.uv]
+package = false

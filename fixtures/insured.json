@@ -1,0 +1,14 @@
+{
+  "first_name": "Morgan",
+  "last_name": "Reed",
+  "date_of_birth": "1988-04-12",
+  "gender": "Female",
+  "street": "42 Harbor Road",
+  "house_number": "7B",
+  "city": "Boston",
+  "postal_code": "02110",
+  "country": "United States",
+  "email": "morgan.reed@example.test",
+  "phone": "+1 555 0112",
+  "contact_preference": "Email"
+}
