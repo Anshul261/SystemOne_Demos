@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 import httpx
 
@@ -28,27 +29,47 @@ class GlinerClient:
         candidates: dict[str, str],
         prompt: str,
     ) -> Decision:
+        return self.classify_many(
+            text, {task: {"labels": candidates, "prompt": prompt}}
+        )[task]
+
+    def classify_many(
+        self, text: str, schema: dict[str, dict[str, Any]]
+    ) -> dict[str, Decision | list[Decision]]:
         response = httpx.post(
             f"{self.base_url}/classify",
             json={
                 "text": text,
-                "schema": {
-                    task: {
-                        "labels": candidates,
-                        "prompt": prompt,
-                    }
-                },
+                "schema": schema,
                 "include_confidence": True,
             },
             timeout=self.timeout,
         )
         response.raise_for_status()
-        value = response.json()["result"][task]
+        result = response.json()["result"]
+        decisions = {}
+        for task, spec in schema.items():
+            labels = spec["labels"]
+            value = result[task]
+            if spec.get("multi_label"):
+                if not isinstance(value, list):
+                    raise DecisionError(f"GLiNER returned an invalid {task}: {value}")
+                decisions[task] = [self._decision(item, labels, task) for item in value]
+            else:
+                if isinstance(value, list):
+                    raise DecisionError(f"GLiNER returned an invalid {task}: {value}")
+                decisions[task] = self._decision(value, labels, task)
+        return decisions
+
+    @staticmethod
+    def _decision(value: Any, labels: dict[str, str] | list[str], task: str) -> Decision:
         if isinstance(value, str):
             decision = Decision(value, None)
-        else:
+        elif isinstance(value, dict) and isinstance(value.get("label"), str):
             decision = Decision(value["label"], value.get("confidence"))
-        if decision.label not in candidates:
+        else:
+            raise DecisionError(f"GLiNER returned an invalid {task}: {value}")
+        if decision.label not in labels:
             raise DecisionError(f"GLiNER returned an unknown {task}: {decision.label}")
         return decision
 

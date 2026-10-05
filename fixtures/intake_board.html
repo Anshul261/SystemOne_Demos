@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Request intake | sandbox</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #eaf3ed; background: #09120e; }
+    body { max-width: 1160px; margin: 0 auto; padding: 32px; }
+    header { border-bottom: 1px solid #335541; padding-bottom: 18px; margin-bottom: 22px; }
+    h1 { margin: 6px 0; font-size: 34px; }
+    p { color: #b2ccba; }
+    .eyebrow { color: #a8f0b8; letter-spacing: .15em; text-transform: uppercase; font-size: 12px; }
+    .ticket { background: #13241a; border: 1px solid #335541; padding: 20px; margin: 14px 0; }
+    .ticket h2 { margin: 4px 0; font-size: 20px; }
+    .id { color: #a8f0b8; font: 13px monospace; }
+    .message { line-height: 1.6; color: #eaf3ed; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-top: 18px; }
+    label { display: grid; gap: 6px; color: #b2ccba; font-size: 13px; }
+    select { min-width: 145px; padding: 8px; background: #08130d; color: white; border: 1px solid #648a6c; }
+    button { padding: 10px 16px; background: #a8f0b8; border: 0; color: #08130d; font-weight: bold; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    .result { color: #a8f0b8; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Local sandbox / synthetic requests</div>
+    <h1 id="board-title">Request intake</h1>
+    <p>Route incoming requests to a staff queue. This board does not book visits, dispense medication, or change employee accounts.</p>
+    <p id="progress" role="status">0 routed</p>
+  </header>
+  <main id="inbox"></main>
+  <script>
+    function dropdown(name, values, title) {
+      const label = document.createElement('label');
+      label.textContent = title;
+      const select = document.createElement('select');
+      select.dataset.field = name;
+      select.append(new Option('Choose...', ''));
+      values.forEach(value => select.append(new Option(value.replaceAll('_', ' '), value)));
+      label.append(select);
+      return label;
+    }
+
+    window.loadTickets = function ({ title, categoryLabel, tickets, categories, queues, priorities, topics = [] }) {
+      window.topicLabels = topics;
+      document.querySelector('#board-title').textContent = title;
+      document.querySelector('#progress').textContent = `0 / ${tickets.length} routed`;
+      const inbox = document.querySelector('#inbox');
+      inbox.replaceChildren();
+      tickets.forEach(ticket => {
+        const card = document.createElement('article');
+        card.className = 'ticket';
+        card.dataset.ticketId = ticket.id;
+        const id = document.createElement('div');
+        id.className = 'id';
+        id.textContent = ticket.id;
+        const subject = document.createElement('h2');
+        subject.textContent = ticket.subject;
+        const message = document.createElement('p');
+        message.className = 'message';
+        message.textContent = ticket.message;
+        const controls = document.createElement('div');
+        controls.className = 'controls';
+        ['category', 'queue', 'priority', 'review'].forEach(name => {
+          controls.append(dropdown(name, {
+            category: categories, queue: queues, priority: priorities,
+            review: ['staff_queue', 'review_required']
+          }[name], {
+            category: categoryLabel, queue: 'Staff queue',
+            priority: 'Priority', review: 'Staff review'
+          }[name]));
+        });
+        const button = document.createElement('button');
+        button.textContent = 'Apply routing';
+        button.addEventListener('click', () => {
+          const selections = [...controls.querySelectorAll('select')];
+          if (selections.some(select => !select.value)) return;
+          selections.forEach(select => { card.dataset[select.dataset.field] = select.value; select.disabled = true; });
+          button.disabled = true;
+          const result = document.createElement('p');
+          result.className = 'result';
+          result.textContent = `${card.dataset.queue.replaceAll('_', ' ')} | ${card.dataset.priority} | ${card.dataset.review.replaceAll('_', ' ')}`;
+          card.append(result);
+          document.querySelector('#progress').textContent =
+            `${inbox.querySelectorAll('.ticket[data-review]').length} / ${tickets.length} routed`;
+        });
+        controls.append(button);
+        card.append(id, subject, message, controls);
+        inbox.append(card);
+      });
+    };
+
+    window.tagTicket = function (id, tags) {
+      if (tags.some(tag => !window.topicLabels.includes(tag))) throw new Error('Unknown topic');
+      const card = [...document.querySelectorAll('.ticket')].find(item => item.dataset.ticketId === id);
+      if (!card || !card.dataset.review) throw new Error('Route the ticket before tagging it');
+      card.dataset.topics = tags.join(',');
+      if (tags.length) card.querySelector('.result').textContent += ` | tags: ${tags.join(', ')}`;
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+demo,iteration,success,end_to_end_seconds,decision_events,field_requests,field_cache_hits,model_calls,model_total_ms,site_timer,error
+clinic,1,True,0.724,20,0,0,5,110.95,,
+clinic,2,True,0.678,20,0,0,5,107.99,,
+clinic,3,True,0.725,20,0,0,5,112.25,,
+helpdesk,1,True,0.559,12,0,0,4,85.2,,
+helpdesk,2,True,0.56,12,0,0,4,86.43,,
+helpdesk,3,True,0.526,12,0,0,4,82.59,,

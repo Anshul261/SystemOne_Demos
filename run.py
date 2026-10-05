@@ -16,6 +16,8 @@ from playwright.sync_api import Page, sync_playwright
 
 from browser_forms import AuditLog, fill_classified_form, page_state
 from gliner_client import DecisionError, GlinerClient
+from intake import run_clinic, run_helpdesk
+from jpt_client import make_client
 
 RPA_URL = "https://rpachallenge.com/"
 RPA_DATA_URL = "https://rpachallenge.com/assets/downloadFiles/challenge.xlsx"
@@ -292,9 +294,9 @@ PIKO_DESCRIPTIONS = {
     "city": "Value for the City field",
     "postal_code": "Value for the Postal Code field",
     "country": "Value for the Country field",
-    "email": "Value for the Email field",
+    "email": "Email address, not the preferred contact channel",
     "phone": "Value for the Phone field",
-    "contact_preference": "Value for the Contact Preference field",
+    "contact_preference": "Preferred contact channel (Email or Phone), not the email address",
 }
 
 
@@ -323,7 +325,7 @@ def choose_page_action(
         candidates=list(candidates),
     )
     if decision.label != expected:
-        raise DecisionError(f"Expected {expected}, GLiNER selected {decision}")
+        raise DecisionError(f"Expected {expected}, model selected {decision}")
 
 
 def run_piko(
@@ -391,6 +393,8 @@ DEMOS = {
     "parabank": run_parabank,
     "piko": run_piko,
     "piko-excel": run_piko_challenge,
+    "clinic": run_clinic,
+    "helpdesk": run_helpdesk,
 }
 
 
@@ -398,13 +402,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("demo", choices=[*DEMOS, "all"])
     parser.add_argument("--headed", action="store_true")
+    parser.add_argument("--model", choices=["gliner", "jpt"], default="gliner")
     parser.add_argument(
         "--gliner-url",
         default=os.getenv("GLINER_URL", "http://127.0.0.1:8010"),
     )
+    parser.add_argument(
+        "--jpt-url", default=os.getenv("JPT_URL", "http://127.0.0.1:8085")
+    )
     args = parser.parse_args()
 
-    gliner = GlinerClient(args.gliner_url)
+    gliner = make_client(args.model, args.gliner_url, args.jpt_url)
     names = list(DEMOS) if args.demo == "all" else [args.demo]
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=not args.headed)

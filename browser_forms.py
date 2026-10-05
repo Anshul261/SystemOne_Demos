@@ -131,6 +131,25 @@ def fill_classified_form(
         value = str(values[decision.label])
         control = form_controls(root).nth(field.index)
         if field.tag == "select":
+            options = control.locator("option").evaluate_all(
+                "options => options.map(option => ({label: option.text.trim(), value: option.value}))"
+            )
+            if not any(
+                option["label"] == value or option["value"] == value.casefold()
+                for option in options
+            ):
+                audit.write(
+                    "field_classification",
+                    field=asdict(field),
+                    decision=decision.label,
+                    confidence=decision.confidence,
+                    candidates=list(candidates),
+                    executed=False,
+                )
+                raise DecisionError(
+                    f"{field.label}: selected {decision.label} produces {value!r}, "
+                    "which is not an available option"
+                )
             try:
                 control.select_option(label=value)
             except PlaywrightError:

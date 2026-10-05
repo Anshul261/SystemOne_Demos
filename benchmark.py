@@ -21,6 +21,7 @@ import httpx
 from playwright.sync_api import sync_playwright
 
 from gliner_client import Decision, GlinerClient
+from jpt_client import JptClient
 from run import DEMOS, PIKO_CHALLENGE_DESCRIPTIONS
 
 
@@ -31,16 +32,12 @@ class TimedGlinerClient(GlinerClient):
         self.field_requests = 0
         self.field_cache_hits = 0
 
-    def classify(
-        self,
-        text: str,
-        task: str,
-        candidates: dict[str, str],
-        prompt: str,
-    ) -> Decision:
+    def classify_many(
+        self, text: str, schema: dict[str, dict[str, Any]]
+    ) -> dict[str, Decision | list[Decision]]:
         started = time.perf_counter()
         try:
-            return super().classify(text, task, candidates, prompt)
+            return super().classify_many(text, schema)
         finally:
             self.latencies_ms.append((time.perf_counter() - started) * 1000)
 
@@ -50,6 +47,18 @@ class TimedGlinerClient(GlinerClient):
         if cache_key in self._field_cache:
             self.field_cache_hits += 1
         return super().classify_field(label, candidates)
+
+
+class TimedJptClient(TimedGlinerClient, JptClient):
+    pass
+
+
+def timed_client(model: str, base_url: str) -> TimedGlinerClient:
+    if model == "gliner":
+        return TimedGlinerClient(base_url)
+    if model == "jpt":
+        return TimedJptClient(base_url)
+    raise ValueError(f"Unknown model: {model}")
 
 
 def percentile(values: list[float], percent: float) -> float:
@@ -95,9 +104,11 @@ def distribution_stats(values: list[float]) -> dict[str, float]:
     }
 
 
-def micro_benchmark(base_url: str, requests: int, warmup: int = 5) -> dict[str, Any]:
+def micro_benchmark(
+    base_url: str, requests: int, warmup: int = 5, model: str = "gliner"
+) -> dict[str, Any]:
     labels = list(PIKO_CHALLENGE_DESCRIPTIONS)
-    client = TimedGlinerClient(base_url)
+    client = timed_client(model, base_url)
 
     def classify(index: int) -> None:
         label = labels[index % len(labels)].replace("_", " ").title()
@@ -144,6 +155,7 @@ def run_browser_benchmarks(
     base_url: str,
     demos: list[str],
     iterations: int,
+    model: str = "gliner",
 ) -> list[dict[str, Any]]:
     results = []
     with sync_playwright() as playwright:
@@ -154,7 +166,7 @@ def run_browser_benchmarks(
                     print(f"[{demo}] run {iteration}/{iterations}", flush=True)
                     context = browser.new_context(ignore_https_errors=True)
                     page = context.new_page()
-                    client = TimedGlinerClient(base_url)
+                    client = timed_client(model, base_url)
                     started = time.perf_counter()
                     result: dict[str, Any] = {
                         "demo": demo,
@@ -328,9 +340,9 @@ def markdown_report(results: dict[str, Any]) -> str:
         f"Host: `{results['system']['platform']}`",
         f"GPU: `{results['system']['gpu']}`",
         f"Python: `{results['system']['python']}` / Playwright: `{results['system']['packages']['playwright']}`",
-        f"Model: `{results['model']['model']}` at `{results['model']['revision']}`",
+        f"Model: `{results['model']['model']}` at `{results['model'].get('revision', 'unreported')}`",
         "",
-        "## Raw GLiNER decisions",
+        "## Raw model decisions",
         "",
         "Sequential local HTTP requests after warmup:",
         "",
@@ -359,19 +371,25 @@ def markdown_report(results: dict[str, Any]) -> str:
             f"{item['model_calls_p50']} | {item['model_total_p50_ms']} ms | "
             f"{item['field_cache_hits_p50']} | {timers} |"
         )
+    iterations = results["configuration"]["iterations"]
     lines.extend(
         [
             "",
             "## Reading the numbers",
             "",
             "- Raw latency includes local HTTP and JSON overhead, not only GPU kernel time.",
-            "- End-to-end time includes third-party page loads, downloads, rendering, and browser actions.",
+            "- End-to-end time includes page loads, rendering, and browser actions; external workflows also include downloads and network delays.",
             "- Field cache hits avoid repeated model calls after a label has already been classified.",
-            f"- This report uses {results['configuration']['iterations']} runs per workflow; it measures reproducibility, not concurrent capacity.",
-            "- ParaBank runs create synthetic users and sandbox payments; no real financial system is used.",
-            "",
+            f"- This report uses {iterations} {'run' if iterations == 1 else 'runs'} per workflow; it measures reproducibility, not concurrent capacity.",
         ]
     )
+    if "parabank" in results["configuration"]["demos"]:
+        lines.append(
+            "- ParaBank runs create synthetic users and sandbox payments; no real financial system is used."
+        )
+    if "temperature" in results["model"]:
+        lines.append(f"- JPT serving temperature: {results['model']['temperature']}.")
+    lines.append("")
     return "\n".join(lines)
 
 
@@ -380,14 +398,19 @@ def main() -> None:
     parser.add_argument("--iterations", type=int, default=3)
     parser.add_argument("--micro-requests", type=int, default=50)
     parser.add_argument("--demos", nargs="+", choices=list(DEMOS), default=list(DEMOS))
+    parser.add_argument("--model", choices=["gliner", "jpt"], default="gliner")
     parser.add_argument("--gliner-url", default="http://127.0.0.1:8010")
-    parser.add_argument("--output-dir", default="benchmarks")
+    parser.add_argument("--jpt-url", default=os.getenv("JPT_URL", "http://127.0.0.1:8085"))
+    parser.add_argument("--output-dir")
     args = parser.parse_args()
 
     started_at = datetime.now(UTC)
-    model = httpx.get(f"{args.gliner_url}/health", timeout=10).json()
-    micro = micro_benchmark(args.gliner_url, args.micro_requests)
-    browser_runs = run_browser_benchmarks(args.gliner_url, args.demos, args.iterations)
+    base_url = args.gliner_url if args.model == "gliner" else args.jpt_url
+    model = httpx.get(f"{base_url}/health", timeout=10).json()
+    if args.model == "jpt" and model["model"] != "kirp/jpt-0.8b":
+        raise RuntimeError(f"JPT endpoint is serving {model['model']}, not kirp/jpt-0.8b")
+    micro = micro_benchmark(base_url, args.micro_requests, model=args.model)
+    browser_runs = run_browser_benchmarks(base_url, args.demos, args.iterations, args.model)
     results = {
         "measured_at": started_at.isoformat(),
         "completed_at": datetime.now(UTC).isoformat(),
@@ -397,6 +420,7 @@ def main() -> None:
             "micro_requests": args.micro_requests,
             "demos": args.demos,
             "sequential": True,
+            "model": args.model,
         },
         "system": environment_metadata(),
         "model": model,
@@ -404,7 +428,7 @@ def main() -> None:
         "browser_runs": browser_runs,
         "browser_summary": summarize_browser_runs(browser_runs),
     }
-    output_dir = Path(args.output_dir)
+    output_dir = Path(args.output_dir or ("benchmarks" if args.model == "gliner" else "benchmarks/jpt"))
     output_dir.mkdir(parents=True, exist_ok=True)
     results_path = output_dir / "results.json"
     report_path = output_dir / "RESULTS.md"

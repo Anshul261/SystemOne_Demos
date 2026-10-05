@@ -1,0 +1,22 @@
+[
+  {
+    "id": "HD-2081",
+    "subject": "401k deduction missing from paystub",
+    "message": "Last month's contribution posted. This month the retirement deduction line is gone and HR told me to open a ticket."
+  },
+  {
+    "id": "HD-2082",
+    "subject": "Cannot sign in to work account",
+    "message": "My work account says access denied after the password reset. I need IT to restore my login before my shift tomorrow."
+  },
+  {
+    "id": "HD-2083",
+    "subject": "Office air conditioning",
+    "message": "The air conditioning in the west office stopped working this morning. Can facilities send someone to check it?"
+  },
+  {
+    "id": "HD-2084",
+    "subject": "Travel expense claim",
+    "message": "My hotel receipt was approved last week but the travel expense reimbursement has not appeared. Where is my expense claim?"
+  }
+]

@@ -1,7 +1,7 @@
 [project]
 name = "systemone-demos"
 version = "0.1.0"
-description = "Three classification-driven browser automation demos using GLiNER2.5 Decide"
+description = "Classification-driven browser automation demos using GLiNER2.5 Decide"
 requires-python = ">=3.11"
 dependencies = [
     "gradio==5.49.1",

@@ -1,0 +1,9 @@
+model,options,correct,iterations,mean_ms,selected
+gliner,8,3,3,24.3,it_access
+gliner,32,3,3,42.7,it_access
+gliner,128,3,3,638.2,it_access
+gliner,255,3,3,2325.6,it_access
+jpt,8,3,3,56.7,it_access
+jpt,32,3,3,117.3,it_access
+jpt,128,3,3,314.4,it_access
+jpt,255,3,3,707.5,it_access

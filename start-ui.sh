@@ -9,7 +9,7 @@ PORT="${DEMO_UI_PORT:-7863}"
 if [ -f "$PID_FILE" ]; then
   read -r EXISTING_PID <"$PID_FILE"
   if kill -0 "$EXISTING_PID" 2>/dev/null; then
-    echo "GLiNER Browser Lab is already running with PID $EXISTING_PID."
+    echo "Decision Browser Lab is already running with PID $EXISTING_PID."
     exit 0
   fi
 fi
@@ -20,7 +20,7 @@ echo "$!" >"$PID_FILE"
 
 for _ in $(seq 1 60); do
   if curl -fsS "http://127.0.0.1:$PORT/" >/dev/null 2>&1; then
-    echo "GLiNER Browser Lab is ready at http://127.0.0.1:$PORT."
+    echo "Decision Browser Lab is ready at http://127.0.0.1:$PORT."
     exit 0
   fi
   read -r UI_PID <"$PID_FILE"

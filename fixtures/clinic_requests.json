@@ -1,0 +1,27 @@
+[
+  {
+    "id": "CL-1041",
+    "subject": "Dermatology visit",
+    "message": "The rash came back after the antibiotics finished. Can I get a same-week appointment with dermatology, or should I just refill the cream?"
+  },
+  {
+    "id": "CL-1042",
+    "subject": "Blood pressure medication",
+    "message": "My blood pressure tablets run out on Friday. Could the office request a refill from my pharmacy? I still have two days left."
+  },
+  {
+    "id": "CL-1043",
+    "subject": "Lab report",
+    "message": "My blood test was done on Monday and I cannot see the results in the portal. Could someone tell me when the results will be available?"
+  },
+  {
+    "id": "CL-1044",
+    "subject": "Visit invoice",
+    "message": "The invoice for my last visit has a second copay on it. Can billing explain the extra charge?"
+  },
+  {
+    "id": "CL-1045",
+    "subject": "Need a nurse now",
+    "message": "I have sudden chest pain and shortness of breath right now. Please have a nurse call me immediately."
+  }
+]

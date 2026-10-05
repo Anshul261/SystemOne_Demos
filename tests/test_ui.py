@@ -8,3 +8,4 @@ def test_each_demo_has_a_short_dynamic_guide():
         assert "<ol>" in guide
         assert guide.count("<li>") == 3
         assert "GLiNER" in guide
+        assert "JPT" in demo_guide(name, "jpt")

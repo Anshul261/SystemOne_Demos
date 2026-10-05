@@ -1,0 +1,26 @@
+[
+  {
+    "name": "RPA Challenge",
+    "status": "PASSED \u00b7 RPA Challenge \u00b7 10.6s",
+    "seconds": 18.4,
+    "video": "/home/alphadata-ai-team/Documents/gliner-browser-demos/demo-video/01-raw.webm"
+  },
+  {
+    "name": "ParaBank Claim Payment",
+    "status": "PASSED \u00b7 ParaBank Claim Payment \u00b7 5.4s",
+    "seconds": 13.3,
+    "video": "/home/alphadata-ai-team/Documents/gliner-browser-demos/demo-video/02-raw.webm"
+  },
+  {
+    "name": "Piko Resilient Intake",
+    "status": "PASSED \u00b7 Piko Resilient Intake \u00b7 4.5s",
+    "seconds": 12.3,
+    "video": "/home/alphadata-ai-team/Documents/gliner-browser-demos/demo-video/03-raw.webm"
+  },
+  {
+    "name": "Piko Excel Challenge",
+    "status": "PASSED \u00b7 Piko Excel Challenge \u00b7 7.9s",
+    "seconds": 15.9,
+    "video": "/home/alphadata-ai-team/Documents/gliner-browser-demos/demo-video/04-raw.webm"
+  }
+]

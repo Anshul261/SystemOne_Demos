@@ -11,10 +11,11 @@ import gradio as gr
 from PIL import Image
 from playwright.sync_api import sync_playwright
 
-from gliner_client import GlinerClient
+from jpt_client import make_client
 from run import DEMOS
 
 GLINER_URL = os.getenv("GLINER_URL", "http://127.0.0.1:8010")
+JPT_URL = os.getenv("JPT_URL", "http://127.0.0.1:8085")
 HOST = os.getenv("DEMO_UI_HOST", "127.0.0.1")
 PORT = int(os.getenv("DEMO_UI_PORT", "7863"))
 
@@ -23,6 +24,8 @@ DEMO_NAMES = {
     "ParaBank Claim Payment": "parabank",
     "Piko Resilient Intake": "piko",
     "Piko Excel Challenge": "piko-excel",
+    "Clinic Requests": "clinic",
+    "Employee Help Desk": "helpdesk",
 }
 
 DEMO_GUIDES = {
@@ -49,6 +52,18 @@ DEMO_GUIDES = {
         "<ol><li>Playwright downloads the Excel file, then starts the website timer.</li>"
         "<li>GLiNER classifies each shuffled form label as one spreadsheet column.</li>"
         "<li>Playwright enters ten rows, submits each record, and verifies the final score.</li></ol>"
+    ),
+    "Clinic Requests": (
+        "<strong>Patient message routing</strong>"
+        "<ol><li>Read five synthetic patient messages from a local intake board.</li>"
+        "<li>GLiNER picks request type, priority, staff-review need, and topic tags in one call.</li>"
+        "<li>Playwright routes each message to clinic staff and checks the saved assignment.</li></ol>"
+    ),
+    "Employee Help Desk": (
+        "<strong>Shared employee inbox</strong>"
+        "<ol><li>Read four synthetic requests for HR, IT, and facilities.</li>"
+        "<li>GLiNER picks a team, priority, and staff-review need from supplied labels.</li>"
+        "<li>Playwright saves each routing choice and checks the resulting queue.</li></ol>"
     ),
 }
 
@@ -79,21 +94,24 @@ def event_row(record: dict[str, Any]) -> list[Any]:
     if event == "field_classification":
         subject = record["field"]["label"]
     else:
-        subject = record.get("claim_id", record.get("expected", "workflow"))
+        subject = record.get(
+            "ticket_id", record.get("claim_id", record.get("expected", "workflow"))
+        )
     confidence = record.get("confidence")
     return [
         event.replace("_", " "),
         subject,
-        record.get("decision", record.get("result", "complete")),
+        record.get("decision", record.get("queue", record.get("result", "complete"))),
         "" if confidence is None else f"{confidence:.3f}",
     ]
 
 
-def demo_guide(display_name: str) -> str:
-    return DEMO_GUIDES[display_name]
+def demo_guide(display_name: str, model: str = "gliner") -> str:
+    guide = DEMO_GUIDES[display_name]
+    return guide.replace("GLiNER", "JPT") if model == "jpt" else guide
 
 
-def stream_demo(display_name: str):
+def stream_demo(display_name: str, model: str = "gliner"):
     demo_name = DEMO_NAMES[display_name]
     events: queue.Queue = queue.Queue()
     started = time.monotonic()
@@ -110,7 +128,9 @@ def stream_demo(display_name: str):
                 )
                 page = context.new_page()
                 try:
-                    artifact = DEMOS[demo_name](page, GlinerClient(GLINER_URL), publish)
+                    artifact = DEMOS[demo_name](
+                        page, make_client(model, GLINER_URL, JPT_URL), publish
+                    )
                     events.put(
                         (
                             {"event": "run_finished", "artifact": str(artifact)},
@@ -153,50 +173,52 @@ def stream_demo(display_name: str):
             for row in rows
         )
         status = (
-            f"**RUNNING** · `{display_name}` · "
+            f"**RUNNING** · `{display_name}` · `{model}` · "
             f"<span class='metric'>{elapsed:.1f}s / {decisions} decisions</span>"
         )
         if record["event"] == "run_finished":
-            status = f"**PASSED** · `{display_name}` · <span class='metric'>{elapsed:.1f}s</span>"
+            status = f"**PASSED** · `{display_name}` · `{model}` · <span class='metric'>{elapsed:.1f}s</span>"
         elif record["event"] == "run_failed":
             status = f"**FAILED** · `{record['error']}`"
         yield status, latest_image, rows, latest_decision
 
 
-with gr.Blocks(css=CSS, title="GLiNER Browser Lab") as app:
+with gr.Blocks(css=CSS, title="Decision Browser Lab") as app:
     gr.HTML(
         """
         <div class="hero">
-          <div class="eyebrow">SystemOne Demos / local GLiNER decisions</div>
-          <h1>GLiNER Browser Lab</h1>
-          <p>Watch a text classifier map form fields and choose bounded actions while Playwright executes the workflow.</p>
+          <div class="eyebrow">SystemOne Demos / local model decisions</div>
+          <h1>Decision Browser Lab</h1>
+          <p>Compare GLiNER and JPT on the same form and routing tasks while Playwright executes each decision.</p>
         </div>
         """
     )
     with gr.Row(elem_classes="app-shell"):
         with gr.Column(scale=1, elem_classes="panel"):
             demo = gr.Radio(list(DEMO_NAMES), value="RPA Challenge", label="Workflow")
+            model = gr.Radio(["gliner", "jpt"], value="gliner", label="Decision model")
             guide = gr.HTML(
                 value=demo_guide("RPA Challenge"), elem_classes="demo-guide"
             )
             run_button = gr.Button(
                 "Run selected demo", variant="primary", elem_classes="run-button"
             )
-            status = gr.Markdown("**IDLE** · GLiNER endpoint ready for a run")
+            status = gr.Markdown("**IDLE** · select a workflow and model")
             latest = gr.JSON(label="Latest decision")
         with gr.Column(scale=2, elem_classes="panel"):
             screenshot = gr.Image(label="Live browser", interactive=False, height=520)
     decisions = gr.Dataframe(
-        headers=["Event", "Field / state", "GLiNER decision", "Confidence"],
+        headers=["Event", "Field / state", "Model decision", "Confidence"],
         datatype=["str", "str", "str", "str"],
         interactive=False,
         wrap=True,
         elem_classes="decision-table panel",
     )
-    demo.change(demo_guide, inputs=demo, outputs=guide)
+    demo.change(demo_guide, inputs=[demo, model], outputs=guide)
+    model.change(demo_guide, inputs=[demo, model], outputs=guide)
     run_button.click(
         stream_demo,
-        inputs=demo,
+        inputs=[demo, model],
         outputs=[status, screenshot, decisions, latest],
     )
 
