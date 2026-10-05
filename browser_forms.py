@@ -29,12 +29,14 @@ class AuditLog:
         output_dir: str = "artifacts",
         page: Page | None = None,
         on_event: Callable[[dict[str, Any], bytes | None], None] | None = None,
+        screenshot_events: set[str] | None = None,
     ):
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         self.path = Path(output_dir) / f"{demo}-{stamp}.jsonl"
         self.page = page
         self.on_event = on_event
+        self.screenshot_events = screenshot_events
 
     def write(self, event: str, **details: Any) -> None:
         record = {
@@ -46,7 +48,10 @@ class AuditLog:
             handle.write(json.dumps(record, ensure_ascii=True) + "\n")
         if self.on_event:
             screenshot = (
-                self.page.screenshot(type="jpeg", quality=72) if self.page else None
+                self.page.screenshot(type="jpeg", quality=72)
+                if self.page
+                and (self.screenshot_events is None or event in self.screenshot_events)
+                else None
             )
             self.on_event(record, screenshot)
 

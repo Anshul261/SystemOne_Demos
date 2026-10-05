@@ -21,6 +21,7 @@ RPA_URL = "https://rpachallenge.com/"
 RPA_DATA_URL = "https://rpachallenge.com/assets/downloadFiles/challenge.xlsx"
 PARABANK_URL = "https://parabank.parasoft.com/parabank/index.htm"
 PIKO_URL = "https://pikoautomation.pl/sandbox/healing-agent"
+PIKO_CHALLENGE_URL = "https://pikoautomation.pl/sandbox/automation-challenge/"
 ROOT = Path(__file__).resolve().parent
 
 
@@ -53,6 +54,29 @@ def rpa_records() -> list[dict[str, str]]:
     ]
 
 
+def piko_challenge_records(workbook_path: str) -> list[dict[str, str]]:
+    workbook = io.BytesIO(Path(workbook_path).read_bytes())
+    sheet = load_workbook(workbook, read_only=True).active
+    rows = list(sheet.iter_rows(values_only=True))
+    headers = {
+        "First Name": "first_name",
+        "Last Name": "last_name",
+        "Email": "email",
+        "Phone": "phone",
+        "Company": "company",
+        "Job Title": "job_title",
+        "Experience Level": "experience_level",
+        "City": "city",
+        "Country": "country",
+    }
+    keys = [headers[str(value).strip()] for value in rows[0]]
+    return [
+        {key: str(value).strip() for key, value in zip(keys, row)}
+        for row in rows[1:]
+        if any(value is not None for value in row)
+    ]
+
+
 RPA_DESCRIPTIONS = {
     "first_name": "Value for a field labeled First Name",
     "last_name": "Value for a field labeled Last Name",
@@ -61,6 +85,18 @@ RPA_DESCRIPTIONS = {
     "address": "Value for a field labeled Address",
     "email": "Value for a field labeled Email",
     "phone_number": "Value for a field labeled Phone Number",
+}
+
+PIKO_CHALLENGE_DESCRIPTIONS = {
+    "first_name": "Value for a field labeled First Name",
+    "last_name": "Value for a field labeled Last Name",
+    "email": "Value for a field labeled Email",
+    "phone": "Value for a field labeled Phone",
+    "company": "Value for a field labeled Company",
+    "job_title": "Value for a field labeled Job Title",
+    "experience_level": "Value for a field labeled Experience Level",
+    "city": "Value for a field labeled City",
+    "country": "Value for a field labeled Country",
 }
 
 
@@ -89,6 +125,46 @@ def run_rpa(
     audit.write("completed", result=result)
     if "100%" not in result:
         raise RuntimeError(f"RPA Challenge did not report 100%: {result}")
+    return audit.path
+
+
+def run_piko_challenge(
+    page: Page, gliner: GlinerClient, on_event: EventCallback | None = None
+) -> Path:
+    audit = AuditLog(
+        "piko-excel-challenge",
+        page=page,
+        on_event=on_event,
+        screenshot_events={"record_ready", "completed"},
+    )
+    page.goto(PIKO_CHALLENGE_URL, wait_until="networkidle")
+    with page.expect_download() as download_info:
+        page.get_by_role("link", name="Download the Excel file").click()
+    download = download_info.value
+    workbook_path = download.path()
+    records = piko_challenge_records(str(workbook_path))
+    audit.write(
+        "file_downloaded", filename=download.suggested_filename, records=len(records)
+    )
+
+    page.get_by_role("button", name="Start", exact=True).click()
+    audit.write("timer_started", records=len(records))
+    for number, record in enumerate(records, start=1):
+        fill_classified_form(
+            page.locator(".ac-form-card"),
+            record,
+            PIKO_CHALLENGE_DESCRIPTIONS,
+            gliner,
+            audit,
+        )
+        audit.write("record_ready", record=number, total=len(records))
+        page.get_by_role("button", name=re.compile(r"^Submit")).click()
+
+    page.get_by_text(re.compile(r"10 / 10 correct records", re.IGNORECASE)).wait_for()
+    result = page_state(page)
+    audit.write("completed", result=result)
+    if "100%" not in result:
+        raise RuntimeError(f"Piko Automation Challenge did not report 100%: {result}")
     return audit.path
 
 
@@ -314,6 +390,7 @@ DEMOS = {
     "rpa": run_rpa,
     "parabank": run_parabank,
     "piko": run_piko,
+    "piko-excel": run_piko_challenge,
 }
 
 

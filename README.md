@@ -1,6 +1,6 @@
 # GLiNER browser demos
 
-Three small browser automations that treat forms as classification problems.
+Four small browser automations that treat forms as classification problems.
 They use the local `fastino/GLiNER2.5-Decide` service to select source fields,
 business actions, and recovery actions from explicit allowlists. Playwright
 executes the selected action. GLiNER never generates values or selectors.
@@ -12,9 +12,10 @@ executes the selected action. GLiNER never generates values or selectors.
 | `python run.py rpa` | RPA Challenge | Maps shuffled form fields to source columns and enters ten policyholder-style records. |
 | `python run.py parabank` | ParaBank | Classifies an insurance claim action, creates a synthetic test customer, and issues a sandbox claim payment. |
 | `python run.py piko` | Piko Healing Agent | Maps a three-step insured form and classifies recovery from randomized IDs and a verification modal. |
+| `python run.py piko-excel` | Piko Automation Challenge | Downloads the participant workbook, starts the timer, classifies shuffled fields, and submits ten records. |
 
 All input data is synthetic. ParaBank is a public testing application, not a
-real bank. The runner restricts navigation to the three named demo workflows.
+real bank. The runner restricts navigation to the four named demo workflows.
 
 ## Setup
 
@@ -39,6 +40,7 @@ uv run playwright install chromium
 uv run python run.py rpa --headed
 uv run python run.py parabank --headed
 uv run python run.py piko --headed
+uv run python run.py piko-excel --headed
 ```
 
 Omit `--headed` for headless execution. Run all demos with:

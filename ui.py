@@ -22,6 +22,7 @@ DEMO_NAMES = {
     "RPA Challenge": "rpa",
     "ParaBank Claim Payment": "parabank",
     "Piko Resilient Intake": "piko",
+    "Piko Excel Challenge": "piko-excel",
 }
 
 DEMO_GUIDES = {
@@ -42,6 +43,12 @@ DEMO_GUIDES = {
         "<ol><li>The form changes its field and button IDs on purpose.</li>"
         "<li>GLiNER classifies each visible field and the next allowed action.</li>"
         "<li>Playwright follows those choices, including confirming the surprise verification dialog.</li></ol>"
+    ),
+    "Piko Excel Challenge": (
+        "<strong>Timed spreadsheet-to-form automation</strong>"
+        "<ol><li>Playwright downloads the Excel file, then starts the website timer.</li>"
+        "<li>GLiNER classifies each shuffled form label as one spreadsheet column.</li>"
+        "<li>Playwright enters ten rows, submits each record, and verifies the final score.</li></ol>"
     ),
 }
 
