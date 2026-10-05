@@ -1,10 +1,17 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import hashlib
+import importlib.metadata
 import json
+import os
 import platform
 import re
+import shlex
 import statistics
+import subprocess
+import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -66,6 +73,28 @@ def latency_stats(values: list[float]) -> dict[str, float]:
     }
 
 
+def distribution_stats(values: list[float]) -> dict[str, float]:
+    if not values:
+        return {
+            "mean": 0.0,
+            "standard_deviation": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "minimum": 0.0,
+            "maximum": 0.0,
+        }
+    return {
+        "mean": round(statistics.fmean(values), 3),
+        "standard_deviation": round(statistics.stdev(values), 3)
+        if len(values) > 1
+        else 0.0,
+        "p50": round(percentile(values, 50), 3),
+        "p95": round(percentile(values, 95), 3),
+        "minimum": round(min(values), 3),
+        "maximum": round(max(values), 3),
+    }
+
+
 def micro_benchmark(base_url: str, requests: int, warmup: int = 5) -> dict[str, Any]:
     labels = list(PIKO_CHALLENGE_DESCRIPTIONS)
     client = TimedGlinerClient(base_url)
@@ -93,6 +122,7 @@ def micro_benchmark(base_url: str, requests: int, warmup: int = 5) -> dict[str, 
         "wall_seconds": round(elapsed, 3),
         "requests_per_second": round(requests / elapsed, 2),
         "latency": latency_stats(client.latencies_ms),
+        "samples_ms": [round(value, 3) for value in client.latencies_ms],
     }
 
 
@@ -163,6 +193,9 @@ def run_browser_benchmarks(
                             if client.latencies_ms
                             else None
                         )
+                        result["model_latency_samples_ms"] = [
+                            round(value, 3) for value in client.latencies_ms
+                        ]
                         results.append(result)
                         context.close()
         finally:
@@ -175,6 +208,7 @@ def summarize_browser_runs(runs: list[dict[str, Any]]) -> dict[str, Any]:
     for demo in dict.fromkeys(run["demo"] for run in runs):
         demo_runs = [run for run in runs if run["demo"] == demo]
         passed = [run for run in demo_runs if run["success"]]
+        durations = [run["end_to_end_seconds"] for run in passed]
         model_latencies = [
             run["model_latency"]["p50_ms"] for run in passed if run["model_latency"]
         ]
@@ -182,6 +216,7 @@ def summarize_browser_runs(runs: list[dict[str, Any]]) -> dict[str, Any]:
             "runs": len(demo_runs),
             "passed": len(passed),
             "success_rate": round(len(passed) / len(demo_runs), 3),
+            "end_to_end_distribution_seconds": distribution_stats(durations),
             "end_to_end_p50_seconds": round(
                 percentile([run["end_to_end_seconds"] for run in passed], 50), 3
             ),
@@ -205,13 +240,89 @@ def summarize_browser_runs(runs: list[dict[str, Any]]) -> dict[str, Any]:
     return summary
 
 
+def command_output(command: list[str]) -> str | None:
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return result.stdout.strip() if result.returncode == 0 else None
+
+
+def environment_metadata() -> dict[str, Any]:
+    memory_kib = 0
+    try:
+        for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
+            if line.startswith("MemTotal:"):
+                memory_kib = int(line.split()[1])
+                break
+    except OSError:
+        pass
+    return {
+        "machine": platform.machine(),
+        "platform": platform.platform(),
+        "python": platform.python_version(),
+        "logical_cpu_count": os.cpu_count(),
+        "host_memory_gib": round(memory_kib / 1024 / 1024, 2),
+        "gpu": command_output(
+            [
+                "nvidia-smi",
+                "--query-gpu=name,driver_version,compute_cap",
+                "--format=csv,noheader",
+            ]
+        ),
+        "git_commit": command_output(["git", "rev-parse", "HEAD"]),
+        "packages": {
+            package: importlib.metadata.version(package)
+            for package in ("httpx", "openpyxl", "playwright")
+        },
+    }
+
+
+def write_runs_csv(path: Path, runs: list[dict[str, Any]]) -> None:
+    fields = [
+        "demo",
+        "iteration",
+        "success",
+        "end_to_end_seconds",
+        "decision_events",
+        "field_requests",
+        "field_cache_hits",
+        "model_calls",
+        "model_total_ms",
+        "site_timer",
+        "error",
+    ]
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(runs)
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def markdown_report(results: dict[str, Any]) -> str:
     micro = results["micro"]
     lines = [
         "# Benchmark results",
         "",
         f"Measured: `{results['measured_at']}`",
-        f"Host: `{results['system']['machine']}` / `{results['system']['python']}`",
+        f"Command: `{results['command']}`",
+        f"Git commit: `{results['system']['git_commit']}`",
+        f"Host: `{results['system']['platform']}`",
+        f"GPU: `{results['system']['gpu']}`",
+        f"Python: `{results['system']['python']}` / Playwright: `{results['system']['packages']['playwright']}`",
         f"Model: `{results['model']['model']}` at `{results['model']['revision']}`",
         "",
         "## Raw GLiNER decisions",
@@ -229,14 +340,17 @@ def markdown_report(results: dict[str, Any]) -> str:
         "",
         "## Browser workflows",
         "",
-        "| Demo | Passed | End-to-end p50 | End-to-end p95 | Model calls | Model time | Cache hits | Site timer |",
-        "|---|---:|---:|---:|---:|---:|---:|---|",
+        "| Demo | Passed | Mean ± SD | p50 | p95 | Min–max | Model calls | Model time | Cache hits | Site timer |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ]
     for demo, item in results["browser_summary"].items():
         timers = ", ".join(item["site_timers"]) or "n/a"
+        distribution = item["end_to_end_distribution_seconds"]
         lines.append(
             f"| `{demo}` | {item['passed']}/{item['runs']} | "
+            f"{distribution['mean']} ± {distribution['standard_deviation']} s | "
             f"{item['end_to_end_p50_seconds']} s | {item['end_to_end_p95_seconds']} s | "
+            f"{distribution['minimum']}–{distribution['maximum']} s | "
             f"{item['model_calls_p50']} | {item['model_total_p50_ms']} ms | "
             f"{item['field_cache_hits_p50']} | {timers} |"
         )
@@ -248,7 +362,7 @@ def markdown_report(results: dict[str, Any]) -> str:
             "- Raw latency includes local HTTP and JSON overhead, not only GPU kernel time.",
             "- End-to-end time includes third-party page loads, downloads, rendering, and browser actions.",
             "- Field cache hits avoid repeated model calls after a label has already been classified.",
-            "- Three runs reveal obvious regressions but are not enough for capacity planning.",
+            f"- This report uses {results['configuration']['iterations']} runs per workflow; it measures reproducibility, not concurrent capacity.",
             "- ParaBank runs create synthetic users and sandbox payments; no real financial system is used.",
             "",
         ]
@@ -265,12 +379,21 @@ def main() -> None:
     parser.add_argument("--output-dir", default="benchmarks")
     args = parser.parse_args()
 
+    started_at = datetime.now(UTC)
     model = httpx.get(f"{args.gliner_url}/health", timeout=10).json()
     micro = micro_benchmark(args.gliner_url, args.micro_requests)
     browser_runs = run_browser_benchmarks(args.gliner_url, args.demos, args.iterations)
     results = {
-        "measured_at": datetime.now(UTC).isoformat(),
-        "system": {"machine": platform.machine(), "python": platform.python_version()},
+        "measured_at": started_at.isoformat(),
+        "completed_at": datetime.now(UTC).isoformat(),
+        "command": " ".join(shlex.quote(part) for part in [sys.executable, *sys.argv]),
+        "configuration": {
+            "iterations": args.iterations,
+            "micro_requests": args.micro_requests,
+            "demos": args.demos,
+            "sequential": True,
+        },
+        "system": environment_metadata(),
         "model": model,
         "micro": micro,
         "browser_runs": browser_runs,
@@ -278,10 +401,18 @@ def main() -> None:
     }
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "results.json").write_text(
-        json.dumps(results, indent=2), encoding="utf-8"
+    results_path = output_dir / "results.json"
+    report_path = output_dir / "RESULTS.md"
+    csv_path = output_dir / "runs.csv"
+    results_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    report_path.write_text(markdown_report(results), encoding="utf-8")
+    write_runs_csv(csv_path, browser_runs)
+    checksum_lines = [
+        f"{sha256(path)}  {path.name}" for path in (report_path, results_path, csv_path)
+    ]
+    (output_dir / "SHA256SUMS").write_text(
+        "\n".join(checksum_lines) + "\n", encoding="utf-8"
     )
-    (output_dir / "RESULTS.md").write_text(markdown_report(results), encoding="utf-8")
     print(markdown_report(results))
 
 

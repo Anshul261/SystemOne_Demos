@@ -102,3 +102,13 @@ The command writes `benchmarks/results.json` with every run and
 p50/p95 latency, throughput, end-to-end browser time, model calls, model time,
 and field-classification cache hits. Results depend on the network and the
 availability of the third-party sandbox sites.
+
+For a publication-oriented run with raw latency samples, ten workflow
+iterations, CSV output, environment provenance, and SHA-256 checksums:
+
+```bash
+uv run python benchmark.py \
+  --iterations 10 \
+  --micro-requests 500 \
+  --output-dir benchmarks/publish-10x
+```
