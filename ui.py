@@ -24,6 +24,27 @@ DEMO_NAMES = {
     "Piko Resilient Intake": "piko",
 }
 
+DEMO_GUIDES = {
+    "RPA Challenge": (
+        "<strong>Bulk form matching</strong>"
+        "<ol><li>Read one person from the downloaded spreadsheet.</li>"
+        "<li>GLiNER classifies each visible form label as a source column.</li>"
+        "<li>Playwright enters that trusted value, submits, and scans the shuffled form again.</li></ol>"
+    ),
+    "ParaBank Claim Payment": (
+        "<strong>Claim decision and payment entry</strong>"
+        "<ol><li>GLiNER reviews claim status, documents, and fraud review.</li>"
+        "<li>It selects an allowed action such as pay, review, or stop.</li>"
+        "<li>If approved, GLiNER maps claim data to the payment form and Playwright submits it.</li></ol>"
+    ),
+    "Piko Resilient Intake": (
+        "<strong>Changing form and interruption handling</strong>"
+        "<ol><li>The form changes its field and button IDs on purpose.</li>"
+        "<li>GLiNER classifies each visible field and the next allowed action.</li>"
+        "<li>Playwright follows those choices, including confirming the surprise verification dialog.</li></ol>"
+    ),
+}
+
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 :root { --ink:#e8f5ed; --muted:#86a994; --panel:#0d1712; --line:#203c2c; --lime:#a8f0b8; --amber:#f6c76b; }
@@ -35,6 +56,10 @@ CSS = """
 .hero p { color:var(--muted); max-width:760px; font-size:15px; }
 .panel { background:rgba(13,23,18,.88) !important; border:1px solid var(--line) !important; border-radius:3px !important; box-shadow:none !important; }
 .panel label, .panel .label-wrap { color:#d8ede0 !important; }
+.demo-guide { background:#101d16 !important; border-left:3px solid var(--lime) !important; padding:12px 14px !important; margin:2px 0 12px !important; }
+.demo-guide strong { color:#edf9f0; font-size:14px; }
+.demo-guide ol { color:#9fc0ac; margin:8px 0 0 18px; padding:0; font-size:13px; line-height:1.5; }
+.demo-guide li { margin:3px 0; }
 .run-button { background:var(--lime) !important; color:#07110a !important; border:0 !important; font-weight:700 !important; }
 .metric { font-family:'IBM Plex Mono',monospace; color:var(--amber); }
 .decision-table { font-family:'IBM Plex Mono',monospace; font-size:12px; }
@@ -55,6 +80,10 @@ def event_row(record: dict[str, Any]) -> list[Any]:
         record.get("decision", record.get("result", "complete")),
         "" if confidence is None else f"{confidence:.3f}",
     ]
+
+
+def demo_guide(display_name: str) -> str:
+    return DEMO_GUIDES[display_name]
 
 
 def stream_demo(display_name: str):
@@ -140,6 +169,9 @@ with gr.Blocks(css=CSS, title="GLiNER Browser Lab") as app:
     with gr.Row(elem_classes="app-shell"):
         with gr.Column(scale=1, elem_classes="panel"):
             demo = gr.Radio(list(DEMO_NAMES), value="RPA Challenge", label="Workflow")
+            guide = gr.HTML(
+                value=demo_guide("RPA Challenge"), elem_classes="demo-guide"
+            )
             run_button = gr.Button(
                 "Run selected demo", variant="primary", elem_classes="run-button"
             )
@@ -154,6 +186,7 @@ with gr.Blocks(css=CSS, title="GLiNER Browser Lab") as app:
         wrap=True,
         elem_classes="decision-table panel",
     )
+    demo.change(demo_guide, inputs=demo, outputs=guide)
     run_button.click(
         stream_demo,
         inputs=demo,
