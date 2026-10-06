@@ -1,16 +1,21 @@
 from __future__ import annotations
 
-import io
+import base64
 import os
 import queue
 import threading
 import time
+from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 import gradio as gr
-from PIL import Image
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from playwright.sync_api import sync_playwright
 
+from intake import intake_schema, load_tickets, run_intake_simulation
 from jpt_client import make_client
 from run import DEMOS
 
@@ -18,6 +23,7 @@ GLINER_URL = os.getenv("GLINER_URL", "http://127.0.0.1:8010")
 JPT_URL = os.getenv("JPT_URL", "http://127.0.0.1:8085")
 HOST = os.getenv("DEMO_UI_HOST", "127.0.0.1")
 PORT = int(os.getenv("DEMO_UI_PORT", "7863"))
+WEB = Path(__file__).resolve().parent / "web"
 
 DEMO_NAMES = {
     "RPA Challenge": "rpa",
@@ -55,72 +61,98 @@ DEMO_GUIDES = {
     ),
     "Clinic Requests": (
         "<strong>Patient message routing</strong>"
-        "<ol><li>Read five synthetic patient messages from a local intake board.</li>"
-        "<li>GLiNER picks request type, priority, staff-review need, and topic tags in one call.</li>"
-        "<li>Playwright routes each message to clinic staff and checks the saved assignment.</li></ol>"
+        "<ol><li>Send a patient message or play the five-request sample inbox.</li>"
+        "<li>GLiNER predicts request type, priority, staff review, and topic tags.</li>"
+        "<li>Routing rules turn the predictions into a ticket for the right clinic team.</li></ol>"
     ),
     "Employee Help Desk": (
         "<strong>Shared employee inbox</strong>"
-        "<ol><li>Read four synthetic requests for HR, IT, and facilities.</li>"
-        "<li>GLiNER picks a team, priority, and staff-review need from supplied labels.</li>"
-        "<li>Playwright saves each routing choice and checks the resulting queue.</li></ol>"
+        "<ol><li>Send an employee message or play the four-request sample inbox.</li>"
+        "<li>GLiNER predicts a team, priority, and staff-review need.</li>"
+        "<li>Routing rules produce a ticket and a simulated acknowledgment.</li></ol>"
     ),
 }
-
-CSS = """
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
-:root { --ink:#e8f5ed; --muted:#86a994; --panel:#0d1712; --line:#203c2c; --lime:#a8f0b8; --amber:#f6c76b; }
-.gradio-container { background: radial-gradient(circle at 18% 0%, #193525 0, #08100c 38%, #050806 100%); color:var(--ink); font-family:'DM Sans',sans-serif; }
-.app-shell { max-width:1440px !important; margin:auto !important; }
-.hero { padding:28px 4px 18px; border-bottom:1px solid var(--line); margin-bottom:18px; }
-.eyebrow { color:var(--lime); font:500 12px 'IBM Plex Mono',monospace; letter-spacing:.16em; text-transform:uppercase; }
-.hero h1 { color:#edf9f0 !important; margin:7px 0 5px; font-size:clamp(30px,4vw,54px); line-height:1; letter-spacing:-.04em; }
-.hero p { color:var(--muted); max-width:760px; font-size:15px; }
-.panel { background:rgba(13,23,18,.88) !important; border:1px solid var(--line) !important; border-radius:3px !important; box-shadow:none !important; }
-.panel label, .panel .label-wrap { color:#d8ede0 !important; }
-.demo-guide { background:#101d16 !important; border-left:3px solid var(--lime) !important; padding:12px 14px !important; margin:2px 0 12px !important; }
-.demo-guide strong { color:#edf9f0; font-size:14px; }
-.demo-guide ol { color:#9fc0ac; margin:8px 0 0 18px; padding:0; font-size:13px; line-height:1.5; }
-.demo-guide li { margin:3px 0; }
-.run-button { background:var(--lime) !important; color:#07110a !important; border:0 !important; font-weight:700 !important; }
-.metric { font-family:'IBM Plex Mono',monospace; color:var(--amber); }
-.decision-table { font-family:'IBM Plex Mono',monospace; font-size:12px; }
-footer { display:none !important; }
-"""
-
-
-def event_row(record: dict[str, Any]) -> list[Any]:
-    event = record["event"]
-    if event == "field_classification":
-        subject = record["field"]["label"]
-    else:
-        subject = record.get(
-            "ticket_id", record.get("claim_id", record.get("expected", "workflow"))
-        )
-    confidence = record.get("confidence")
-    return [
-        event.replace("_", " "),
-        subject,
-        record.get("decision", record.get("queue", record.get("result", "complete"))),
-        "" if confidence is None else f"{confidence:.3f}",
-    ]
-
 
 def demo_guide(display_name: str, model: str = "gliner") -> str:
     guide = DEMO_GUIDES[display_name]
     return guide.replace("GLiNER", "JPT") if model == "jpt" else guide
 
 
-def stream_demo(display_name: str, model: str = "gliner"):
-    demo_name = DEMO_NAMES[display_name]
+app = gr.Server(title="SystemOne Decision Lab")
+app.mount("/assets", StaticFiles(directory=WEB), name="assets")
+
+
+@app.get("/")
+def homepage():
+    return FileResponse(WEB / "index.html")
+
+
+@app.get("/demo-config")
+def demo_config():
+    return {
+        "workflows": [
+            {"id": key, "name": name, "guide": DEMO_GUIDES[name]}
+            for name, key in DEMO_NAMES.items()
+        ],
+        "samples": {"clinic": load_tickets(True), "helpdesk": load_tickets(False)},
+        "schemas": {"clinic": intake_schema(True), "helpdesk": intake_schema(False)},
+        "models": ["gliner", "jpt"] if os.getenv("JPT_URL") or not os.getenv("SPACE_ID") else ["gliner"],
+    }
+
+
+class RunCancelled(Exception):
+    pass
+
+
+@app.api(name="run_demo", concurrency_limit=1, stream_every=0.1)
+def stream_demo(
+    workflow: str,
+    model: str = "gliner",
+    mode: str = "single",
+    subject: str = "",
+    message: str = "",
+) -> Iterator[dict[str, Any]]:
+    """Stream model decisions, routing records, and browser screenshots."""
+    if workflow not in DEMOS or model not in demo_config()["models"]:
+        raise ValueError("Choose an available workflow and model.")
+    if mode not in {"single", "inbox"}:
+        raise ValueError("Choose a single request or the sample inbox.")
+    simulated = workflow in {"clinic", "helpdesk"}
+    tickets = None
+    if simulated and mode == "single":
+        if not subject.strip() or not message.strip():
+            raise ValueError("Add a subject and message before sending a request.")
+        if len(subject) > 200 or len(message) > 4000:
+            raise ValueError("Use at most 200 characters for the subject and 4,000 for the message.")
+        sample = next(
+            (ticket for ticket in load_tickets(workflow == "clinic")
+             if ticket["subject"] == subject and ticket["message"] == message),
+            None,
+        )
+        prefix = "CL" if workflow == "clinic" else "HD"
+        tickets = [{
+            "id": sample["id"] if sample else f"{prefix}-{uuid4().hex[:8].upper()}",
+            "subject": subject.strip(),
+            "message": message.strip(),
+        }]
     events: queue.Queue = queue.Queue()
+    cancelled = threading.Event()
     started = time.monotonic()
 
     def publish(record: dict[str, Any], screenshot: bytes | None) -> None:
+        if cancelled.is_set():
+            raise RunCancelled()
         events.put((record, screenshot))
 
     def worker() -> None:
         try:
+            client = make_client(model, GLINER_URL, JPT_URL)
+            if simulated:
+                artifact = run_intake_simulation(
+                    client, clinic=workflow == "clinic", tickets=tickets, on_event=publish
+                )
+                publish({"event": "run_finished", "artifact": artifact.name}, None)
+                return
             with sync_playwright() as playwright:
                 browser = playwright.chromium.launch(headless=True)
                 context = browser.new_context(
@@ -128,102 +160,45 @@ def stream_demo(display_name: str, model: str = "gliner"):
                 )
                 page = context.new_page()
                 try:
-                    artifact = DEMOS[demo_name](
-                        page, make_client(model, GLINER_URL, JPT_URL), publish
-                    )
-                    events.put(
-                        (
-                            {"event": "run_finished", "artifact": str(artifact)},
-                            page.screenshot(type="jpeg", quality=72),
-                        )
+                    artifact = DEMOS[workflow](page, client, publish)
+                    publish(
+                        {"event": "run_finished", "artifact": artifact.name},
+                        page.screenshot(type="jpeg", quality=72),
                     )
                 finally:
                     context.close()
                     browser.close()
+        except RunCancelled:
+            pass
         except Exception as exc:  # noqa: BLE001 - surface worker failures in the UI
             events.put(({"event": "run_failed", "error": str(exc)}, None))
         finally:
             events.put(None)
 
-    threading.Thread(target=worker, daemon=True).start()
-    rows = []
+    worker_thread = threading.Thread(target=worker, daemon=True)
+    worker_thread.start()
+    records = []
     latest_image = None
-    latest_decision = {}
-    while True:
-        item = events.get()
-        if item is None:
-            break
-        record, screenshot = item
-        if screenshot:
-            latest_image = Image.open(io.BytesIO(screenshot)).copy()
-        if (
-            record["event"]
-            in {
-                "field_classification",
-                "business_decision",
-                "browser_action",
+    try:
+        while True:
+            item = events.get()
+            if item is None:
+                break
+            record, screenshot = item
+            records.append(record)
+            if screenshot:
+                latest_image = "data:image/jpeg;base64," + base64.b64encode(screenshot).decode("ascii")
+            yield {
+                "events": list(records),
+                "screenshot": latest_image,
+                "elapsed_s": round(time.monotonic() - started, 2),
             }
-            or record["event"] == "run_failed"
-        ):
-            latest_decision = record
-        rows.append(event_row(record))
-        elapsed = time.monotonic() - started
-        decisions = sum(
-            row[0] in {"field classification", "business decision", "browser action"}
-            for row in rows
-        )
-        status = (
-            f"**RUNNING** · `{display_name}` · `{model}` · "
-            f"<span class='metric'>{elapsed:.1f}s / {decisions} decisions</span>"
-        )
-        if record["event"] == "run_finished":
-            status = f"**PASSED** · `{display_name}` · `{model}` · <span class='metric'>{elapsed:.1f}s</span>"
-        elif record["event"] == "run_failed":
-            status = f"**FAILED** · `{record['error']}`"
-        yield status, latest_image, rows, latest_decision
-
-
-with gr.Blocks(css=CSS, title="Decision Browser Lab") as app:
-    gr.HTML(
-        """
-        <div class="hero">
-          <div class="eyebrow">SystemOne Demos / local model decisions</div>
-          <h1>Decision Browser Lab</h1>
-          <p>Compare GLiNER and JPT on the same form and routing tasks while Playwright executes each decision.</p>
-        </div>
-        """
-    )
-    with gr.Row(elem_classes="app-shell"):
-        with gr.Column(scale=1, elem_classes="panel"):
-            demo = gr.Radio(list(DEMO_NAMES), value="RPA Challenge", label="Workflow")
-            model = gr.Radio(["gliner", "jpt"], value="gliner", label="Decision model")
-            guide = gr.HTML(
-                value=demo_guide("RPA Challenge"), elem_classes="demo-guide"
-            )
-            run_button = gr.Button(
-                "Run selected demo", variant="primary", elem_classes="run-button"
-            )
-            status = gr.Markdown("**IDLE** · select a workflow and model")
-            latest = gr.JSON(label="Latest decision")
-        with gr.Column(scale=2, elem_classes="panel"):
-            screenshot = gr.Image(label="Live browser", interactive=False, height=520)
-    decisions = gr.Dataframe(
-        headers=["Event", "Field / state", "Model decision", "Confidence"],
-        datatype=["str", "str", "str", "str"],
-        interactive=False,
-        wrap=True,
-        elem_classes="decision-table panel",
-    )
-    demo.change(demo_guide, inputs=[demo, model], outputs=guide)
-    model.change(demo_guide, inputs=[demo, model], outputs=guide)
-    run_button.click(
-        stream_demo,
-        inputs=[demo, model],
-        outputs=[status, screenshot, decisions, latest],
-    )
+    finally:
+        cancelled.set()
+        # Keep the shared queue slot until the browser or model call has stopped.
+        # Cancellation takes effect at the next audit event.
+        worker_thread.join()
 
 
 if __name__ == "__main__":
-    if HOST not in {"127.0.0.1", "localhost", "::1"}:
-        raise SystemExit("DEMO_UI_HOST must be a loopback address")
-    app.queue(default_concurrency_limit=1).launch(server_name=HOST, server_port=PORT)
+    app.launch(server_name=HOST, server_port=PORT)

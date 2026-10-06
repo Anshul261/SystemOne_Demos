@@ -32,7 +32,7 @@ class AuditLog:
         screenshot_events: set[str] | None = None,
     ):
         Path(output_dir).mkdir(parents=True, exist_ok=True)
-        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
         self.path = Path(output_dir) / f"{demo}-{stamp}.jsonl"
         self.page = page
         self.on_event = on_event

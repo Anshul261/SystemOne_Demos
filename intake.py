@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -57,22 +58,12 @@ def _single(value: Decision | list[Decision], task: str) -> Decision:
     return value
 
 
-def run_intake(
-    page: Page,
-    gliner: GlinerClient,
-    *,
-    clinic: bool,
-    on_event: Callable[[dict[str, Any], bytes | None], None] | None = None,
-) -> Path:
-    name = "clinic-requests" if clinic else "employee-helpdesk"
-    audit = AuditLog(
-        name,
-        page=page,
-        on_event=on_event,
-        screenshot_events={"ticket_routed", "completed"},
-    )
+def load_tickets(clinic: bool) -> list[dict[str, str]]:
     fixture = "clinic_requests.json" if clinic else "helpdesk_tickets.json"
-    tickets = json.loads((ROOT / "fixtures" / fixture).read_text(encoding="utf-8"))
+    return json.loads((ROOT / "fixtures" / fixture).read_text(encoding="utf-8"))
+
+
+def intake_schema(clinic: bool) -> dict[str, dict[str, Any]]:
     categories = CLINIC_REQUESTS if clinic else HELPDESK_QUEUES
     priorities = CLINIC_PRIORITIES if clinic else HELPDESK_PRIORITIES
     task = "request" if clinic else "queue"
@@ -90,6 +81,123 @@ def run_intake(
             "multi_label": True,
             "cls_threshold": 0.4,
         }
+    return schema
+
+
+def classify_ticket(
+    ticket: dict[str, str], gliner: GlinerClient, clinic: bool, audit: AuditLog
+) -> dict[str, Decision | list[Decision]]:
+    schema = intake_schema(clinic)
+    text = f"[subject] {ticket['subject']}\n[body] {ticket['message']}"
+    audit.write("classification_started", ticket_id=ticket["id"], text=text, schema=schema)
+    started = time.monotonic()
+    decisions = gliner.classify_many(text, schema)
+    elapsed_ms = round((time.monotonic() - started) * 1000, 1)
+    for head, value in decisions.items():
+        labels = value if isinstance(value, list) else [value]
+        audit.write(
+            "business_decision",
+            ticket_id=ticket["id"],
+            task=head,
+            decision=", ".join(item.label for item in labels) or "none",
+            confidence=labels[0].confidence if len(labels) == 1 else None,
+            predictions=[{"label": item.label, "confidence": item.confidence} for item in labels],
+            candidates=list(schema[head]["labels"]),
+            model_ms=elapsed_ms,
+        )
+    return decisions
+
+
+def route_decisions(
+    decisions: dict[str, Decision | list[Decision]], clinic: bool
+) -> dict[str, Any]:
+    schema = intake_schema(clinic)
+    for head, spec in schema.items():
+        value = decisions[head]
+        if spec.get("multi_label"):
+            if not isinstance(value, list):
+                raise DecisionError(f"Expected multiple {head} decisions")
+            labels = value
+        else:
+            labels = [_single(value, head)]
+        if any(item.label not in spec["labels"] for item in labels):
+            raise DecisionError(f"Unknown {head} decision")
+
+    task = "request" if clinic else "queue"
+    category = decisions[task].label
+    priority = decisions["priority"].label
+    handoff = decisions["needs_human"].label
+    topics = [item.label for item in decisions["topics"]] if clinic else []
+    destination = CLINIC_QUEUES[category] if clinic else category
+    rules = [
+        f"Request type {category} maps to {destination}."
+        if clinic else f"The predicted team selects the {destination} queue."
+    ]
+    if clinic and priority == "urgent":
+        destination = "clinical_review"
+        rules.append("Urgent clinic requests override the usual queue and go to clinical_review.")
+    requires_review = handoff == "yes" or (clinic and destination == "clinical_review")
+    if handoff == "yes":
+        rules.append("The model flagged staff review, so review_required is set.")
+    elif clinic and destination == "clinical_review":
+        rules.append("The clinical_review queue always requires staff review.")
+    else:
+        rules.append("The request enters the staff queue with no extra review flag.")
+    return {
+        "category": category,
+        "queue": destination,
+        "priority": priority,
+        "review": "review_required" if requires_review else "staff_queue",
+        "tags": topics,
+        "rules": rules,
+    }
+
+
+def run_intake_simulation(
+    gliner: GlinerClient,
+    *,
+    clinic: bool,
+    tickets: list[dict[str, str]] | None = None,
+    on_event: Callable[[dict[str, Any], bytes | None], None] | None = None,
+) -> Path:
+    """Classify messages and produce local ticket records without a browser."""
+    tickets = load_tickets(clinic) if tickets is None else tickets
+    if not tickets or any(
+        not ticket.get(field, "").strip()
+        for ticket in tickets
+        for field in ("id", "subject", "message")
+    ):
+        raise ValueError("Add a subject and message before sending a request.")
+    name = "clinic-simulation" if clinic else "helpdesk-simulation"
+    audit = AuditLog(name, on_event=on_event)
+    audit.write("simulation_started", total=len(tickets), clinic=clinic)
+    for index, ticket in enumerate(tickets, start=1):
+        audit.write("request_received", ticket_id=ticket["id"], ticket=ticket, index=index)
+        decisions = classify_ticket(ticket, gliner, clinic, audit)
+        route = route_decisions(decisions, clinic)
+        audit.write("routing_decided", ticket_id=ticket["id"], **route)
+        audit.write("ticket_routed", ticket_id=ticket["id"], subject=ticket["subject"], **route)
+    audit.write("completed", routed=len(tickets), result="Local ticket records produced")
+    return audit.path
+
+
+def run_intake(
+    page: Page,
+    gliner: GlinerClient,
+    *,
+    clinic: bool,
+    on_event: Callable[[dict[str, Any], bytes | None], None] | None = None,
+) -> Path:
+    name = "clinic-requests" if clinic else "employee-helpdesk"
+    audit = AuditLog(
+        name,
+        page=page,
+        on_event=on_event,
+        screenshot_events={"ticket_routed", "completed"},
+    )
+    tickets = load_tickets(clinic)
+    categories = CLINIC_REQUESTS if clinic else HELPDESK_QUEUES
+    priorities = CLINIC_PRIORITIES if clinic else HELPDESK_PRIORITIES
 
     page.goto(BOARD_URL)
     page.evaluate(
@@ -111,36 +219,15 @@ def run_intake(
         card = page.locator(".ticket").filter(
             has=page.get_by_text(ticket["id"], exact=True)
         )
-        text = (
-            f"[subject] {card.locator('h2').inner_text()}\n"
-            f"[body] {card.locator('.message').inner_text()}"
-        )
-        decisions = gliner.classify_many(text, schema)
-        for head, value in decisions.items():
-            labels = value if isinstance(value, list) else [value]
-            audit.write(
-                "business_decision",
-                ticket_id=ticket["id"],
-                task=head,
-                decision=", ".join(item.label for item in labels) or "none",
-                confidence=labels[0].confidence if len(labels) == 1 else None,
-                candidates=list(schema[head]["labels"]),
-            )
-
-        category = _single(decisions[task], task).label
-        priority = _single(decisions["priority"], "priority").label
-        handoff = _single(decisions["needs_human"], "needs_human").label
-        topics = [item.label for item in decisions["topics"]] if clinic else []
-        queue = CLINIC_QUEUES[category] if clinic else category
-        if clinic and priority == "urgent":
-            queue = "clinical_review"
-        requires_review = handoff == "yes" or (clinic and queue == "clinical_review")
-        chosen = {
-            "category": category,
-            "queue": queue,
-            "priority": priority,
-            "review": "review_required" if requires_review else "staff_queue",
+        visible_ticket = {
+            "id": ticket["id"],
+            "subject": card.locator("h2").inner_text(),
+            "message": card.locator(".message").inner_text(),
         }
+        decisions = classify_ticket(visible_ticket, gliner, clinic, audit)
+        route = route_decisions(decisions, clinic)
+        chosen = {field: route[field] for field in ("category", "queue", "priority", "review")}
+        topics = route["tags"]
         for field, value in chosen.items():
             card.locator(f'select[data-field="{field}"]').select_option(value=value)
         card.get_by_role("button", name="Apply routing").click()

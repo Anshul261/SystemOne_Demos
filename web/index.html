@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>SystemOne · Decision lab</title>
+  <link rel="stylesheet" href="assets/app.css">
+  <script type="module" src="assets/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#clinic" aria-label="SystemOne home"><span class="brand-mark">s1</span> SystemOne <span class="brand-divider">/</span> <span class="brand-sub">Decision lab</span></a>
+    <span class="server-badge"><span class="dot"></span> Powered by gr.Server</span>
+  </header>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="eyebrow">Explore the workflows</div>
+      <nav id="workflows" aria-label="Demo workflows"></nav>
+      <div class="sidebar-settings">
+        <label for="model">Decision model</label>
+        <select id="model"><option value="gliner">GLiNER2.5 Decide</option></select>
+        <label for="pace">Playback</label>
+        <select id="pace"><option value="guided">Guided, step by step</option><option value="instant">As results arrive</option></select>
+        <p class="quiet">Playback pacing is separate from measured model time.</p>
+      </div>
+      <div class="sidebar-note"><span class="tiny-mark">s1</span><p>Messages become decisions.<br>Decisions become actions.</p><span class="quiet">Synthetic sample data</span></div>
+    </aside>
+    <main>
+      <div class="page-heading">
+        <div><div class="eyebrow" id="workflow-kind">Request routing / 05</div><h1 id="workflow-title">Clinic requests</h1><p id="workflow-description">Follow a patient message from the inbox to the right clinic team.</p></div>
+        <span class="mode-badge" id="mode-badge">Simulation · live inference</span>
+      </div>
+      <div class="run-bar">
+        <div class="run-status" role="status" aria-live="polite"><span class="dot" id="status-dot"></span><span id="status">Loading the demo…</span></div>
+        <div class="run-metrics"><span id="run-count">0 tickets produced</span><span id="model-time">Model time · waiting</span></div>
+        <button id="stop" class="text-button" disabled>Stop run</button>
+      </div>
+      <div id="error" class="error-box" role="alert" hidden></div>
+      <section id="simulation" aria-label="Request flow">
+        <ol class="steps" aria-label="Processing stages">
+          <li data-stage="1"><span>01</span> Human request <i>→</i></li>
+          <li data-stage="2"><span>02</span> Model predictions <i>→</i></li>
+          <li data-stage="3"><span>03</span> Routing rules <i>→</i></li>
+          <li data-stage="4"><span>04</span> Ticket output</li>
+        </ol>
+        <div class="flow-grid">
+          <section class="flow-card incoming" id="input-card">
+            <div class="card-top"><span class="card-icon">↗</span><div><h2 id="sender-title">The patient writes</h2><p>A message in their own words</p></div><span id="request-id" class="small-badge">Draft</span></div>
+            <form id="request-form">
+              <label for="sample">Start with an example</label><select id="sample"></select>
+              <label for="subject">Subject</label><input id="subject" maxlength="200" required autocomplete="off">
+              <label for="message">Message</label><textarea id="message" rows="7" maxlength="4000" required></textarea>
+              <div class="message-footer"><span id="channel-label">Patient message</span><span id="character-count"></span></div>
+              <button class="primary-button" id="send" type="submit" disabled>Send request <span aria-hidden="true">→</span></button>
+              <button class="secondary-button" id="inbox" type="button" disabled>Play sample inbox</button>
+            </form>
+            <p class="card-footnote">Edit the message to see how the model responds.</p>
+          </section>
+          <section class="flow-card model-card" id="model-card">
+            <div class="card-top"><span class="card-icon model-icon">G</span><div><h2 id="model-title">GLiNER reads it</h2><p>Predictions from supplied labels</p></div></div>
+            <div id="predictions" class="predictions"></div>
+            <details class="taxonomy"><summary>What can the model choose?</summary><div id="taxonomy"></div></details>
+            <div class="rule-box" id="rule-box"><div class="eyebrow">03 / Routing rules</div><p id="rule-placeholder">Once predictions arrive, the workflow maps them to a staff queue.</p><ul id="rules"></ul></div>
+          </section>
+          <section class="flow-card output-card" id="output-card">
+            <div class="card-top"><span class="card-icon">✓</span><div><h2>A ticket comes out</h2><p>Structured and ready for staff</p></div></div>
+            <div id="output-empty" class="empty-state"><div class="ticket-outline" aria-hidden="true"><span></span><span></span><span></span></div><h3>Waiting for a request</h3><p>The destination, priority, and review status will appear here.</p></div>
+            <div id="ticket-output" hidden></div>
+            <div class="output-note"><span class="dot"></span> Simulated ticket and acknowledgment</div>
+          </section>
+        </div>
+        <section class="ledger">
+          <div class="section-heading"><div><h2>Routing ledger <span id="ledger-count" class="small-badge">0</span></h2><p id="ledger-description">Each completed request gets a record. Select one to inspect its flow.</p></div><button id="download" class="text-button" disabled>Download JSON ↓</button></div>
+          <div id="ledger-empty" class="ledger-empty">Your routed requests will collect here.</div>
+          <div class="table-scroll" id="ledger-table" hidden><table><thead><tr><th>Request</th><th>Destination</th><th>Priority</th><th>Review</th><th>Model time</th></tr></thead><tbody id="ledger-rows"></tbody></table></div>
+        </section>
+      </section>
+      <section id="browser-demo" hidden aria-label="Browser workflow">
+        <div class="browser-toolbar"><div id="browser-guide"></div><button id="run-browser" class="primary-button">Run browser demo →</button></div>
+        <div class="browser-frame"><div class="browser-chrome"><span></span><span></span><span></span><p>Live browser · Playwright</p></div><div id="browser-empty" class="empty-state"><h3>Ready to open the website</h3><p>Start the demo to follow each model decision and browser action.</p></div><img id="screenshot" alt="Latest screenshot of the automated browser" hidden></div>
+        <div class="browser-decision"><div class="section-heading"><h2>Latest model decision</h2><span class="small-badge" id="browser-confidence">Waiting</span></div><pre id="browser-latest">Field and action classifications will appear here.</pre></div>
+      </section>
+      <details class="trace" id="trace"><summary>Under the hood <span>Model input, decisions, and execution events</span></summary><pre id="event-log">No events yet.</pre></details>
+      <footer><span>SystemOne demos</span><span id="footer-note">Real model predictions. Simulated request delivery.</span><a href="https://www.gradio.app/guides/server-mode" target="_blank" rel="noreferrer">Built with Gradio Server ↗</a></footer>
+    </main>
+  </div>
+</body>
+</html>

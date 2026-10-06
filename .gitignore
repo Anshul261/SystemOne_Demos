@@ -1,4 +1,6 @@
 .venv/
+.gliner.pid
+gliner.log
 __pycache__/
 .pytest_cache/
 artifacts/

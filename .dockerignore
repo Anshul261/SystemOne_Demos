@@ -1,0 +1,13 @@
+.git
+**/.venv
+**/__pycache__
+.pytest_cache
+.ui.pid
+.gliner.pid
+*.log
+.env
+.env.*
+artifacts
+benchmarks
+demo-video
+tests

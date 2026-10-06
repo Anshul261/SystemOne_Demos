@@ -1,10 +1,24 @@
+---
+title: SystemOne Decision Lab
+sdk: docker
+app_port: 7860
+colorFrom: green
+colorTo: gray
+fullWidth: true
+startup_duration_timeout: 1h
+models:
+  - fastino/GLiNER2.5-Decide
+---
+
 # SystemOne Demos
 
-Six browser automations that demonstrate SystemOne-style decisions by
-treating forms and incoming requests as classification problems.
+Six demos that treat forms and incoming requests as classification problems.
+Four automate websites. Clinic Requests and Employee Help Desk use interactive
+message-to-ticket simulations in the UI.
 They use `fastino/GLiNER2.5-Decide` by default and can also use `kirp/jpt-0.8b`.
 The models select source fields, business actions, and routing from explicit
-allowlists. Playwright executes the choice; neither model generates values or selectors.
+allowlists. Playwright executes browser choices; Python rules produce simulated
+intake tickets. Neither model generates values or selectors.
 
 ## Demos
 
@@ -23,13 +37,28 @@ the browser for verification; they do not connect to a clinic or employer.
 
 ## Setup
 
-Start the GLiNER service from the adjacent vLLM workspace:
+The GLiNER service is bundled in `services/gliner` with its own uv environment
+and lockfile. Start it from this repository:
 
 ```bash
-cd ../vllm/dgx_spark/deployments/gliner2_5_decide
-./04-start-server.sh
-./05-test-server.sh
+./start-gliner.sh
+curl -fsS http://127.0.0.1:8010/health
 ```
+
+The first launch installs inference dependencies and downloads
+`fastino/GLiNER2.5-Decide` to the Hugging Face cache. Existing cached weights
+are reused. The service selects CUDA when available and otherwise uses CPU.
+Weights and virtual environments are not committed. No JPT model is installed.
+To download the weights ahead of time with the Hugging Face CLI:
+
+```bash
+hf download fastino/GLiNER2.5-Decide
+```
+
+Logs are written to `gliner.log`. Stop with `./stop-gliner.sh`, or run in the
+foreground with `./run-gliner.sh`. Set `GLINER_DEVICE=cpu` to force CPU,
+`GLINER_MODEL` to select another compatible checkpoint, or `GLINER_PORT` to
+change the port (also set `GLINER_URL` for the demo client).
 
 Install this project's dependencies and Chromium:
 
@@ -97,10 +126,20 @@ Start the local visual control room:
 ./start-ui.sh
 ```
 
-Open `http://127.0.0.1:7863`. The UI streams browser screenshots and shows each
-model's field, business, and browser-action classifications with their confidence.
-Runs are serialized so two browser sessions cannot alter the shared sandbox
-sites at the same time. Override the port with `DEMO_UI_PORT`.
+Open `http://127.0.0.1:7863`. The UI uses Gradio 6.29.1 `gr.Server` with a custom
+frontend and the Gradio JavaScript client for queued, streamed results.
+
+For Clinic Requests and Employee Help Desk, choose an example or write a request.
+Send it to watch the message, model predictions, routing rules, and final ticket
+appear in order. Play the sample inbox to process all five clinic messages or
+all four employee messages. Select a ledger entry to inspect its results or
+download the run as JSON. Guided playback adds pauses for reading; model time
+measures the classification call itself. Ticket delivery and acknowledgments
+are simulated, and acknowledgment text comes from a template.
+
+The four website demos stream browser screenshots and execution events. Runs
+share one queue so browser sessions cannot alter the sandbox sites at the same
+time. Override the port with `DEMO_UI_PORT`.
 
 Stop it with `./stop-ui.sh`. Logs are written to `gradio.log`.
 
@@ -114,6 +153,42 @@ silently falling back to a hard-coded route. The intake demos use
 caller-supplied label descriptions and, for the clinic, multi-label topic tags.
 See the [GLiNER2.5-Decide model card](https://huggingface.co/fastino/GLiNER2.5-Decide)
 for the request, ticket-routing, described-label, and multi-decision examples.
+
+## Host all six demos on Hugging Face Spaces
+
+Create a **Docker Space** and push this repository's files to it. The root
+`README.md` configures port 7860, and `Dockerfile` installs Chromium and both
+Python environments. `space.py` starts the bundled GLiNER service, waits for
+its health check, and starts the UI. The model downloads on the first start.
+The service uses CUDA when available and otherwise CPU.
+
+The UI and model service have separate environments because Gradio 6.29.1 needs
+`huggingface-hub>=1.16`, while GLiNER's Transformers dependency requires a version
+below 1.0. The model service stays on loopback port 8010; only the UI port is
+exposed. The four browser demos need outbound access to their sandbox sites.
+
+Test the container locally:
+
+```bash
+docker build -t systemone-demos .
+docker run --rm -p 7860:7860 systemone-demos
+```
+
+To upload only tracked repository files to an existing Space:
+
+```bash
+hf auth login
+mkdir -p /tmp/opencode/systemone-space
+git archive HEAD | tar -x -C /tmp/opencode/systemone-space
+hf upload YOUR_USERNAME/YOUR_SPACE /tmp/opencode/systemone-space --type space
+```
+
+JPT appears in the Space's model picker only when `JPT_URL` is configured in its
+settings. Its server must be reachable from the Space. GLiNER is bundled.
+Local audit files are ephemeral on Spaces; download a run's JSON to keep it.
+
+The implementation follows Gradio's [server-mode guide](https://www.gradio.app/guides/server-mode)
+and Hugging Face's [Docker Spaces guide](https://huggingface.co/docs/hub/spaces-sdks-docker).
 
 ## Test
 
