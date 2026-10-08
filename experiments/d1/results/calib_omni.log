@@ -1,0 +1,27 @@
+
+LiquidAI/d1-omni-600M: question choice on the calibration split (110 documents)
+  anywhere  best c2  calib AUROC 0.615  threshold 0.000
+  in_box    best c2  calib AUROC 1.000  threshold 0.000
+  shape     best c3  calib AUROC 0.927  threshold 0.063
+  color     best c2  calib AUROC 0.449  threshold 0.150
+  issuer    best n1  calib AUROC 0.771  threshold 0.075
+  spelling  best c1  calib AUROC 0.401  threshold 0.382
+  status    best c1  calib AUROC 0.993  threshold 0.692
+  date      best n1  calib AUROC 0.835  threshold 0.868
+  genuine   best c1  calib AUROC 0.894  threshold 0.003
+
+LiquidAI/d1-omni-600M: test split (110 documents), thresholds frozen
+  anywhere  acc  60/110 AUROC 0.675
+  in_box    acc 108/110 AUROC 0.999
+  shape     acc  77/90  AUROC 0.863
+  color     acc  43/90  AUROC 0.569
+  issuer    acc  35/80  AUROC 0.534
+  spelling  acc  16/80  AUROC 0.433
+  status    acc  81/90  AUROC 0.969
+  date      acc  65/90  AUROC 0.816
+  genuine   acc  69/80  AUROC 0.956
+
+  VERDICT exact 20/110  fraud passed 0/100  valid flagged 10/10  median 53.3 ms per pass (2 passes per document)
+  per class   {'date_mismatch': '0/10', 'missing': '7/10', 'misspelled': '2/10', 'outside_box': '3/10', 'pasted_digital': '0/10', 'photocopy': '2/10', 'valid': '0/10', 'wrong_color': '0/10', 'wrong_issuer': '2/10', 'wrong_shape': '4/10', 'wrong_status': '0/10'}
+  per capture {'clean': '5/26', 'photo': '9/45', 'scan': '6/39'}
+  fraud that passed: []

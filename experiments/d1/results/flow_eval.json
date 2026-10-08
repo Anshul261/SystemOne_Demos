@@ -1,0 +1,2121 @@
+{
+ "omni": {
+  "summary": {
+   "correct": "29/110",
+   "fraud_accepted": "0/100",
+   "valid_accepted": "0/10",
+   "sent_to_review": "75/110",
+   "calls": {
+    "omni:region": 110
+   },
+   "per_class": {
+    "date_mismatch": "0/10",
+    "missing": "10/10",
+    "misspelled": "10/10",
+    "outside_box": "0/10",
+    "pasted_digital": "0/10",
+    "photocopy": "0/10",
+    "valid": "0/10",
+    "wrong_color": "0/10",
+    "wrong_issuer": "0/10",
+    "wrong_shape": "0/10",
+    "wrong_status": "9/10"
+   },
+   "per_capture": {
+    "clean": "5/26",
+    "photo": "15/45",
+    "scan": "9/39"
+   },
+   "outcomes_by_class": {
+    "date_mismatch": {
+     "review": 10
+    },
+    "missing": {
+     "reject/missing": 10
+    },
+    "misspelled": {
+     "review": 10
+    },
+    "outside_box": {
+     "reject/missing": 9,
+     "reject/wrong_status": 1
+    },
+    "pasted_digital": {
+     "review": 10
+    },
+    "photocopy": {
+     "review": 10
+    },
+    "valid": {
+     "review": 10
+    },
+    "wrong_color": {
+     "review": 10
+    },
+    "wrong_issuer": {
+     "review": 10
+    },
+    "wrong_shape": {
+     "reject/wrong_status": 6,
+     "review": 4
+    },
+    "wrong_status": {
+     "reject/wrong_status": 9,
+     "review": 1
+    }
+   }
+  },
+  "outcomes": [
+   {
+    "file": "docs/valid-0.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-1.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-2.jpg",
+    "expected": "valid",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-3.jpg",
+    "expected": "valid",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-4.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-5.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-6.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-7.jpg",
+    "expected": "valid",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-8.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/valid-9.jpg",
+    "expected": "valid",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-0.jpg",
+    "expected": "missing",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-1.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-2.jpg",
+    "expected": "missing",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-3.jpg",
+    "expected": "missing",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-4.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-5.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-6.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-7.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-8.jpg",
+    "expected": "missing",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/missing-9.jpg",
+    "expected": "missing",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-0.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-1.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-2.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-3.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-4.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-5.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-6.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-7.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-8.jpg",
+    "expected": "outside_box",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/outside_box-9.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-0.jpg",
+    "expected": "wrong_shape",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-1.jpg",
+    "expected": "wrong_shape",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-2.jpg",
+    "expected": "wrong_shape",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-3.jpg",
+    "expected": "wrong_shape",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-4.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-5.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-6.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-7.jpg",
+    "expected": "wrong_shape",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-8.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_shape-9.jpg",
+    "expected": "wrong_shape",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-0.jpg",
+    "expected": "wrong_color",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-1.jpg",
+    "expected": "wrong_color",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-2.jpg",
+    "expected": "wrong_color",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-3.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-4.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-5.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-6.jpg",
+    "expected": "wrong_color",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-7.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-8.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_color-9.jpg",
+    "expected": "wrong_color",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-0.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-1.jpg",
+    "expected": "wrong_issuer",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-2.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-3.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-4.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-5.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-6.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-7.jpg",
+    "expected": "wrong_issuer",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-8.jpg",
+    "expected": "wrong_issuer",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_issuer-9.jpg",
+    "expected": "wrong_issuer",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-0.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-1.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-2.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-3.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-4.jpg",
+    "expected": "misspelled",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-5.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-6.jpg",
+    "expected": "misspelled",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-7.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-8.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/misspelled-9.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-0.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-1.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-2.jpg",
+    "expected": "wrong_status",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-3.jpg",
+    "expected": "wrong_status",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-4.jpg",
+    "expected": "wrong_status",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-5.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-6.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-7.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-8.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/wrong_status-9.jpg",
+    "expected": "wrong_status",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-0.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-1.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-2.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-3.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-4.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-5.jpg",
+    "expected": "date_mismatch",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-6.jpg",
+    "expected": "date_mismatch",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-7.jpg",
+    "expected": "date_mismatch",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-8.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/date_mismatch-9.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-0.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-1.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-2.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-3.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-4.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-5.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-6.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-7.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-8.jpg",
+    "expected": "photocopy",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/photocopy-9.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-0.jpg",
+    "expected": "pasted_digital",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-1.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-2.jpg",
+    "expected": "pasted_digital",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-3.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-4.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-5.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-6.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-7.jpg",
+    "expected": "pasted_digital",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-8.jpg",
+    "expected": "pasted_digital",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   },
+   {
+    "file": "docs/pasted_digital-9.jpg",
+    "expected": "pasted_digital",
+    "capture": "scan",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "omni:region"
+   }
+  ]
+ },
+ "3b": {
+  "summary": {
+   "correct": "100/110",
+   "fraud_accepted": "8/100",
+   "valid_accepted": "9/10",
+   "sent_to_review": "4/110",
+   "calls": {
+    "3b:region": 90,
+    "3b:region + 3b:page": 20
+   },
+   "per_class": {
+    "date_mismatch": "10/10",
+    "missing": "10/10",
+    "misspelled": "2/10",
+    "outside_box": "10/10",
+    "pasted_digital": "9/10",
+    "photocopy": "10/10",
+    "valid": "9/10",
+    "wrong_color": "10/10",
+    "wrong_issuer": "10/10",
+    "wrong_shape": "10/10",
+    "wrong_status": "10/10"
+   },
+   "per_capture": {
+    "clean": "25/26",
+    "photo": "40/45",
+    "scan": "35/39"
+   },
+   "outcomes_by_class": {
+    "date_mismatch": {
+     "reject/date_mismatch": 10
+    },
+    "missing": {
+     "reject/missing": 10
+    },
+    "misspelled": {
+     "accept": 8,
+     "review": 2
+    },
+    "outside_box": {
+     "reject/outside_box": 10
+    },
+    "pasted_digital": {
+     "reject/pasted_digital": 9,
+     "review": 1
+    },
+    "photocopy": {
+     "reject/photocopy": 10
+    },
+    "valid": {
+     "accept": 9,
+     "review": 1
+    },
+    "wrong_color": {
+     "reject/wrong_color": 10
+    },
+    "wrong_issuer": {
+     "reject/wrong_issuer": 10
+    },
+    "wrong_shape": {
+     "reject/wrong_shape": 10
+    },
+    "wrong_status": {
+     "reject/wrong_status": 10
+    }
+   }
+  },
+  "outcomes": [
+   {
+    "file": "docs/valid-0.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-1.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-2.jpg",
+    "expected": "valid",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-3.jpg",
+    "expected": "valid",
+    "capture": "scan",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-4.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-5.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-6.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-7.jpg",
+    "expected": "valid",
+    "capture": "clean",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-8.jpg",
+    "expected": "valid",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/valid-9.jpg",
+    "expected": "valid",
+    "capture": "scan",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/missing-0.jpg",
+    "expected": "missing",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-1.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-2.jpg",
+    "expected": "missing",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-3.jpg",
+    "expected": "missing",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-4.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-5.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-6.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-7.jpg",
+    "expected": "missing",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-8.jpg",
+    "expected": "missing",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/missing-9.jpg",
+    "expected": "missing",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "missing",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-0.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-1.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-2.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-3.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-4.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-5.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-6.jpg",
+    "expected": "outside_box",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-7.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-8.jpg",
+    "expected": "outside_box",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/outside_box-9.jpg",
+    "expected": "outside_box",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "outside_box",
+    "correct": true,
+    "calls": "3b:region + 3b:page"
+   },
+   {
+    "file": "docs/wrong_shape-0.jpg",
+    "expected": "wrong_shape",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-1.jpg",
+    "expected": "wrong_shape",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-2.jpg",
+    "expected": "wrong_shape",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-3.jpg",
+    "expected": "wrong_shape",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-4.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-5.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-6.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-7.jpg",
+    "expected": "wrong_shape",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-8.jpg",
+    "expected": "wrong_shape",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_shape-9.jpg",
+    "expected": "wrong_shape",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_shape",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-0.jpg",
+    "expected": "wrong_color",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-1.jpg",
+    "expected": "wrong_color",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-2.jpg",
+    "expected": "wrong_color",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-3.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-4.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-5.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-6.jpg",
+    "expected": "wrong_color",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-7.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-8.jpg",
+    "expected": "wrong_color",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_color-9.jpg",
+    "expected": "wrong_color",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_color",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-0.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-1.jpg",
+    "expected": "wrong_issuer",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-2.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-3.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-4.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-5.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-6.jpg",
+    "expected": "wrong_issuer",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-7.jpg",
+    "expected": "wrong_issuer",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-8.jpg",
+    "expected": "wrong_issuer",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_issuer-9.jpg",
+    "expected": "wrong_issuer",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_issuer",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-0.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-1.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-2.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-3.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-4.jpg",
+    "expected": "misspelled",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-5.jpg",
+    "expected": "misspelled",
+    "capture": "photo",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-6.jpg",
+    "expected": "misspelled",
+    "capture": "clean",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-7.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-8.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/misspelled-9.jpg",
+    "expected": "misspelled",
+    "capture": "scan",
+    "verdict": "accept",
+    "predicted": "valid",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-0.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-1.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-2.jpg",
+    "expected": "wrong_status",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-3.jpg",
+    "expected": "wrong_status",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-4.jpg",
+    "expected": "wrong_status",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-5.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-6.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-7.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-8.jpg",
+    "expected": "wrong_status",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/wrong_status-9.jpg",
+    "expected": "wrong_status",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "wrong_status",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-0.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-1.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-2.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-3.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-4.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-5.jpg",
+    "expected": "date_mismatch",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-6.jpg",
+    "expected": "date_mismatch",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-7.jpg",
+    "expected": "date_mismatch",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-8.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/date_mismatch-9.jpg",
+    "expected": "date_mismatch",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "date_mismatch",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-0.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-1.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-2.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-3.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-4.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-5.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-6.jpg",
+    "expected": "photocopy",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-7.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-8.jpg",
+    "expected": "photocopy",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/photocopy-9.jpg",
+    "expected": "photocopy",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "photocopy",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-0.jpg",
+    "expected": "pasted_digital",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-1.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-2.jpg",
+    "expected": "pasted_digital",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-3.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-4.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-5.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-6.jpg",
+    "expected": "pasted_digital",
+    "capture": "clean",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-7.jpg",
+    "expected": "pasted_digital",
+    "capture": "photo",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-8.jpg",
+    "expected": "pasted_digital",
+    "capture": "photo",
+    "verdict": "review",
+    "predicted": "unverified",
+    "correct": false,
+    "calls": "3b:region"
+   },
+   {
+    "file": "docs/pasted_digital-9.jpg",
+    "expected": "pasted_digital",
+    "capture": "scan",
+    "verdict": "reject",
+    "predicted": "pasted_digital",
+    "correct": true,
+    "calls": "3b:region"
+   }
+  ]
+ }
+}

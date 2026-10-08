@@ -1,0 +1,1969 @@
+{
+ "model": "LiquidAI/d1-3B",
+ "revision": "da1fe36a861f24690f27f622dca1d8688503d113",
+ "tasks": {
+  "staver": {
+   "n": 100,
+   "positives": 86,
+   "accuracy@0.5": "64/100",
+   "auroc": 0.967,
+   "median_ms": 304.3,
+   "rows": [
+    {
+     "file": "docs/staver-000.png",
+     "label": "stamp",
+     "ms": 4992.416747999869,
+     "stamp": 0.679178699175393
+    },
+    {
+     "file": "docs/staver-001.png",
+     "label": "stamp",
+     "ms": 312.4596319999,
+     "stamp": 0.6513548646660542
+    },
+    {
+     "file": "docs/staver-002.png",
+     "label": "stamp",
+     "ms": 308.43955800014555,
+     "stamp": 0.9046505351008906
+    },
+    {
+     "file": "docs/staver-003.png",
+     "label": "stamp",
+     "ms": 309.12477400011085,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/staver-004.png",
+     "label": "stamp",
+     "ms": 305.47388099989803,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/staver-005.png",
+     "label": "stamp",
+     "ms": 308.429828999806,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/staver-006.png",
+     "label": "stamp",
+     "ms": 302.51124899996285,
+     "stamp": 0.08509904500702024
+    },
+    {
+     "file": "docs/staver-007.png",
+     "label": "stamp",
+     "ms": 304.2528290000064,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/staver-008.png",
+     "label": "stamp",
+     "ms": 302.2973929998898,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/staver-009.png",
+     "label": "stamp",
+     "ms": 303.8644490000024,
+     "stamp": 0.7310585786300049
+    },
+    {
+     "file": "docs/staver-010.png",
+     "label": "stamp",
+     "ms": 302.22658599996066,
+     "stamp": 0.8670357598021706
+    },
+    {
+     "file": "docs/staver-011.png",
+     "label": "stamp",
+     "ms": 304.73235900012696,
+     "stamp": 0.8519528019683106
+    },
+    {
+     "file": "docs/staver-012.png",
+     "label": "stamp",
+     "ms": 302.5253050000174,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/staver-013.png",
+     "label": "stamp",
+     "ms": 303.83809599993583,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/staver-014.png",
+     "label": "stamp",
+     "ms": 301.8566959999589,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/staver-015.png",
+     "label": "stamp",
+     "ms": 304.10841699995217,
+     "stamp": 0.22270013882530884
+    },
+    {
+     "file": "docs/staver-016.png",
+     "label": "stamp",
+     "ms": 302.64754900008484,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/staver-017.png",
+     "label": "no_stamp",
+     "ms": 303.3127040000636,
+     "stamp": 0.0953494648991095
+    },
+    {
+     "file": "docs/staver-018.png",
+     "label": "stamp",
+     "ms": 301.445398000169,
+     "stamp": 0.8519528019683106
+    },
+    {
+     "file": "docs/staver-019.png",
+     "label": "stamp",
+     "ms": 304.8337860000174,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/staver-020.png",
+     "label": "stamp",
+     "ms": 302.7310810000472,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/staver-021.png",
+     "label": "stamp",
+     "ms": 303.84733400001096,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/staver-022.png",
+     "label": "no_stamp",
+     "ms": 303.08668700013186,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/staver-023.png",
+     "label": "stamp",
+     "ms": 305.93484099995294,
+     "stamp": 0.7549149868676283
+    },
+    {
+     "file": "docs/staver-024.png",
+     "label": "no_stamp",
+     "ms": 303.66585699994175,
+     "stamp": 0.10669059394565118
+    },
+    {
+     "file": "docs/staver-025.png",
+     "label": "stamp",
+     "ms": 304.3819770000482,
+     "stamp": 0.8933094060543487
+    },
+    {
+     "file": "docs/staver-026.png",
+     "label": "stamp",
+     "ms": 301.63244399977884,
+     "stamp": 0.7549149868676283
+    },
+    {
+     "file": "docs/staver-027.png",
+     "label": "stamp",
+     "ms": 303.53257699994174,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/staver-028.png",
+     "label": "stamp",
+     "ms": 302.40762600010385,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/staver-029.png",
+     "label": "stamp",
+     "ms": 304.7900330000175,
+     "stamp": 0.11920292202211755
+    },
+    {
+     "file": "docs/staver-030.png",
+     "label": "stamp",
+     "ms": 302.58615899992947,
+     "stamp": 0.7549149868676283
+    },
+    {
+     "file": "docs/staver-031.png",
+     "label": "stamp",
+     "ms": 306.4014110000244,
+     "stamp": 0.6513548646660542
+    },
+    {
+     "file": "docs/staver-032.png",
+     "label": "stamp",
+     "ms": 302.29931400003807,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/staver-033.png",
+     "label": "stamp",
+     "ms": 305.17735499984155,
+     "stamp": 0.11920292202211755
+    },
+    {
+     "file": "docs/staver-034.png",
+     "label": "stamp",
+     "ms": 302.9913419998138,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/staver-035.png",
+     "label": "stamp",
+     "ms": 308.37833400005366,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/staver-036.png",
+     "label": "stamp",
+     "ms": 306.3944969999284,
+     "stamp": 0.22270013882530884
+    },
+    {
+     "file": "docs/staver-037.png",
+     "label": "stamp",
+     "ms": 310.8765410001979,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/staver-038.png",
+     "label": "stamp",
+     "ms": 311.98498499998095,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/staver-039.png",
+     "label": "stamp",
+     "ms": 308.53240399983406,
+     "stamp": 0.8519528019683106
+    },
+    {
+     "file": "docs/staver-040.png",
+     "label": "no_stamp",
+     "ms": 303.1026619999011,
+     "stamp": 0.11920292202211755
+    },
+    {
+     "file": "docs/staver-041.png",
+     "label": "stamp",
+     "ms": 305.30451300001005,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/staver-042.png",
+     "label": "stamp",
+     "ms": 301.63560200003303,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/staver-043.png",
+     "label": "stamp",
+     "ms": 304.76796100015235,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/staver-044.png",
+     "label": "stamp",
+     "ms": 300.89441499990244,
+     "stamp": 0.7310585786300049
+    },
+    {
+     "file": "docs/staver-045.png",
+     "label": "stamp",
+     "ms": 306.228363000173,
+     "stamp": 0.679178699175393
+    },
+    {
+     "file": "docs/staver-046.png",
+     "label": "stamp",
+     "ms": 302.9350379999869,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/staver-047.png",
+     "label": "stamp",
+     "ms": 304.4034660001671,
+     "stamp": 0.8807970779778823
+    },
+    {
+     "file": "docs/staver-048.png",
+     "label": "stamp",
+     "ms": 302.93502800009264,
+     "stamp": 0.7549149868676283
+    },
+    {
+     "file": "docs/staver-049.png",
+     "label": "stamp",
+     "ms": 305.1217560000623,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/staver-050.png",
+     "label": "no_stamp",
+     "ms": 302.49445199979164,
+     "stamp": 0.1480471980316895
+    },
+    {
+     "file": "docs/staver-051.png",
+     "label": "stamp",
+     "ms": 304.87073599988435,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/staver-052.png",
+     "label": "stamp",
+     "ms": 304.1029969999727,
+     "stamp": 0.0953494648991095
+    },
+    {
+     "file": "docs/staver-053.png",
+     "label": "stamp",
+     "ms": 304.9899129998721,
+     "stamp": 0.8933094060543487
+    },
+    {
+     "file": "docs/staver-054.png",
+     "label": "stamp",
+     "ms": 301.7792160001136,
+     "stamp": 0.7057850278370112
+    },
+    {
+     "file": "docs/staver-055.png",
+     "label": "stamp",
+     "ms": 304.8999529999037,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/staver-056.png",
+     "label": "stamp",
+     "ms": 302.42305999991004,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/staver-057.png",
+     "label": "stamp",
+     "ms": 305.4813149999518,
+     "stamp": 0.7057850278370112
+    },
+    {
+     "file": "docs/staver-058.png",
+     "label": "stamp",
+     "ms": 302.4731709999742,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/staver-059.png",
+     "label": "stamp",
+     "ms": 304.91101100005835,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/staver-060.png",
+     "label": "stamp",
+     "ms": 302.6925719998417,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/staver-061.png",
+     "label": "stamp",
+     "ms": 305.76084900008027,
+     "stamp": 0.8519528019683106
+    },
+    {
+     "file": "docs/staver-062.png",
+     "label": "stamp",
+     "ms": 302.3029129999486,
+     "stamp": 0.1480471980316895
+    },
+    {
+     "file": "docs/staver-063.png",
+     "label": "no_stamp",
+     "ms": 304.0727679999691,
+     "stamp": 0.11920292202211755
+    },
+    {
+     "file": "docs/staver-064.png",
+     "label": "stamp",
+     "ms": 302.3746289998144,
+     "stamp": 0.5
+    },
+    {
+     "file": "docs/staver-065.png",
+     "label": "stamp",
+     "ms": 304.5757049999338,
+     "stamp": 0.7057850278370112
+    },
+    {
+     "file": "docs/staver-066.png",
+     "label": "stamp",
+     "ms": 302.3709009999038,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/staver-067.png",
+     "label": "no_stamp",
+     "ms": 305.5508170000394,
+     "stamp": 0.0953494648991095
+    },
+    {
+     "file": "docs/staver-068.png",
+     "label": "stamp",
+     "ms": 303.02904299992406,
+     "stamp": 0.7057850278370112
+    },
+    {
+     "file": "docs/staver-069.png",
+     "label": "stamp",
+     "ms": 311.7020810000213,
+     "stamp": 0.7057850278370112
+    },
+    {
+     "file": "docs/staver-070.png",
+     "label": "no_stamp",
+     "ms": 306.94160699999884,
+     "stamp": 0.10669059394565118
+    },
+    {
+     "file": "docs/staver-071.png",
+     "label": "stamp",
+     "ms": 308.5692919999019,
+     "stamp": 0.7981867777396212
+    },
+    {
+     "file": "docs/staver-072.png",
+     "label": "stamp",
+     "ms": 305.78014700017775,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/staver-073.png",
+     "label": "stamp",
+     "ms": 310.78611499992803,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/staver-074.png",
+     "label": "stamp",
+     "ms": 302.85626799991405,
+     "stamp": 0.9399133498259924
+    },
+    {
+     "file": "docs/staver-075.png",
+     "label": "stamp",
+     "ms": 305.2749200001017,
+     "stamp": 0.6224593312018546
+    },
+    {
+     "file": "docs/staver-076.png",
+     "label": "no_stamp",
+     "ms": 303.2100630000514,
+     "stamp": 0.10669059394565118
+    },
+    {
+     "file": "docs/staver-077.png",
+     "label": "stamp",
+     "ms": 306.11327200017513,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/staver-078.png",
+     "label": "stamp",
+     "ms": 302.54001600019365,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/staver-079.png",
+     "label": "stamp",
+     "ms": 304.3469060000916,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/staver-080.png",
+     "label": "no_stamp",
+     "ms": 302.0865369999228,
+     "stamp": 0.11920292202211755
+    },
+    {
+     "file": "docs/staver-081.png",
+     "label": "stamp",
+     "ms": 305.8192810001401,
+     "stamp": 0.5
+    },
+    {
+     "file": "docs/staver-082.png",
+     "label": "no_stamp",
+     "ms": 303.4423980000156,
+     "stamp": 0.0953494648991095
+    },
+    {
+     "file": "docs/staver-083.png",
+     "label": "stamp",
+     "ms": 306.028754999943,
+     "stamp": 0.9241418199787566
+    },
+    {
+     "file": "docs/staver-084.png",
+     "label": "stamp",
+     "ms": 304.0625800001635,
+     "stamp": 0.9399133498259924
+    },
+    {
+     "file": "docs/staver-085.png",
+     "label": "stamp",
+     "ms": 305.1363650001804,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/staver-086.png",
+     "label": "stamp",
+     "ms": 302.66761299981226,
+     "stamp": 0.11920292202211755
+    },
+    {
+     "file": "docs/staver-087.png",
+     "label": "stamp",
+     "ms": 305.5259610000576,
+     "stamp": 0.7772998611746911
+    },
+    {
+     "file": "docs/staver-088.png",
+     "label": "stamp",
+     "ms": 303.5514939999757,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/staver-089.png",
+     "label": "stamp",
+     "ms": 306.73006000006353,
+     "stamp": 0.5621765008857981
+    },
+    {
+     "file": "docs/staver-090.png",
+     "label": "stamp",
+     "ms": 302.40857600006166,
+     "stamp": 0.8519528019683106
+    },
+    {
+     "file": "docs/staver-091.png",
+     "label": "stamp",
+     "ms": 305.9549470001457,
+     "stamp": 0.8519528019683106
+    },
+    {
+     "file": "docs/staver-092.png",
+     "label": "no_stamp",
+     "ms": 305.3825090000828,
+     "stamp": 0.0953494648991095
+    },
+    {
+     "file": "docs/staver-093.png",
+     "label": "stamp",
+     "ms": 306.20996099992226,
+     "stamp": 0.7057850278370112
+    },
+    {
+     "file": "docs/staver-094.png",
+     "label": "stamp",
+     "ms": 303.8712679999662,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/staver-095.png",
+     "label": "stamp",
+     "ms": 305.315531000133,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/staver-096.png",
+     "label": "stamp",
+     "ms": 302.7503069999966,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/staver-097.png",
+     "label": "no_stamp",
+     "ms": 304.56726099987463,
+     "stamp": 0.11920292202211755
+    },
+    {
+     "file": "docs/staver-098.png",
+     "label": "stamp",
+     "ms": 301.8339999998716,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/staver-099.png",
+     "label": "no_stamp",
+     "ms": 305.3251740000178,
+     "stamp": 0.07585818002124356
+    }
+   ]
+  },
+  "sifta": {
+   "n": 192,
+   "positives": 96,
+   "accuracy@0.5": "97/192",
+   "auroc": 0.746,
+   "median_ms": 296.2,
+   "stamp_flag_rate": 0.21,
+   "rows": [
+    {
+     "file": "docs/sifta-train-000.png",
+     "label": "real",
+     "ms": 350.4808669999875,
+     "forged": 0.0675466911396291,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-001.png",
+     "label": "real",
+     "ms": 305.25711199993566,
+     "forged": 0.06008665017400762,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-train-002.png",
+     "label": "real",
+     "ms": 287.03726100002314,
+     "forged": 0.07585818002124356,
+     "stamp": 0.1480471980316895
+    },
+    {
+     "file": "docs/sifta-train-003.png",
+     "label": "forged",
+     "ms": 296.86150499992436,
+     "forged": 0.32082130082460697,
+     "stamp": 0.5621765008857981
+    },
+    {
+     "file": "docs/sifta-train-004.png",
+     "label": "real",
+     "ms": 305.1094610000291,
+     "forged": 0.10669059394565118,
+     "stamp": 0.8354835371034369
+    },
+    {
+     "file": "docs/sifta-train-005.png",
+     "label": "real",
+     "ms": 299.3273310000859,
+     "forged": 0.08509904500702024,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-train-006.png",
+     "label": "real",
+     "ms": 304.3562349998865,
+     "forged": 0.0953494648991095,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-train-007.png",
+     "label": "real",
+     "ms": 307.47927599986724,
+     "forged": 0.4073334000459302,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/sifta-train-008.png",
+     "label": "real",
+     "ms": 287.8518879999774,
+     "forged": 0.06008665017400762,
+     "stamp": 0.037326887344129464
+    },
+    {
+     "file": "docs/sifta-train-009.png",
+     "label": "real",
+     "ms": 298.0656719998933,
+     "forged": 0.10669059394565118,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/sifta-train-010.png",
+     "label": "real",
+     "ms": 284.5119150001665,
+     "forged": 0.0675466911396291,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-train-011.png",
+     "label": "real",
+     "ms": 297.3165060000156,
+     "forged": 0.29421497216298875,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/sifta-train-012.png",
+     "label": "forged",
+     "ms": 296.5843390002192,
+     "forged": 0.32082130082460697,
+     "stamp": 0.8670357598021706
+    },
+    {
+     "file": "docs/sifta-train-013.png",
+     "label": "real",
+     "ms": 308.27328100008344,
+     "forged": 0.0675466911396291,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-014.png",
+     "label": "forged",
+     "ms": 295.79175599997143,
+     "forged": 0.13296424019782924,
+     "stamp": 0.1480471980316895
+    },
+    {
+     "file": "docs/sifta-train-015.png",
+     "label": "real",
+     "ms": 295.7294230000116,
+     "forged": 0.4073334000459302,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/sifta-train-016.png",
+     "label": "forged",
+     "ms": 295.81714400001147,
+     "forged": 0.37754066879814546,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/sifta-train-017.png",
+     "label": "real",
+     "ms": 147.60056900013296,
+     "forged": 0.06008665017400762,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-018.png",
+     "label": "real",
+     "ms": 296.7768209998667,
+     "forged": 0.053403329799824234,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-019.png",
+     "label": "forged",
+     "ms": 295.79911299993,
+     "forged": 0.1480471980316895,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-train-020.png",
+     "label": "forged",
+     "ms": 150.33908200007318,
+     "forged": 0.32082130082460697,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-train-021.png",
+     "label": "forged",
+     "ms": 300.3983280000284,
+     "forged": 0.4073334000459302,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-train-022.png",
+     "label": "forged",
+     "ms": 297.9220180000084,
+     "forged": 0.46879062662624377,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-023.png",
+     "label": "real",
+     "ms": 294.8797579999791,
+     "forged": 0.06008665017400762,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-train-024.png",
+     "label": "forged",
+     "ms": 298.3555109999543,
+     "forged": 0.4378234991142019,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/sifta-train-025.png",
+     "label": "forged",
+     "ms": 295.35407399998803,
+     "forged": 0.07585818002124356,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-026.png",
+     "label": "real",
+     "ms": 286.3512910000736,
+     "forged": 0.08509904500702024,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-027.png",
+     "label": "real",
+     "ms": 299.16621999996096,
+     "forged": 0.0675466911396291,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-train-028.png",
+     "label": "real",
+     "ms": 296.4809109998896,
+     "forged": 0.20181322226037882,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/sifta-train-029.png",
+     "label": "forged",
+     "ms": 147.13026599997647,
+     "forged": 0.1645164628965632,
+     "stamp": 0.18242552380635632
+    },
+    {
+     "file": "docs/sifta-train-030.png",
+     "label": "real",
+     "ms": 296.95175500000914,
+     "forged": 0.0953494648991095,
+     "stamp": 0.8670357598021706
+    },
+    {
+     "file": "docs/sifta-train-031.png",
+     "label": "real",
+     "ms": 285.635111999909,
+     "forged": 0.10669059394565118,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-032.png",
+     "label": "real",
+     "ms": 297.90734199991675,
+     "forged": 0.4073334000459302,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/sifta-train-033.png",
+     "label": "forged",
+     "ms": 295.7464880000771,
+     "forged": 0.0675466911396291,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-train-034.png",
+     "label": "forged",
+     "ms": 299.42705400003433,
+     "forged": 0.10669059394565118,
+     "stamp": 0.7981867777396212
+    },
+    {
+     "file": "docs/sifta-train-035.png",
+     "label": "real",
+     "ms": 285.4757590000645,
+     "forged": 0.08509904500702024,
+     "stamp": 0.04208772791561884
+    },
+    {
+     "file": "docs/sifta-train-036.png",
+     "label": "forged",
+     "ms": 298.8271550000263,
+     "forged": 0.10669059394565118,
+     "stamp": 0.18242552380635632
+    },
+    {
+     "file": "docs/sifta-train-037.png",
+     "label": "forged",
+     "ms": 295.22017099998266,
+     "forged": 0.4073334000459302,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-train-038.png",
+     "label": "real",
+     "ms": 286.91352600003484,
+     "forged": 0.10669059394565118,
+     "stamp": 0.04742587317756679
+    },
+    {
+     "file": "docs/sifta-train-039.png",
+     "label": "forged",
+     "ms": 147.0058769998559,
+     "forged": 0.20181322226037882,
+     "stamp": 0.18242552380635632
+    },
+    {
+     "file": "docs/sifta-train-040.png",
+     "label": "forged",
+     "ms": 285.30309400002807,
+     "forged": 0.10669059394565118,
+     "stamp": 0.04208772791561884
+    },
+    {
+     "file": "docs/sifta-train-041.png",
+     "label": "forged",
+     "ms": 298.1503840001096,
+     "forged": 0.29421497216298875,
+     "stamp": 0.7772998611746911
+    },
+    {
+     "file": "docs/sifta-train-042.png",
+     "label": "forged",
+     "ms": 304.85717999999906,
+     "forged": 0.07585818002124356,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-train-043.png",
+     "label": "forged",
+     "ms": 286.7788839998866,
+     "forged": 0.08509904500702024,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-train-044.png",
+     "label": "forged",
+     "ms": 154.8580440000933,
+     "forged": 0.20181322226037882,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-045.png",
+     "label": "forged",
+     "ms": 289.4155920000685,
+     "forged": 0.0953494648991095,
+     "stamp": 0.18242552380635632
+    },
+    {
+     "file": "docs/sifta-train-046.png",
+     "label": "real",
+     "ms": 301.0417969999253,
+     "forged": 0.0675466911396291,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-047.png",
+     "label": "forged",
+     "ms": 308.3808639999006,
+     "forged": 0.0953494648991095,
+     "stamp": 0.053403329799824234
+    },
+    {
+     "file": "docs/sifta-train-048.png",
+     "label": "forged",
+     "ms": 301.3453199998821,
+     "forged": 0.13296424019782924,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-049.png",
+     "label": "forged",
+     "ms": 290.4814799999258,
+     "forged": 0.10669059394565118,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-train-050.png",
+     "label": "forged",
+     "ms": 292.5830720000704,
+     "forged": 0.11920292202211755,
+     "stamp": 0.04208772791561884
+    },
+    {
+     "file": "docs/sifta-train-051.png",
+     "label": "forged",
+     "ms": 299.22644199996284,
+     "forged": 0.46879062662624377,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-train-052.png",
+     "label": "forged",
+     "ms": 297.6108000000295,
+     "forged": 0.5,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-train-053.png",
+     "label": "real",
+     "ms": 147.2646860001987,
+     "forged": 0.0675466911396291,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/sifta-train-054.png",
+     "label": "real",
+     "ms": 294.51947300003667,
+     "forged": 0.0675466911396291,
+     "stamp": 0.18242552380635632
+    },
+    {
+     "file": "docs/sifta-train-055.png",
+     "label": "forged",
+     "ms": 298.3068420001018,
+     "forged": 0.1645164628965632,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-056.png",
+     "label": "forged",
+     "ms": 221.23025799987772,
+     "forged": 0.1645164628965632,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/sifta-train-057.png",
+     "label": "forged",
+     "ms": 296.3047160001224,
+     "forged": 0.0675466911396291,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-train-058.png",
+     "label": "real",
+     "ms": 299.0455040001052,
+     "forged": 0.2689414213699951,
+     "stamp": 0.8519528019683106
+    },
+    {
+     "file": "docs/sifta-train-059.png",
+     "label": "forged",
+     "ms": 285.0794450000649,
+     "forged": 0.18242552380635632,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/sifta-train-060.png",
+     "label": "real",
+     "ms": 297.2204979998878,
+     "forged": 0.46879062662624377,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-train-061.png",
+     "label": "forged",
+     "ms": 219.04462499992405,
+     "forged": 0.07585818002124356,
+     "stamp": 0.04742587317756679
+    },
+    {
+     "file": "docs/sifta-train-062.png",
+     "label": "forged",
+     "ms": 147.01408600012655,
+     "forged": 0.1645164628965632,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-train-063.png",
+     "label": "real",
+     "ms": 145.93397599992386,
+     "forged": 0.11920292202211755,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-train-064.png",
+     "label": "real",
+     "ms": 297.71332800009986,
+     "forged": 0.10669059394565118,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-065.png",
+     "label": "forged",
+     "ms": 219.15350499989472,
+     "forged": 0.08509904500702024,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-066.png",
+     "label": "real",
+     "ms": 220.1930450000873,
+     "forged": 0.07585818002124356,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-train-067.png",
+     "label": "real",
+     "ms": 297.3697480001647,
+     "forged": 0.07585818002124356,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-068.png",
+     "label": "real",
+     "ms": 297.52866199987693,
+     "forged": 0.06008665017400762,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-train-069.png",
+     "label": "real",
+     "ms": 147.59737300005327,
+     "forged": 0.10669059394565118,
+     "stamp": 0.6513548646660542
+    },
+    {
+     "file": "docs/sifta-train-070.png",
+     "label": "real",
+     "ms": 296.2200939998638,
+     "forged": 0.08509904500702024,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/sifta-train-071.png",
+     "label": "forged",
+     "ms": 296.3198029999603,
+     "forged": 0.1480471980316895,
+     "stamp": 0.7772998611746911
+    },
+    {
+     "file": "docs/sifta-train-072.png",
+     "label": "forged",
+     "ms": 293.8527010001053,
+     "forged": 0.0675466911396291,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-train-073.png",
+     "label": "forged",
+     "ms": 297.77070600016486,
+     "forged": 0.5312093733737563,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-074.png",
+     "label": "forged",
+     "ms": 302.8797970000596,
+     "forged": 0.0675466911396291,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-train-075.png",
+     "label": "real",
+     "ms": 300.7867480000641,
+     "forged": 0.08509904500702024,
+     "stamp": 0.7772998611746911
+    },
+    {
+     "file": "docs/sifta-train-076.png",
+     "label": "real",
+     "ms": 146.73981700002514,
+     "forged": 0.07585818002124356,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-077.png",
+     "label": "forged",
+     "ms": 296.36211499996534,
+     "forged": 0.46879062662624377,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-train-078.png",
+     "label": "forged",
+     "ms": 297.7118149999569,
+     "forged": 0.0953494648991095,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-079.png",
+     "label": "forged",
+     "ms": 297.0170380001491,
+     "forged": 0.4073334000459302,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/sifta-train-080.png",
+     "label": "forged",
+     "ms": 296.6474219999782,
+     "forged": 0.46879062662624377,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/sifta-train-081.png",
+     "label": "forged",
+     "ms": 301.7609800001537,
+     "forged": 0.1645164628965632,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/sifta-train-082.png",
+     "label": "real",
+     "ms": 296.23394899999766,
+     "forged": 0.5621765008857981,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/sifta-train-083.png",
+     "label": "real",
+     "ms": 294.7486539999318,
+     "forged": 0.06008665017400762,
+     "stamp": 0.08509904500702024
+    },
+    {
+     "file": "docs/sifta-train-084.png",
+     "label": "real",
+     "ms": 297.98176799999965,
+     "forged": 0.08509904500702024,
+     "stamp": 0.7981867777396212
+    },
+    {
+     "file": "docs/sifta-train-085.png",
+     "label": "real",
+     "ms": 220.96970000006877,
+     "forged": 0.07585818002124356,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-086.png",
+     "label": "forged",
+     "ms": 298.2365469999877,
+     "forged": 0.4378234991142019,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-train-087.png",
+     "label": "forged",
+     "ms": 290.3911910000261,
+     "forged": 0.18242552380635632,
+     "stamp": 0.679178699175393
+    },
+    {
+     "file": "docs/sifta-train-088.png",
+     "label": "real",
+     "ms": 305.82079700002396,
+     "forged": 0.06008665017400762,
+     "stamp": 0.07585818002124356
+    },
+    {
+     "file": "docs/sifta-train-089.png",
+     "label": "real",
+     "ms": 151.41147099984664,
+     "forged": 0.0675466911396291,
+     "stamp": 0.5
+    },
+    {
+     "file": "docs/sifta-train-090.png",
+     "label": "real",
+     "ms": 291.79399400004513,
+     "forged": 0.08509904500702024,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-091.png",
+     "label": "real",
+     "ms": 305.93003800004226,
+     "forged": 0.10669059394565118,
+     "stamp": 0.08509904500702024
+    },
+    {
+     "file": "docs/sifta-train-092.png",
+     "label": "real",
+     "ms": 288.01119700005984,
+     "forged": 0.08509904500702024,
+     "stamp": 0.04208772791561884
+    },
+    {
+     "file": "docs/sifta-train-093.png",
+     "label": "forged",
+     "ms": 299.41652599995905,
+     "forged": 0.10669059394565118,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-094.png",
+     "label": "forged",
+     "ms": 147.6312299998881,
+     "forged": 0.0953494648991095,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/sifta-train-095.png",
+     "label": "real",
+     "ms": 146.27578899990112,
+     "forged": 0.13296424019782924,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-train-096.png",
+     "label": "real",
+     "ms": 283.6190779999015,
+     "forged": 0.08509904500702024,
+     "stamp": 0.07585818002124356
+    },
+    {
+     "file": "docs/sifta-train-097.png",
+     "label": "real",
+     "ms": 303.6574689999725,
+     "forged": 0.0675466911396291,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-098.png",
+     "label": "real",
+     "ms": 296.92682000018067,
+     "forged": 0.29421497216298875,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/sifta-train-099.png",
+     "label": "forged",
+     "ms": 298.7168339998334,
+     "forged": 0.13296424019782924,
+     "stamp": 0.7310585786300049
+    },
+    {
+     "file": "docs/sifta-train-100.png",
+     "label": "forged",
+     "ms": 296.63448299993433,
+     "forged": 0.4073334000459302,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-train-101.png",
+     "label": "real",
+     "ms": 295.87079099997027,
+     "forged": 0.34864513533394575,
+     "stamp": 0.6224593312018546
+    },
+    {
+     "file": "docs/sifta-train-102.png",
+     "label": "real",
+     "ms": 146.4677080000456,
+     "forged": 0.0675466911396291,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/sifta-train-103.png",
+     "label": "forged",
+     "ms": 296.56882500012216,
+     "forged": 0.11920292202211755,
+     "stamp": 0.07585818002124356
+    },
+    {
+     "file": "docs/sifta-train-104.png",
+     "label": "real",
+     "ms": 298.83564000010665,
+     "forged": 0.07585818002124356,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-train-105.png",
+     "label": "forged",
+     "ms": 286.6891389999182,
+     "forged": 0.22270013882530884,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/sifta-train-106.png",
+     "label": "forged",
+     "ms": 147.95470400008526,
+     "forged": 0.13296424019782924,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/sifta-train-107.png",
+     "label": "forged",
+     "ms": 297.69964100000834,
+     "forged": 0.08509904500702024,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/sifta-train-108.png",
+     "label": "forged",
+     "ms": 294.5328640000753,
+     "forged": 0.4378234991142019,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/sifta-train-109.png",
+     "label": "real",
+     "ms": 299.8300400001881,
+     "forged": 0.0675466911396291,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-train-110.png",
+     "label": "real",
+     "ms": 219.05570600006286,
+     "forged": 0.0675466911396291,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-111.png",
+     "label": "forged",
+     "ms": 295.0577499998417,
+     "forged": 0.0675466911396291,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-train-112.png",
+     "label": "forged",
+     "ms": 286.6016259999924,
+     "forged": 0.13296424019782924,
+     "stamp": 0.5312093733737563
+    },
+    {
+     "file": "docs/sifta-train-113.png",
+     "label": "real",
+     "ms": 306.1947929998041,
+     "forged": 0.10669059394565118,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-train-114.png",
+     "label": "forged",
+     "ms": 296.7895030001273,
+     "forged": 0.1480471980316895,
+     "stamp": 0.5
+    },
+    {
+     "file": "docs/sifta-train-115.png",
+     "label": "forged",
+     "ms": 221.38200500012317,
+     "forged": 0.0953494648991095,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-train-116.png",
+     "label": "real",
+     "ms": 294.0904859999591,
+     "forged": 0.29421497216298875,
+     "stamp": 0.5621765008857981
+    },
+    {
+     "file": "docs/sifta-train-117.png",
+     "label": "forged",
+     "ms": 298.11927800005833,
+     "forged": 0.1645164628965632,
+     "stamp": 0.7310585786300049
+    },
+    {
+     "file": "docs/sifta-train-118.png",
+     "label": "forged",
+     "ms": 298.6130520000643,
+     "forged": 0.10669059394565118,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-train-119.png",
+     "label": "forged",
+     "ms": 219.25408500010235,
+     "forged": 0.13296424019782924,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/sifta-train-120.png",
+     "label": "forged",
+     "ms": 294.7929770000428,
+     "forged": 0.0953494648991095,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-train-121.png",
+     "label": "real",
+     "ms": 297.5846229999206,
+     "forged": 0.20181322226037882,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-train-122.png",
+     "label": "forged",
+     "ms": 221.47581700005503,
+     "forged": 0.0953494648991095,
+     "stamp": 0.08509904500702024
+    },
+    {
+     "file": "docs/sifta-train-123.png",
+     "label": "real",
+     "ms": 299.8166779998428,
+     "forged": 0.4378234991142019,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/sifta-train-124.png",
+     "label": "forged",
+     "ms": 221.74797100001342,
+     "forged": 0.08509904500702024,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-train-125.png",
+     "label": "real",
+     "ms": 295.0142100000903,
+     "forged": 0.07585818002124356,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-train-126.png",
+     "label": "real",
+     "ms": 295.00173499991433,
+     "forged": 0.0675466911396291,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-train-127.png",
+     "label": "real",
+     "ms": 219.71854299999904,
+     "forged": 0.0953494648991095,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-train-128.png",
+     "label": "forged",
+     "ms": 296.1455600000136,
+     "forged": 0.4378234991142019,
+     "stamp": 0.7772998611746911
+    },
+    {
+     "file": "docs/sifta-train-129.png",
+     "label": "forged",
+     "ms": 297.71943599985207,
+     "forged": 0.08509904500702024,
+     "stamp": 0.29421497216298875
+    },
+    {
+     "file": "docs/sifta-train-130.png",
+     "label": "real",
+     "ms": 289.07084000002214,
+     "forged": 0.0953494648991095,
+     "stamp": 0.04208772791561884
+    },
+    {
+     "file": "docs/sifta-train-131.png",
+     "label": "forged",
+     "ms": 300.7844419998946,
+     "forged": 0.34864513533394575,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/sifta-train-132.png",
+     "label": "forged",
+     "ms": 292.9361029998745,
+     "forged": 0.1645164628965632,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-train-133.png",
+     "label": "forged",
+     "ms": 300.85649900001954,
+     "forged": 0.46879062662624377,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/sifta-validation-000.png",
+     "label": "forged",
+     "ms": 289.5346860000245,
+     "forged": 0.10669059394565118,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-validation-001.png",
+     "label": "forged",
+     "ms": 308.74829399999726,
+     "forged": 0.11920292202211755,
+     "stamp": 0.08509904500702024
+    },
+    {
+     "file": "docs/sifta-validation-002.png",
+     "label": "real",
+     "ms": 296.59234399991874,
+     "forged": 0.06008665017400762,
+     "stamp": 0.22270013882530884
+    },
+    {
+     "file": "docs/sifta-validation-003.png",
+     "label": "forged",
+     "ms": 286.32057999993776,
+     "forged": 0.18242552380635632,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-validation-004.png",
+     "label": "forged",
+     "ms": 285.9827489999134,
+     "forged": 0.34864513533394575,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-validation-005.png",
+     "label": "forged",
+     "ms": 220.50751199981278,
+     "forged": 0.08509904500702024,
+     "stamp": 0.07585818002124356
+    },
+    {
+     "file": "docs/sifta-validation-006.png",
+     "label": "real",
+     "ms": 294.50786600000356,
+     "forged": 0.07585818002124356,
+     "stamp": 0.08509904500702024
+    },
+    {
+     "file": "docs/sifta-validation-007.png",
+     "label": "forged",
+     "ms": 300.5111320001106,
+     "forged": 0.13296424019782924,
+     "stamp": 0.07585818002124356
+    },
+    {
+     "file": "docs/sifta-validation-008.png",
+     "label": "real",
+     "ms": 292.20424100003584,
+     "forged": 0.08509904500702024,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-validation-009.png",
+     "label": "forged",
+     "ms": 299.857209000038,
+     "forged": 0.11920292202211755,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-validation-010.png",
+     "label": "real",
+     "ms": 285.94142099996134,
+     "forged": 0.0953494648991095,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-validation-011.png",
+     "label": "real",
+     "ms": 299.0264860000025,
+     "forged": 0.08509904500702024,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-validation-012.png",
+     "label": "real",
+     "ms": 294.1283499999372,
+     "forged": 0.08509904500702024,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-validation-013.png",
+     "label": "forged",
+     "ms": 284.8919460000161,
+     "forged": 0.1645164628965632,
+     "stamp": 0.5621765008857981
+    },
+    {
+     "file": "docs/sifta-validation-014.png",
+     "label": "forged",
+     "ms": 299.1535280000335,
+     "forged": 0.20181322226037882,
+     "stamp": 0.07585818002124356
+    },
+    {
+     "file": "docs/sifta-validation-015.png",
+     "label": "real",
+     "ms": 304.05312499988213,
+     "forged": 0.0675466911396291,
+     "stamp": 0.18242552380635632
+    },
+    {
+     "file": "docs/sifta-validation-016.png",
+     "label": "real",
+     "ms": 148.1866980000177,
+     "forged": 0.10669059394565118,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/sifta-validation-017.png",
+     "label": "real",
+     "ms": 297.32837099982135,
+     "forged": 0.4073334000459302,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-validation-018.png",
+     "label": "real",
+     "ms": 148.54247599987502,
+     "forged": 0.07585818002124356,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-validation-019.png",
+     "label": "forged",
+     "ms": 296.8093189999763,
+     "forged": 0.1480471980316895,
+     "stamp": 0.8175744761936437
+    },
+    {
+     "file": "docs/sifta-validation-020.png",
+     "label": "real",
+     "ms": 297.17504999985067,
+     "forged": 0.053403329799824234,
+     "stamp": 0.0953494648991095
+    },
+    {
+     "file": "docs/sifta-validation-021.png",
+     "label": "forged",
+     "ms": 295.87869700003466,
+     "forged": 0.0953494648991095,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-validation-022.png",
+     "label": "real",
+     "ms": 297.9674220000561,
+     "forged": 0.20181322226037882,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/sifta-validation-023.png",
+     "label": "real",
+     "ms": 301.6851250001764,
+     "forged": 0.07585818002124356,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/sifta-validation-024.png",
+     "label": "real",
+     "ms": 289.1687619999175,
+     "forged": 0.11920292202211755,
+     "stamp": 0.07585818002124356
+    },
+    {
+     "file": "docs/sifta-validation-025.png",
+     "label": "real",
+     "ms": 296.00620899987007,
+     "forged": 0.06008665017400762,
+     "stamp": 0.22270013882530884
+    },
+    {
+     "file": "docs/sifta-validation-026.png",
+     "label": "forged",
+     "ms": 298.7083170000915,
+     "forged": 0.37754066879814546,
+     "stamp": 0.6513548646660542
+    },
+    {
+     "file": "docs/sifta-validation-027.png",
+     "label": "real",
+     "ms": 299.22151900018434,
+     "forged": 0.10669059394565118,
+     "stamp": 0.8807970779778823
+    },
+    {
+     "file": "docs/sifta-validation-028.png",
+     "label": "forged",
+     "ms": 296.0571240000718,
+     "forged": 0.46879062662624377,
+     "stamp": 0.34864513533394575
+    },
+    {
+     "file": "docs/sifta-test-000.png",
+     "label": "real",
+     "ms": 285.4856829999335,
+     "forged": 0.0953494648991095,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-test-001.png",
+     "label": "forged",
+     "ms": 302.1026480000728,
+     "forged": 0.20181322226037882,
+     "stamp": 0.46879062662624377
+    },
+    {
+     "file": "docs/sifta-test-002.png",
+     "label": "real",
+     "ms": 149.3531860000985,
+     "forged": 0.08509904500702024,
+     "stamp": 0.22270013882530884
+    },
+    {
+     "file": "docs/sifta-test-003.png",
+     "label": "real",
+     "ms": 147.0000080000773,
+     "forged": 0.07585818002124356,
+     "stamp": 0.24508501313237172
+    },
+    {
+     "file": "docs/sifta-test-004.png",
+     "label": "real",
+     "ms": 301.96434799995586,
+     "forged": 0.34864513533394575,
+     "stamp": 0.679178699175393
+    },
+    {
+     "file": "docs/sifta-test-005.png",
+     "label": "forged",
+     "ms": 298.3961320001072,
+     "forged": 0.13296424019782924,
+     "stamp": 0.7057850278370112
+    },
+    {
+     "file": "docs/sifta-test-006.png",
+     "label": "forged",
+     "ms": 298.43464999999014,
+     "forged": 0.1480471980316895,
+     "stamp": 0.7981867777396212
+    },
+    {
+     "file": "docs/sifta-test-007.png",
+     "label": "forged",
+     "ms": 296.42180299993015,
+     "forged": 0.46879062662624377,
+     "stamp": 0.32082130082460697
+    },
+    {
+     "file": "docs/sifta-test-008.png",
+     "label": "forged",
+     "ms": 291.8140609999682,
+     "forged": 0.2689414213699951,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/sifta-test-009.png",
+     "label": "real",
+     "ms": 291.3509720001457,
+     "forged": 0.10669059394565118,
+     "stamp": 0.04742587317756679
+    },
+    {
+     "file": "docs/sifta-test-010.png",
+     "label": "real",
+     "ms": 302.70732700000735,
+     "forged": 0.4378234991142019,
+     "stamp": 0.4073334000459302
+    },
+    {
+     "file": "docs/sifta-test-011.png",
+     "label": "real",
+     "ms": 306.4111659998616,
+     "forged": 0.0675466911396291,
+     "stamp": 0.13296424019782924
+    },
+    {
+     "file": "docs/sifta-test-012.png",
+     "label": "real",
+     "ms": 303.19461699991734,
+     "forged": 0.34864513533394575,
+     "stamp": 0.5
+    },
+    {
+     "file": "docs/sifta-test-013.png",
+     "label": "real",
+     "ms": 219.07700099995964,
+     "forged": 0.0675466911396291,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-test-014.png",
+     "label": "forged",
+     "ms": 284.2862930001502,
+     "forged": 0.08509904500702024,
+     "stamp": 0.1645164628965632
+    },
+    {
+     "file": "docs/sifta-test-015.png",
+     "label": "real",
+     "ms": 285.73416300014287,
+     "forged": 0.06008665017400762,
+     "stamp": 0.10669059394565118
+    },
+    {
+     "file": "docs/sifta-test-016.png",
+     "label": "forged",
+     "ms": 295.5585429999701,
+     "forged": 0.4073334000459302,
+     "stamp": 0.6513548646660542
+    },
+    {
+     "file": "docs/sifta-test-017.png",
+     "label": "real",
+     "ms": 299.2311810000956,
+     "forged": 0.07585818002124356,
+     "stamp": 0.10669059394565118
+    },
+    {
+     "file": "docs/sifta-test-018.png",
+     "label": "forged",
+     "ms": 304.8184079998464,
+     "forged": 0.0953494648991095,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/sifta-test-019.png",
+     "label": "real",
+     "ms": 297.52245999998195,
+     "forged": 0.4378234991142019,
+     "stamp": 0.20181322226037882
+    },
+    {
+     "file": "docs/sifta-test-020.png",
+     "label": "forged",
+     "ms": 299.439085999893,
+     "forged": 0.08509904500702024,
+     "stamp": 0.4378234991142019
+    },
+    {
+     "file": "docs/sifta-test-021.png",
+     "label": "real",
+     "ms": 219.53951000000416,
+     "forged": 0.07585818002124356,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-test-022.png",
+     "label": "forged",
+     "ms": 295.0182929998846,
+     "forged": 0.34864513533394575,
+     "stamp": 0.5926665999540697
+    },
+    {
+     "file": "docs/sifta-test-023.png",
+     "label": "real",
+     "ms": 286.7676879998271,
+     "forged": 0.08509904500702024,
+     "stamp": 0.04208772791561884
+    },
+    {
+     "file": "docs/sifta-test-024.png",
+     "label": "real",
+     "ms": 298.70227500009605,
+     "forged": 0.11920292202211755,
+     "stamp": 0.0675466911396291
+    },
+    {
+     "file": "docs/sifta-test-025.png",
+     "label": "forged",
+     "ms": 148.71943999992254,
+     "forged": 0.11920292202211755,
+     "stamp": 0.2689414213699951
+    },
+    {
+     "file": "docs/sifta-test-026.png",
+     "label": "forged",
+     "ms": 301.99507599991193,
+     "forged": 0.4073334000459302,
+     "stamp": 0.37754066879814546
+    },
+    {
+     "file": "docs/sifta-test-027.png",
+     "label": "real",
+     "ms": 286.2109170000622,
+     "forged": 0.0953494648991095,
+     "stamp": 0.06008665017400762
+    },
+    {
+     "file": "docs/sifta-test-028.png",
+     "label": "forged",
+     "ms": 299.6415969998907,
+     "forged": 0.1645164628965632,
+     "stamp": 0.29421497216298875
+    }
+   ]
+  }
+ }
+}
