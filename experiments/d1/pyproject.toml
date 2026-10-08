@@ -12,6 +12,8 @@ dependencies = [
     "matplotlib",
     "numpy",
     "duckdb>=1.5.6",
+    "pypdf>=6.19.0",
+    "pypdfium2>=5.14.0",
 ]
 
 [tool.uv]

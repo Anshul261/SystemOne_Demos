@@ -1,0 +1,64 @@
+{
+ "note": "Label examples are paraphrased; none is copied from the document being extracted.",
+ "documents": [
+  {
+   "id": "sfip",
+   "title": "FEMA flood insurance policy",
+   "subtitle": "Standard Flood Insurance Policy, Dwelling Form · 44 CFR 61 App. A(1), 2024",
+   "file": "sfip-dwelling-form-44cfr61-appA1-2024.pdf",
+   "source": "https://www.govinfo.gov/content/pkg/CFR-2024-title44-vol1/pdf/CFR-2024-title44-vol1-part61-appA1.pdf",
+   "license": "U.S. government work, public domain",
+   "default_page": 2,
+   "schema": {
+    "defined_term": "the name of a term the policy defines, such as 'Covered Auto'",
+    "definition": "the full meaning given to one defined term, for example 'Any portion of the home located below street level and enclosed on all sides by earth.'",
+    "exclusion": "a complete clause describing property or loss the policy does not cover, for example 'We do not cover damage to a rental car caused while it is driven on an unpaved road or by an unlisted driver.'",
+    "coverage_limit": "a dollar amount limit on what the policy pays, for example '$100,000'",
+    "time_period": "a deadline or length of time, for example 'within 30 days after the accident'",
+    "flood_zone": "a flood zone designation, for example 'Zone X' or 'Zones B, C'",
+    "law_or_agency": "a statute, regulation or government agency, for example 'Fair Credit Reporting Act' or 'Department of Labor'"
+   },
+   "pages": 16
+  },
+  {
+   "id": "abn-en",
+   "title": "Medicare Advance Beneficiary Notice",
+   "subtitle": "Official form CMS-R-131, filled with synthetic patient data",
+   "file": "cms-abn-filled-en.pdf",
+   "source": "https://www.cms.gov/medicare/medicare-general-information/bni/downloads/abn-forms-english-and-spanish-incl-large-print.zip",
+   "pages": 1,
+   "default_page": 1,
+   "license": "U.S. government form, public domain; all filled-in values are invented",
+   "schema": {
+    "medical_service": "a medical test or service the patient may receive, with its billing code in parentheses, for example 'Lipid panel (80061)'",
+    "noncoverage_reason": "the full reason Medicare may not pay, for example 'Medicare only pays for this screening once every two years.'",
+    "estimated_cost": "a dollar amount the patient may owe, for example '$120.00'",
+    "patient_option": "the complete text of one numbered option the patient can choose, for example 'Option 3: I want the scan listed above, and I will pay the clinic for it today. I understand the clinic will not send a claim and that I cannot appeal later.'",
+    "provider": "the clinic, lab or company giving the notice, for example 'Lakeside Imaging Center'",
+    "phone_number": "a phone number, for example '1-888-555-0142'",
+    "person_name": "the name of the person who signed, for example 'Jordan Lee'",
+    "form_identifier": "a form number or control number, for example 'Form HHS-690'"
+   }
+  },
+  {
+   "id": "abn-es",
+   "title": "Medicare ABN in Spanish",
+   "subtitle": "Official Spanish form CMS-R-131, read with the same English labels",
+   "file": "cms-abn-filled-es.pdf",
+   "source": "https://www.cms.gov/medicare/medicare-general-information/bni/downloads/abn-forms-english-and-spanish-incl-large-print.zip",
+   "pages": 2,
+   "default_page": 1,
+   "license": "U.S. government form, public domain; all filled-in values are invented",
+   "schema": {
+    "medical_service": "a medical test or service the patient may receive, with its billing code in parentheses, for example 'Lipid panel (80061)'",
+    "noncoverage_reason": "the full reason Medicare may not pay, for example 'Medicare only pays for this screening once every two years.'",
+    "estimated_cost": "a dollar amount the patient may owe, for example '$120.00'",
+    "patient_option": "the complete text of one numbered option the patient can choose, for example 'Option 3: I want the scan listed above, and I will pay the clinic for it today. I understand the clinic will not send a claim and that I cannot appeal later.'",
+    "provider": "the clinic, lab or company giving the notice, for example 'Lakeside Imaging Center'",
+    "phone_number": "a phone number, for example '1-888-555-0142'",
+    "person_name": "the name of the person who signed, for example 'Jordan Lee'",
+    "form_identifier": "a form number or control number, for example 'Form HHS-690'"
+   }
+  }
+ ]
+}
