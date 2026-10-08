@@ -354,3 +354,5 @@ footer a:hover { color:var(--accent); }
 @media (max-width:1200px) { .lab-stats { grid-template-columns:repeat(3,1fr); } .lab-steps { grid-template-columns:repeat(3,1fr); } }
 @media (max-width:900px) { .lab-grid { grid-template-columns:1fr; } .lab-toolbar { grid-template-columns:1fr; } }
 @media (max-width:520px) { .lab-stats { grid-template-columns:1fr 1fr; } .lab-steps { grid-template-columns:1fr 1fr; } }
+#stamp-batch.stop { border-color:var(--reject); color:var(--reject); background:var(--reject-bg); }
+#stamp-batch.stop:hover { background:#5a3530; }

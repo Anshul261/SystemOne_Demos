@@ -33,6 +33,9 @@ function setBusy(value) {
   document.querySelectorAll(".nav-button, #model, #sample, #send, #inbox, #run-browser, #stamp-sample, #stamp-batch, #stamp-upload, #x-document, #x-threshold, #x-upload, #x-run, #x-run-all, #x-add, #x-reset, #x-segment, #lab-document, #lab-run, #lab-upload").forEach((el) => { el.disabled = value; });
   if (typeof xPagerLabel === "function" && config) xPagerLabel();
   $("stamp-check").disabled = value || (!uploadData && !$("stamp-sample").value);
+  $("stamp-batch").disabled = value && !stampBatch;
+  $("stamp-batch").textContent = value && stampBatch ? "Stop playing ■" : "Play all samples";
+  $("stamp-batch").classList.toggle("stop", value && stampBatch);
   $("stamp-download").disabled = value || !stampLedger.length;
   $("subject").readOnly = value;
   $("message").readOnly = value;
@@ -507,17 +510,18 @@ function placeRegion(box = config.stamp.region) {
   $("region-box").hidden = false;
 }
 
-function consumeStamp(record, images) {
+let stampBatch = false;
+
+function consumeStamp(record) {
   stampRecords.push(record);
   $("event-log").textContent = stampRecords.map((item) => JSON.stringify(item, null, 2)).join("\n\n");
-  const imagesFor = (id) => (images?.doc_id === id ? images : {});
   if (record.event === "check_started") {
     status(`Checking ${record.total} document${record.total === 1 ? "" : "s"} with ${record.model_name}…`, "busy");
   } else if (record.event === "document_received") {
     stampDoc = { ...record, verdict: null };
     stampChecks = {};
     stampCalls = [];
-    const page = imagesFor(record.doc_id).page;
+    const page = record.image_url;
     if (record.source === "sample") $("stamp-sample").value = record.doc_id;
     if (page) $("doc-image").src = page;
     $("doc-badge").textContent = record.source === "upload" ? "Upload" : "Sample";
@@ -535,7 +539,7 @@ function consumeStamp(record, images) {
     $("doc-scan").hidden = true;
     placeRegion(record.region);
     stampDoc.region = record.region;
-    const crop = imagesFor(record.doc_id).region;
+    const crop = record.image_url;
     if (crop) { $("crop-image").src = crop; $("crop-image").hidden = false; $("crop-empty").hidden = true; }
     stampStage(2);
     status("Cropping the Official stamp box for a closer look", "busy");
@@ -585,6 +589,7 @@ async function getClient() {
 
 async function startStamp(mode) {
   if (running) return;
+  stampBatch = mode === "batch";
   const input = { model: $("model").value, mode, sample: uploadData ? "" : $("stamp-sample").value, upload: mode === "single" && uploadData ? uploadData : "" };
   const thisRun = ++generation;
   runFailed = false;
@@ -607,7 +612,7 @@ async function startStamp(mode) {
       if (!Array.isArray(payload?.events)) throw new Error("The server returned an invalid event stream.");
       for (const record of payload.events.slice(seen)) {
         if (thisRun !== generation) return;
-        consumeStamp(record, payload.doc_images);
+        consumeStamp(record);
         seen++;
         if ($("pace").value === "guided" && stampPause[record.event]) await delay(stampPause[record.event]);
       }
@@ -616,7 +621,7 @@ async function startStamp(mode) {
   } catch (error) {
     if (thisRun === generation) fail(error);
   } finally {
-    if (thisRun === generation) { job = null; $("doc-scan").hidden = true; $("crop-scan").hidden = true; setBusy(false); }
+    if (thisRun === generation) { job = null; stampBatch = false; $("doc-scan").hidden = true; $("crop-scan").hidden = true; setBusy(false); }
   }
 }
 
@@ -651,7 +656,7 @@ function readUpload(file) {
 
 $("stamp-sample").addEventListener("change", () => { uploadData = null; resetStamp(true); status("Ready. Check this document."); });
 $("stamp-check").addEventListener("click", () => startStamp("single"));
-$("stamp-batch").addEventListener("click", () => startStamp("batch"));
+$("stamp-batch").addEventListener("click", () => (running && stampBatch ? stopRun() : startStamp("batch")));
 $("stamp-upload").addEventListener("change", (event) => readUpload(event.target.files[0]));
 $("stamp-rows").addEventListener("click", (event) => {
   if (running) return;
@@ -1110,8 +1115,10 @@ function labTable() {
     const flag = r.flag === "high" ? '<span class="lab-flag high">↑ HIGH</span>' : r.flag === "low" ? '<span class="lab-flag low">↓ LOW</span>' : "";
     const lab = r.printed_box ? '<span class="lab-ok" title="The lab printed this value in a shaded box">▣</span>'
       : r.printed_flag ? `<span class="lab-ok" title="The lab printed a ${escape(r.printed_flag)} marker">${escape(r.printed_flag)}</span>` : '<span class="lab-na" title="No box or marker from the lab">·</span>';
-    const range = r.low != null ? `${fmtNum(r.low)} – ${fmtNum(r.high)}${r.qualifier ? ` <small>(${escape(r.qualifier)})</small>` : ""}` : '<span class="lab-na">none</span>';
-    const unit = r.unit ? `${escape(r.unit)}${r.unit_inferred ? ' <small class="lab-na" title="Not legible on the scan; the section\'s unit">*</small>' : ""}` : '<span class="lab-na">—</span>';
+    const bounds = r.low != null && r.high != null ? `${fmtNum(r.low)} – ${fmtNum(r.high)}` : r.high != null ? `&lt; ${fmtNum(r.high)}` : r.low != null ? `&gt; ${fmtNum(r.low)}` : null;
+    const range = bounds ? `${bounds}${r.qualifier ? ` <small>(${escape(r.qualifier)})</small>` : ""}` : '<span class="lab-na">none printed</span>';
+    const unit = r.unit ? `${escape(r.unit)}${r.unit_inferred ? ' <small class="lab-na" title="Not printed on this line: the unit printed above, confirmed by d1">↑</small>' : ""}`
+      : r.unit === "" ? '<span class="lab-na" title="d1: a ratio or index, no unit">none</span>' : '<span class="lab-na">—</span>';
     return `${head}<tr class="rec" data-r="${i}" style="--d:${i * 25}ms"><td class="test">${escape(r.test)}</td><td class="val">${fmtNum(r.value)}${flag}</td><td>${unit}</td><td>${range}</td><td class="mark">${lab}</td><td class="mark">${key}</td></tr>`;
   }).join("");
 }
@@ -1261,14 +1268,17 @@ $("workflows").addEventListener("click", (event) => {
   if (button) selectWorkflow(button.dataset.workflow);
 });
 window.addEventListener("hashchange", () => { if (config) selectWorkflow(location.hash.slice(1)); });
-$("stop").addEventListener("click", async () => {
+async function stopRun() {
   generation++;
   const activeJob = job;
   job = null;
+  stampBatch = false;
+  ["doc-scan", "crop-scan", "x-scan", "lab-scan"].forEach((id) => { $(id).hidden = true; });
   status("Playback stopped. Any active call will finish before the next run.");
   setBusy(false);
   try { await activeJob?.cancel(); } catch { /* The connection may already be closed. */ }
-});
+}
+$("stop").addEventListener("click", stopRun);
 $("ledger-rows").addEventListener("click", (event) => {
   if (running) return;
   const button = event.target.closest("[data-index]");

@@ -269,6 +269,10 @@ def stream_demo(
         worker_thread.join()
 
 
+PAGE_IMAGES: OrderedDict[str, bytes] = OrderedDict()
+PAGE_IMAGES_LOCK = threading.Lock()
+
+
 def data_url(jpeg: bytes) -> str:
     return "data:image/jpeg;base64," + base64.b64encode(jpeg).decode("ascii")
 
@@ -319,27 +323,29 @@ def stream_stamp_check(model: str = "omni", mode: str = "single", sample: str = 
     worker_thread = threading.Thread(target=worker, daemon=True)
     worker_thread.start()
     records = []
-    current: dict[str, Any] = {}
+    run_id = uuid4().hex[:8]
     try:
         while True:
             item = events.get()
             if item is None:
                 break
             record, image = item
+            # Each document's page and crop go into the image cache and the event carries its own URL, so a
+            # batch whose updates arrive together still shows every document's images.
+            if image and record["event"] in ("document_received", "region_selected"):
+                key = f"stamp-{run_id}-{record['doc_id']}-{'page' if record['event'] == 'document_received' else 'region'}"
+                with PAGE_IMAGES_LOCK:
+                    PAGE_IMAGES[key] = image
+                    while len(PAGE_IMAGES) > 160:
+                        PAGE_IMAGES.popitem(last=False)
+                record = {**record, "image_url": f"extract-pages/{key}.jpg"}
             records.append(record)
-            # Every update carries the current document's images, so merged stream updates lose nothing.
-            if record["event"] == "document_received":
-                current = {"doc_id": record["doc_id"], "page": data_url(image) if image else None, "region": None}
-            elif record["event"] == "region_selected" and image:
-                current = {**current, "region": data_url(image)}
-            yield {"events": list(records), "doc_images": current, "elapsed_s": round(time.monotonic() - started, 2)}
+            yield {"events": list(records), "elapsed_s": round(time.monotonic() - started, 2)}
     finally:
         cancelled.set()
         worker_thread.join()
 
 
-PAGE_IMAGES: OrderedDict[str, bytes] = OrderedDict()
-PAGE_IMAGES_LOCK = threading.Lock()
 
 
 @app.get("/extract-pages/{key}.jpg")
