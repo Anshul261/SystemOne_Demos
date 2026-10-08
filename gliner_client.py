@@ -27,11 +27,10 @@ class GlinerClient:
         text: str,
         task: str,
         candidates: dict[str, str],
-        prompt: str,
+        prompt: str | None,
     ) -> Decision:
-        return self.classify_many(
-            text, {task: {"labels": candidates, "prompt": prompt}}
-        )[task]
+        spec = {"labels": candidates} | ({"prompt": prompt} if prompt else {})
+        return self.classify_many(text, {task: spec})[task]
 
     def classify_many(
         self, text: str, schema: dict[str, dict[str, Any]]
@@ -76,13 +75,12 @@ class GlinerClient:
     def classify_field(self, label: str, candidates: dict[str, str]) -> Decision:
         cache_key = (label.casefold(), tuple(candidates))
         if cache_key not in self._field_cache:
+            text, prompt = self.field_request(label)
             self._field_cache[cache_key] = self.classify(
-                text=f"Form field label: {label}",
-                task="source_field",
-                candidates=candidates,
-                prompt=(
-                    f"Which source value should be entered into the form field "
-                    f"labeled '{label}'?"
-                ),
-            )
+                text=text, task="source_field", candidates=candidates, prompt=prompt)
         return self._field_cache[cache_key]
+
+    def field_request(self, label: str) -> tuple[str, str | None]:
+        """How a form label is put to the model. GLiNER2.5 Multi maps labels best from the bare label with no
+        instruction (an instruction pulled 'Phone #' and 'Confirm' towards first_name)."""
+        return label, None

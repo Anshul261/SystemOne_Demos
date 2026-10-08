@@ -7,18 +7,27 @@ colorTo: gray
 fullWidth: true
 startup_duration_timeout: 1h
 models:
-  - fastino/GLiNER2.5-Decide
+  - LiquidAI/d1-omni-600M
+  - LiquidAI/d1-3B
+  - fastino/gliner2.5-multi-v1
 ---
 
 # SystemOne Demos
 
-Six demos that treat forms and incoming requests as classification problems.
-Four automate websites. Clinic Requests and Employee Help Desk use interactive
-message-to-ticket simulations in the UI.
-They use `fastino/GLiNER2.5-Decide` by default and can also use `kirp/jpt-0.8b`.
-The models select source fields, business actions, and routing from explicit
-allowlists. Playwright executes browser choices; Python rules produce simulated
-intake tickets. Neither model generates values or selectors.
+Demos that treat forms, requests, and documents as decision problems. Four
+automate live sandbox websites. Clinic Requests and Employee Help Desk route
+messages to tickets. Three document workflows check stamps, extract long spans,
+and read lab reports. The models choose from explicit allowlists: source fields,
+business actions, routes, and roles. Playwright carries out browser choices and
+Python rules make the final decisions. No model generates values or selectors.
+
+The app uses three models:
+
+| Model | Used for |
+|---|---|
+| [d1-omni-600M](https://huggingface.co/LiquidAI/d1-omni-600M) | Default for the browser and routing demos; fast stamp screening |
+| [d1-3B](https://huggingface.co/LiquidAI/d1-3B) | Stamp verification and the lab report reader; an alternative for the browser and routing demos |
+| [GLiNER2.5 Multi](https://huggingface.co/fastino/gliner2.5-multi-v1) | Long-span extraction; an alternative for the browser and routing demos |
 
 ## Demos
 
@@ -31,34 +40,33 @@ intake tickets. Neither model generates values or selectors.
 | `python run.py clinic` | Local clinic intake board | Routes five synthetic patient messages by request type, urgency, human review, and topic tags. Urgent cases go to clinical review; no care is booked or prescribed. |
 | `python run.py helpdesk` | Local employee intake board | Assigns four employee requests to benefits, IT, facilities, or expenses with priority and review status. |
 
-All input data is synthetic. ParaBank is a public testing application, not a
-real bank. The two new intake boards run locally and save routing decisions in
-the browser for verification; they do not connect to a clinic or employer.
+All input data for these demos is synthetic. ParaBank is a public testing
+application, not a real bank. The two intake boards run locally and save routing
+decisions in the browser for verification; they do not connect to a clinic or
+employer.
 
 ## Setup
 
-The GLiNER service is bundled in `services/gliner` with its own uv environment
-and lockfile. Start it from this repository:
+The models run in two local services, each with its own uv environment and
+lockfile:
+
+| Service | Models | Port |
+|---|---|---|
+| `services/d1` | d1-omni-600M and d1-3B | 8020 |
+| `services/extract` | GLiNER2.5 Multi, plus docTR OCR | 8030 |
 
 ```bash
-./start-gliner.sh
-curl -fsS http://127.0.0.1:8010/health
+./start-d1.sh
+./start-extract.sh
+curl -fsS http://127.0.0.1:8020/health
+curl -fsS http://127.0.0.1:8030/health
 ```
 
-The first launch installs inference dependencies and downloads
-`fastino/GLiNER2.5-Decide` to the Hugging Face cache. Existing cached weights
-are reused. The service selects CUDA when available and otherwise uses CPU.
-Weights and virtual environments are not committed. No JPT model is installed.
-To download the weights ahead of time with the Hugging Face CLI:
-
-```bash
-hf download fastino/GLiNER2.5-Decide
-```
-
-Logs are written to `gliner.log`. Stop with `./stop-gliner.sh`, or run in the
-foreground with `./run-gliner.sh`. Set `GLINER_DEVICE=cpu` to force CPU,
-`GLINER_MODEL` to select another compatible checkpoint, or `GLINER_PORT` to
-change the port (also set `GLINER_URL` for the demo client).
+The first launch downloads the weights to the Hugging Face cache. Both services
+use CUDA when it is available. The d1 service loads both d1 models, about 7.5 GB
+of GPU memory; set `D1_MODELS=omni` to load only the small one. Logs go to
+`d1.log` and `extract.log`. Stop the services with `./stop-d1.sh` and
+`./stop-extract.sh`. Set `D1_URL` or `EXTRACT_URL` if they run elsewhere.
 
 Install this project's dependencies and Chromium:
 
@@ -67,56 +75,64 @@ uv sync --extra test
 uv run playwright install chromium
 ```
 
+On some Linux setups Chromium draws no text when it loads every installed font,
+so a page comes back blank and no form labels can be read. `run.py` therefore
+limits Chromium to the DejaVu fonts (`fonts/fontconfig.xml`) whenever they are
+installed. An explicit `FONTCONFIG_FILE` overrides this.
+
 ## Run
 
 ```bash
 uv run python run.py rpa --headed
-uv run python run.py parabank --headed
-uv run python run.py piko --headed
+uv run python run.py parabank --headed --model 3b
+uv run python run.py piko --headed --model multi
 uv run python run.py piko-excel --headed
 uv run python run.py clinic --headed
 uv run python run.py helpdesk --headed
 ```
 
-Omit `--headed` for headless execution. Run all demos with:
+`--model` is `omni` (the default), `3b`, or `multi`. Omit `--headed` for headless
+execution. Run all demos with `uv run python run.py all`.
 
-```bash
-uv run python run.py all
-```
+## Choosing a model for the browser and routing demos
 
-## Compare with JPT-0.8B
+Every decision these demos make was checked offline against correct answers
+(`experiments/d1/browser_decisions.py`):
 
-The [JPT-0.8B model card](https://huggingface.co/kirp/jpt-0.8b) describes a
-different API: typed `choice`, `score`, and `noul` questions through
-[`llm2jev`](https://github.com/tic-top/llm2jev). Serve it on a separate port
-from GLiNER. For example, with vLLM and `llm2jev` installed in their own
-environment:
+- the 48 form fields shown by the four sites;
+- four ParaBank claim cases, including missing documents, fraud, and ambiguity;
+- the nine routing messages, judged on the team they reach, urgency, and staff
+  review.
 
-```bash
-vllm serve kirp/jpt-0.8b --max-logprobs 256 --return-tokens-as-token-ids --enable-scale-out --port 8001
-llm2jev --model kirp/jpt-0.8b --backend vllm --url http://127.0.0.1:8001 --port 8085 --temperature 1.140
-```
+The four sites were then run live (`experiments/d1/live_browser.py`).
 
-In this project's environment:
+| | d1-omni-600M | d1-3B | GLiNER2.5 Multi |
+|---|---:|---:|---:|
+| Form fields | 48/48 | 48/48 | 48/48 |
+| Claim decisions | 4/4 | 4/4 | 1/4 (approves every claim) |
+| Routing messages | 7/9 | 8/9 | 6/9 |
+| Live browser runs | 12/12 | 12/12 | 8/12 (stops at Piko's page action) |
 
-```bash
-uv run python run.py clinic --model jpt --jpt-url http://127.0.0.1:8085
-uv run python run.py helpdesk --model jpt --jpt-url http://127.0.0.1:8085
-uv run python compare_options.py --models gliner jpt --sizes 8 32 128 255 --iterations 3
-uv run python benchmark.py --model jpt --demos clinic helpdesk --iterations 3 --micro-requests 50
-```
+- **d1-omni-600M** is the default. It is as accurate as d1-3B on the browser demos and faster.
+- **GLiNER2.5 Multi** maps every field. It picks "go back" at Piko's continue step, so that
+  workflow stops safely, and it does not tell claims apart.
+- **The retired GLiNER2.5-Decide** passed the sites 100% of the time, but it filled ParaBank's
+  street-address field with the password, which the sandbox accepts. All three current models
+  map that field correctly.
+- **Routing misses** are mostly urgency judgements. "The office air conditioning stopped" is
+  rated urgent rather than high.
 
-The UI has a model picker and reads `JPT_URL` if the decision service uses a
-different port. `compare_options.py` uses the same IT-access request and correct
-route at each size, adding department/request distractors up to 255 choices. It
-reports accuracy and mean latency; server errors are shown for unsupported
-sizes. JPT evaluates the clinic topic tags as separate yes/no questions, while
-GLiNER uses a multi-label head. Their reported probabilities are not calibrated
-against each other. Benchmarks save JPT results under `benchmarks/jpt/` by default;
-choose separate `--output-dir` values to keep comparison runs.
+The models are asked differently, and the clients handle this (`decision_clients.py`):
 
-Measured comparison on the local GB10: [clinic, help-desk, and 255-option
-results](benchmarks/COMPARISON.md).
+- **d1** reads `Form field label: …` as its state, with the question as its instruction.
+- **GLiNER2.5 Multi** maps fields best from the bare label with no instruction. With one,
+  it sent "Phone #" and "Confirm" to first_name.
+
+The routing demos give each priority level a description, which reduced d1's
+over-rated urgency. `compare_options.py` measures accuracy and latency as the
+number of routing options grows to 255, and `benchmark.py --model omni|3b|multi`
+repeats the workflows with timing. Earlier GLiNER2.5-Decide and JPT results stay in
+`benchmarks/` for reference.
 
 ## Demo UI
 
@@ -127,7 +143,8 @@ Start the local visual control room:
 ```
 
 Open `http://127.0.0.1:7863`. The UI uses Gradio 6.29.1 `gr.Server` with a custom
-frontend and the Gradio JavaScript client for queued, streamed results.
+frontend and the Gradio JavaScript client for queued, streamed results. The
+sidebar picks the decision model and shows its measured record.
 
 For Clinic Requests and Employee Help Desk, choose an example or write a request.
 Send it to watch the message, model predictions, routing rules, and final ticket
@@ -143,16 +160,11 @@ time. Override the port with `DEMO_UI_PORT`.
 
 Stop it with `./stop-ui.sh`. Logs are written to `gradio.log`.
 
-Set `GLINER_URL` when the classifier is not listening at
-`http://127.0.0.1:8010`.
-
 Each form-field decision uses its own request. The intake demos send one request
 per message with several decision heads. Choices are written as JSON Lines under
-`artifacts/`; an unknown or low-confidence class stops the workflow instead of
-silently falling back to a hard-coded route. The intake demos use
-caller-supplied label descriptions and, for the clinic, multi-label topic tags.
-See the [GLiNER2.5-Decide model card](https://huggingface.co/fastino/GLiNER2.5-Decide)
-for the request, ticket-routing, described-label, and multi-decision examples.
+`artifacts/`. An unknown or low-confidence class stops the workflow instead of
+silently falling back to a hard-coded route, and a form with no readable labels
+is never submitted.
 
 ## Document stamp check (d1 vision)
 
@@ -214,9 +226,8 @@ own environment.
 
 ## Long-span extraction on real PDFs
 
-The **Long-Span Extraction** workflow runs Fastino's GLiNER2.5 boundary models
-([multi-v1](https://huggingface.co/fastino/gliner2.5-multi-v1), 287M, and
-[base-v1](https://huggingface.co/fastino/gliner2.5-base-v1), 194M) over real PDF pages.
+The **Long-Span Extraction** workflow runs Fastino's GLiNER2.5 Multi boundary model
+([multi-v1](https://huggingface.co/fastino/gliner2.5-multi-v1), 287M) over real PDF pages.
 Each span is drawn on the lines it covers, so a 60-word clause is highlighted line by line.
 
 - **Text and boxes:** `services/extract/document.py` reads every character and its box with
@@ -259,9 +270,8 @@ Measured on an RTX 5070 Ti, with the default schema and numbered-item splitting:
 **Scans and photos:** upload a JPEG, PNG, or WebP page and the service reads it with
 [docTR](https://github.com/mindee/doctr) OCR on the GPU (about 300 ms per page once warm). It
 reads scanned tables row by row and writes " | " between cells that share a row, so a test
-name, its result, and its range stay separate. On one real haematology report, GLiNER2.5
-Base found 10 test names, 13 values, and 14 of 15 reference ranges. Multi did far worse on
-that English OCR text. Each document can name its own default model.
+name, its result, and its range stay separate. For lab reports, the dedicated Lab Report
+Reader below does much better than span extraction.
 
 **Documents that stay on your machine:** list them in `fixtures/documents/local/samples.json`,
 with their files in the same folder. The folder is git-ignored. The UI shows those documents
@@ -351,18 +361,23 @@ Known limits:
 - OCR errors in test names stay as printed ("ESR I Hr." for ESR II Hr).
 - d1-3B takes about 3 to 8 s per page, mostly because it reads each test-column line with its image.
 
-## Host all six demos on Hugging Face Spaces
+## Host the demos on Hugging Face Spaces
 
-Create a **Docker Space** and push this repository's files to it. The root
-`README.md` configures port 7860, and `Dockerfile` installs Chromium and both
-Python environments. `space.py` starts the bundled GLiNER service, waits for
-its health check, and starts the UI. The model downloads on the first start.
-The service uses CUDA when available and otherwise CPU.
+Create a **Docker Space** and push this repository's files to it.
 
-The UI and model service have separate environments because Gradio 6.29.1 needs
-`huggingface-hub>=1.16`, while GLiNER's Transformers dependency requires a version
-below 1.0. The model service stays on loopback port 8010; only the UI port is
-exposed. The four browser demos need outbound access to their sandbox sites.
+- **Image:** the root `README.md` configures port 7860, and `Dockerfile` installs Chromium and
+  the three Python environments (UI, d1, extraction).
+- **Start-up:** `space.py` starts the d1 and extraction services, waits for both health checks,
+  and then starts the UI. The models download on the first start.
+- **Hardware:** use GPU hardware. d1-3B needs about 6 GB of GPU memory, and the CPU fallback is
+  slow.
+- **Separate environments:** Gradio 6.29.1 needs `huggingface-hub>=1.16`, d1 needs
+  `transformers` 5, and `gliner2` needs `transformers` 4.
+- **Networking:** the services stay on loopback ports 8020 and 8030, and only the UI port is
+  exposed. The four browser demos need outbound access to their sandbox sites.
+
+The Docker setup has been updated for these services, but this build has not been run
+here.
 
 Test the container locally:
 
@@ -380,8 +395,6 @@ git archive HEAD | tar -x -C /tmp/opencode/systemone-space
 hf upload YOUR_USERNAME/YOUR_SPACE /tmp/opencode/systemone-space --type space
 ```
 
-JPT appears in the Space's model picker only when `JPT_URL` is configured in its
-settings. Its server must be reachable from the Space. GLiNER is bundled.
 Local audit files are ephemeral on Spaces; download a run's JSON to keep it.
 
 The implementation follows Gradio's [server-mode guide](https://www.gradio.app/guides/server-mode)
@@ -398,7 +411,7 @@ uv run pytest
 Run the model decision checks with:
 
 ```bash
-RUN_LIVE_GLINER_TESTS=1 uv run pytest tests/test_live_decisions.py
+RUN_LIVE_DECISION_TESTS=1 LIVE_DECISION_MODEL=omni uv run pytest tests/test_live_decisions.py
 ```
 
 The live browser demos are the end-to-end tests because the target sites are

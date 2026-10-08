@@ -9,6 +9,7 @@ import hashlib
 import os
 import threading
 import time
+from typing import Any
 from collections import OrderedDict
 
 import torch
@@ -19,9 +20,9 @@ from pydantic import BaseModel, Field
 
 from document import Page, blocks, open_pdf, read_image, read_page, span_lines, word_boxes
 
-MODELS = {"multi": "fastino/gliner2.5-multi-v1", "base": "fastino/gliner2.5-base-v1"}
+MODELS = {"multi": "fastino/gliner2.5-multi-v1"}
 DEVICE = os.getenv("EXTRACT_DEVICE", "cuda" if torch.cuda.is_available() else "cpu")
-PRELOAD = [m for m in os.getenv("EXTRACT_MODELS", "multi,base").split(",") if m]
+PRELOAD = [m for m in os.getenv("EXTRACT_MODELS", "multi").split(",") if m]
 MAX_PDF_BYTES = 25 * 1024 * 1024
 IMAGE_MAGIC = (b"\xff\xd8\xff", b"\x89PNG", b"RIFF")  # JPEG, PNG, WebP
 LEGACY_SPAN_WIDTH = 8  # the old span-head architecture scored spans up to this many words
@@ -139,6 +140,24 @@ def extract(request: Request):
     spans.sort(key=lambda s: (s["start"], -s["end"]))
     response["spans"] = spans
     return response
+
+
+class ClassifyRequest(BaseModel):
+    """The contract gliner_client.GlinerClient speaks: a text and a GLiNER classification schema."""
+    text: str
+    tasks: dict[str, Any] = Field(alias="schema")
+    include_confidence: bool = True
+    model: str = "multi"
+
+
+@app.post("/classify")
+def classify(request: ClassifyRequest):
+    if request.model not in MODELS:
+        raise HTTPException(422, f"Unknown model {request.model!r}; choose one of {sorted(MODELS)}")
+    model = load(request.model)
+    with locks[request.model], torch.inference_mode():
+        result = model.classify_text(request.text, request.tasks, include_confidence=request.include_confidence)
+    return {"result": result}
 
 
 class OcrRequest(BaseModel):

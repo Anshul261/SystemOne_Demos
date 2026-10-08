@@ -21,8 +21,8 @@ DOCUMENTS = ROOT / "fixtures" / "documents"
 LOCAL_DOCUMENTS = DOCUMENTS / "local" / "samples.json"  # git-ignored: documents that stay on this machine
 UPLOAD_TYPES = {"data:application/pdf;base64": b"%PDF", "data:image/jpeg;base64": b"\xff\xd8\xff",
                 "data:image/png;base64": b"\x89PNG", "data:image/webp;base64": b"RIFF"}
-MODEL_NAMES = {"multi": "GLiNER2.5 Multi", "base": "GLiNER2.5 Base"}
-MODEL_SIZES = {"multi": "287M · multilingual", "base": "194M · English"}
+MODEL_NAMES = {"multi": "GLiNER2.5 Multi"}
+MODEL_SIZES = {"multi": "287M · multilingual"}
 LABEL = re.compile(r"^[a-z][a-z0-9_]{0,39}$")
 MAX_LABELS = 12
 MAX_PAGES = 40

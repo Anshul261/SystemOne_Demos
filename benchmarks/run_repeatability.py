@@ -1,4 +1,7 @@
-"""Repeat the existing GLiNER benchmark and summarize variation between rounds.
+"""Historical: reproduces the published GLiNER2.5-Decide benchmark. That model and services/gliner
+were retired; run this from commit 9e5de93 or earlier, where the service still exists.
+
+Repeat the existing GLiNER benchmark and summarize variation between rounds.
 
 Run with the repository's .venv/bin/python. No additional dependencies required.
 """

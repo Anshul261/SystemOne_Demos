@@ -28,11 +28,10 @@ import stamp_check
 from d1_client import D1Client
 from extract_client import ExtractClient
 from intake import intake_schema, load_tickets, run_intake_simulation
-from jpt_client import make_client
+from decision_clients import MODELS as DECISION_MODELS
+from decision_clients import make_client
 from run import DEMOS
 
-GLINER_URL = os.getenv("GLINER_URL", "http://127.0.0.1:8010")
-JPT_URL = os.getenv("JPT_URL", "http://127.0.0.1:8085")
 D1_URL = os.getenv("D1_URL", "http://127.0.0.1:8020")
 EXTRACT_URL = os.getenv("EXTRACT_URL", "http://127.0.0.1:8030")
 HOST = os.getenv("DEMO_UI_HOST", "127.0.0.1")
@@ -108,9 +107,9 @@ DEMO_GUIDES = {
     ),
 }
 
-def demo_guide(display_name: str, model: str = "gliner") -> str:
+def demo_guide(display_name: str, model: str = "omni") -> str:
     guide = DEMO_GUIDES[display_name]
-    return guide.replace("GLiNER", "JPT") if model == "jpt" else guide
+    return guide.replace("GLiNER", DECISION_MODELS.get(model, "the model"))
 
 
 app = gr.Server(title="SystemOne Decision Lab")
@@ -132,7 +131,8 @@ def demo_config():
         ],
         "samples": {"clinic": load_tickets(True), "helpdesk": load_tickets(False)},
         "schemas": {"clinic": intake_schema(True), "helpdesk": intake_schema(False)},
-        "models": ["gliner", "jpt"] if os.getenv("JPT_URL") or not os.getenv("SPACE_ID") else ["gliner"],
+        "models": list(DECISION_MODELS),
+        "model_names": DECISION_MODELS,
         "stamp": stamp_config(),
         "extract": {
             "models": [{"id": key, "name": name, "size": document_extract.MODEL_SIZES[key]}
@@ -176,7 +176,7 @@ class RunCancelled(Exception):
 @app.api(name="run_demo", concurrency_limit=1, stream_every=0.1)
 def stream_demo(
     workflow: str,
-    model: str = "gliner",
+    model: str = "omni",
     mode: str = "single",
     subject: str = "",
     message: str = "",
@@ -215,7 +215,7 @@ def stream_demo(
 
     def worker() -> None:
         try:
-            client = make_client(model, GLINER_URL, JPT_URL)
+            client = make_client(model)
             if simulated:
                 artifact = run_intake_simulation(
                     client, clinic=workflow == "clinic", tickets=tickets, on_event=publish
@@ -370,7 +370,7 @@ def stream_extraction(
 ) -> Iterator[dict[str, Any]]:
     """Stream each page image, its spans with line boxes, and a run summary."""
     if model not in document_extract.MODEL_NAMES:
-        raise ValueError("Choose GLiNER2.5 Multi or Base.")
+        raise ValueError("Choose GLiNER2.5 Multi.")
     if upload:
         pdf = document_extract.decode_document(upload)
         doc = {"id": f"upload-{uuid4().hex[:6]}", "title": "Your document", "source": "upload"}

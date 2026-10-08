@@ -20,14 +20,16 @@ from typing import Any
 import httpx
 from playwright.sync_api import sync_playwright
 
+from decision_clients import D1_URL, EXTRACT_URL, MODELS, D1DecisionClient
 from gliner_client import Decision, GlinerClient
-from jpt_client import JptClient
 from run import DEMOS, PIKO_CHALLENGE_DESCRIPTIONS
 
 
-class TimedGlinerClient(GlinerClient):
-    def __init__(self, base_url: str):
-        super().__init__(base_url)
+class TimedClient:
+    """Wraps any of the three decision clients with request timing and field-cache counts."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.latencies_ms: list[float] = []
         self.field_requests = 0
         self.field_cache_hits = 0
@@ -49,16 +51,24 @@ class TimedGlinerClient(GlinerClient):
         return super().classify_field(label, candidates)
 
 
-class TimedJptClient(TimedGlinerClient, JptClient):
+class TimedGlinerClient(TimedClient, GlinerClient):
     pass
 
 
-def timed_client(model: str, base_url: str) -> TimedGlinerClient:
-    if model == "gliner":
-        return TimedGlinerClient(base_url)
-    if model == "jpt":
-        return TimedJptClient(base_url)
+class TimedD1Client(TimedClient, D1DecisionClient):
+    pass
+
+
+def timed_client(model: str) -> GlinerClient:
+    if model in ("omni", "3b"):
+        return TimedD1Client(model)
+    if model == "multi":
+        return TimedGlinerClient(EXTRACT_URL)
     raise ValueError(f"Unknown model: {model}")
+
+
+def service_url(model: str) -> str:
+    return D1_URL if model in ("omni", "3b") else EXTRACT_URL
 
 
 def percentile(values: list[float], percent: float) -> float:
@@ -104,20 +114,14 @@ def distribution_stats(values: list[float]) -> dict[str, float]:
     }
 
 
-def micro_benchmark(
-    base_url: str, requests: int, warmup: int = 5, model: str = "gliner"
-) -> dict[str, Any]:
+def micro_benchmark(requests: int, warmup: int = 5, model: str = "omni") -> dict[str, Any]:
     labels = list(PIKO_CHALLENGE_DESCRIPTIONS)
-    client = timed_client(model, base_url)
+    client = timed_client(model)
 
     def classify(index: int) -> None:
         label = labels[index % len(labels)].replace("_", " ").title()
-        client.classify(
-            text=f"Form field label: {label}",
-            task="source_field",
-            candidates=PIKO_CHALLENGE_DESCRIPTIONS,
-            prompt=f"Which source value should be entered into the form field labeled '{label}'?",
-        )
+        client._field_cache.clear()  # measure the model, not the cache
+        client.classify_field(label, PIKO_CHALLENGE_DESCRIPTIONS)
 
     for index in range(warmup):
         classify(index)
@@ -152,10 +156,9 @@ def site_timer(events: list[dict[str, Any]]) -> str | None:
 
 
 def run_browser_benchmarks(
-    base_url: str,
     demos: list[str],
     iterations: int,
-    model: str = "gliner",
+    model: str = "omni",
 ) -> list[dict[str, Any]]:
     results = []
     with sync_playwright() as playwright:
@@ -166,7 +169,7 @@ def run_browser_benchmarks(
                     print(f"[{demo}] run {iteration}/{iterations}", flush=True)
                     context = browser.new_context(ignore_https_errors=True)
                     page = context.new_page()
-                    client = timed_client(model, base_url)
+                    client = timed_client(model)
                     started = time.perf_counter()
                     result: dict[str, Any] = {
                         "demo": demo,
@@ -398,19 +401,14 @@ def main() -> None:
     parser.add_argument("--iterations", type=int, default=3)
     parser.add_argument("--micro-requests", type=int, default=50)
     parser.add_argument("--demos", nargs="+", choices=list(DEMOS), default=list(DEMOS))
-    parser.add_argument("--model", choices=["gliner", "jpt"], default="gliner")
-    parser.add_argument("--gliner-url", default="http://127.0.0.1:8010")
-    parser.add_argument("--jpt-url", default=os.getenv("JPT_URL", "http://127.0.0.1:8085"))
+    parser.add_argument("--model", choices=sorted(MODELS), default="omni")
     parser.add_argument("--output-dir")
     args = parser.parse_args()
 
     started_at = datetime.now(UTC)
-    base_url = args.gliner_url if args.model == "gliner" else args.jpt_url
-    model = httpx.get(f"{base_url}/health", timeout=10).json()
-    if args.model == "jpt" and model["model"] != "kirp/jpt-0.8b":
-        raise RuntimeError(f"JPT endpoint is serving {model['model']}, not kirp/jpt-0.8b")
-    micro = micro_benchmark(base_url, args.micro_requests, model=args.model)
-    browser_runs = run_browser_benchmarks(base_url, args.demos, args.iterations, args.model)
+    model = {"model": MODELS[args.model], "service": httpx.get(f"{service_url(args.model)}/health", timeout=10).json()}
+    micro = micro_benchmark(args.micro_requests, model=args.model)
+    browser_runs = run_browser_benchmarks(args.demos, args.iterations, args.model)
     results = {
         "measured_at": started_at.isoformat(),
         "completed_at": datetime.now(UTC).isoformat(),
@@ -428,7 +426,7 @@ def main() -> None:
         "browser_runs": browser_runs,
         "browser_summary": summarize_browser_runs(browser_runs),
     }
-    output_dir = Path(args.output_dir or ("benchmarks" if args.model == "gliner" else "benchmarks/jpt"))
+    output_dir = Path(args.output_dir or f"benchmarks/{args.model}")
     output_dir.mkdir(parents=True, exist_ok=True)
     results_path = output_dir / "results.json"
     report_path = output_dir / "RESULTS.md"

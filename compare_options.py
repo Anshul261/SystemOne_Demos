@@ -6,9 +6,8 @@ import argparse
 import statistics
 import time
 
-from gliner_client import GlinerClient
 from intake import HELPDESK_QUEUES
-from jpt_client import JptClient
+from decision_clients import MODELS, make_client
 
 DEPARTMENTS = (
     "sales", "legal", "compliance", "communications", "procurement",
@@ -44,11 +43,9 @@ def routing_options(size: int) -> dict[str, str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--models", nargs="+", choices=["gliner", "jpt"], default=["gliner", "jpt"])
+    parser.add_argument("--models", nargs="+", choices=sorted(MODELS), default=["omni", "3b", "multi"])
     parser.add_argument("--sizes", nargs="+", type=int, default=[8, 32, 128, 255])
     parser.add_argument("--iterations", type=int, default=3)
-    parser.add_argument("--gliner-url", default="http://127.0.0.1:8010")
-    parser.add_argument("--jpt-url", default="http://127.0.0.1:8085")
     args = parser.parse_args()
     if args.iterations < 1:
         parser.error("--iterations must be positive")
@@ -57,10 +54,8 @@ def main() -> None:
     print("model  options  correct  mean_ms  selected / error", flush=True)
     failed = False
     for model in args.models:
-        client = (
-            GlinerClient(args.gliner_url, timeout=180)
-            if model == "gliner" else JptClient(args.jpt_url, timeout=180)
-        )
+        client = make_client(model)
+        client.timeout = 180
         for size in args.sizes:
             options = routing_options(size)
             times = []

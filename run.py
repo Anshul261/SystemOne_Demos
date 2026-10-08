@@ -17,7 +17,7 @@ from playwright.sync_api import Page, sync_playwright
 from browser_forms import AuditLog, fill_classified_form, page_state
 from gliner_client import DecisionError, GlinerClient
 from intake import run_clinic, run_helpdesk
-from jpt_client import make_client
+from decision_clients import MODELS, make_client
 
 RPA_URL = "https://rpachallenge.com/"
 RPA_DATA_URL = "https://rpachallenge.com/assets/downloadFiles/challenge.xlsx"
@@ -25,6 +25,12 @@ PARABANK_URL = "https://parabank.parasoft.com/parabank/index.htm"
 PIKO_URL = "https://pikoautomation.pl/sandbox/healing-agent"
 PIKO_CHALLENGE_URL = "https://pikoautomation.pl/sandbox/automation-challenge/"
 ROOT = Path(__file__).resolve().parent
+
+# Chromium draws no text on some Linux setups when it loads every installed font (a bad font in the set
+# breaks rendering: pages come back blank, so no form labels can be read). Limit it to DejaVu when that is
+# installed; an explicit FONTCONFIG_FILE still wins.
+if Path("/usr/share/fonts/truetype/dejavu").is_dir():
+    os.environ.setdefault("FONTCONFIG_FILE", str(ROOT / "fonts" / "fontconfig.xml"))
 
 
 def load_fixture(name: str) -> dict[str, str]:
@@ -112,6 +118,8 @@ def run_rpa(
     records = rpa_records()
     page.goto(RPA_URL, wait_until="networkidle")
     page.get_by_role("button", name="Start").click()
+    # The form renders after Start; reading it too early finds no fields.
+    page.locator("form input:visible").first.wait_for()
     for number, record in enumerate(records, start=1):
         fill_classified_form(
             page.locator("form"),
@@ -402,17 +410,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("demo", choices=[*DEMOS, "all"])
     parser.add_argument("--headed", action="store_true")
-    parser.add_argument("--model", choices=["gliner", "jpt"], default="gliner")
-    parser.add_argument(
-        "--gliner-url",
-        default=os.getenv("GLINER_URL", "http://127.0.0.1:8010"),
-    )
-    parser.add_argument(
-        "--jpt-url", default=os.getenv("JPT_URL", "http://127.0.0.1:8085")
-    )
+    parser.add_argument("--model", choices=sorted(MODELS), default="omni")
     args = parser.parse_args()
 
-    gliner = make_client(args.model, args.gliner_url, args.jpt_url)
+    gliner = make_client(args.model)
     names = list(DEMOS) if args.demo == "all" else [args.demo]
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=not args.headed)

@@ -3,7 +3,7 @@ const escape = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
 }[c]));
 const pretty = (value) => String(value ?? "").replaceAll("_", " ");
-const modelName = () => $("model").value === "jpt" ? "JPT" : "GLiNER";
+const modelName = () => config?.model_names?.[$("model").value] || "The model";
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const titles = { request: "Request type", queue: "Team", priority: "Priority", needs_human: "Staff review", topics: "Topics" };
 const decisionEvents = ["business_decision", "field_classification", "browser_action"];
@@ -244,12 +244,19 @@ function fillModels() {
     ? config.extract.models.map((m) => [m.id, m.name])
     : isStamp()
     ? config.stamp.models.map((m) => [m.id, m.name])
-    : config.models.map((m) => [m, m === "gliner" ? "GLiNER2.5 Decide" : "JPT 0.8B"]);
+    : config.models.map((m) => [m, config.model_names[m]]);
   if ([...$("model").options].map((o) => o.value).join() === options.map(([id]) => id).join()) return;
   $("model").innerHTML = options.map(([id, name]) => `<option value="${escape(id)}">${escape(name)}</option>`).join("");
 }
 
+const modelNotes = {
+  omni: "Default. Passed 12/12 live browser runs; every field and claim decision correct.",
+  "3b": "Same decisions as d1-omni-600M, at about 1.5× the model time.",
+  multi: "Maps every form field correctly, but stops safely at Piko's page-action step and approves every claim it is shown.",
+};
+
 function updateModel() {
+  $("model-note").textContent = isStamp() || isExtract() || isLab() ? "" : modelNotes[$("model").value] || "";
   if (isStamp()) { renderReliability(); updateVisionTitle(); return; }
   if (isExtract() || isLab()) return;
   $("model-title").textContent = `${modelName()} reads it`;

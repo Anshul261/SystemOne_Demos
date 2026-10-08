@@ -3,7 +3,8 @@
 **/__pycache__
 .pytest_cache
 .ui.pid
-.gliner.pid
+.d1.pid
+.extract.pid
 *.log
 .env
 .env.*
