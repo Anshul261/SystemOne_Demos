@@ -27,7 +27,9 @@ def score(result: dict, truth: dict) -> dict:
 
 
 def documents() -> list[tuple[str, bytes, dict]]:
-    docs = [("real haematology report", (ROOT / "fixtures/documents/evya-haematology-report.webp").read_bytes(), TRUTH)]
+    docs = [("real haematology report", (ROOT / "fixtures/documents/evya-haematology-report.webp").read_bytes(), TRUTH),
+            ("real liver report", (ROOT / "fixtures/documents/lab/ilbs-liver-report.webp").read_bytes(),
+             json.loads((ROOT / "fixtures/documents/lab/ilbs-liver-report.truth.json").read_text()))]
     for batch in ("lab_reports", "lab_reports_fresh", "lab_reports_final"):  # batches 1-2 informed fixes; batch 3 was scored once
         held = ROOT / "experiments/d1/data" / batch
         if (held / "manifest.json").exists():

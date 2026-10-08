@@ -42,6 +42,8 @@ UNITS = {
     "pg/mL": "pg/mL: picograms per millilitre",
     "µIU/mL": "µIU/mL: micro international units per millilitre, also written uIU/ml or mIU/L, the unit for TSH",
     "mEq/L": "mEq/L: milliequivalents per litre",
+    "mL/min/1.73m²": "mL/min/1.73m²: millilitres per minute per 1.73 square metres, the unit for eGFR",
+    "seconds": "seconds: a time, also written sec or s",
     "µmol/L": "µmol/L: micromoles per litre",
     "g/dL": "g/dL: grams per decilitre, also written gm/dl, gms% or g%",
     "%": "%: percent",
@@ -61,7 +63,9 @@ HIGHLIGHT = {
     "plain": "a number printed on plain paper, with no box around it",
 }
 # A result, optionally followed by the lab's own flag marker ("19.3 *", "7.2 H").
-NUMBER = re.compile(r"^[<>]?\s*(\d+(?:[.,]\d+)?)\s*(\*|H|L|\(H\)|\(L\)|High|Low)?$")
+NUMBER = re.compile(r"^[<>]?\s*(\d+(?:[.,]\d+)?)\s*(\*\s*[HL]|\*|H|L|\(H\)|\(L\)|High|Low)?$")
+# One-sided ranges: "< 30", "≤ 30", "upto 30", "> 5".
+ONE_SIDED = re.compile(r"(<=?|≤|up\s*to|upto|>=?|≥)\s*(\d+(?:[.,]\d+)?)", re.IGNORECASE)
 RANGE = re.compile(r"(\d+(?:[.,]\d+)?)\s*[-–]\s*(\d+(?:[.,]\d+)?)")
 NUMBERS = re.compile(r"\d+(?:[.,]\d+)?")
 
@@ -76,7 +80,7 @@ def number(text: str) -> float | None:
     return float(text.replace(",", "."))
 
 
-def parse_range(text: str) -> tuple[float, float, int, int] | None:
+def parse_range(text: str) -> tuple[float | None, float | None, int, int] | None:
     """(low, high, start, end) of the reference range in `text`. OCR often drops the dash ("3.5 5.1") or
     reads it as a 1 ("0.60 -1 1.30", "40-1 150"); a number right after a dash match is the real high."""
     matches = list(RANGE.finditer(text))
@@ -94,6 +98,11 @@ def parse_range(text: str) -> tuple[float, float, int, int] | None:
         a, b = nums[-2], nums[-1]
         if number(a.group()) < number(b.group()):
             return number(a.group()), number(b.group()), a.start(), b.end()
+    side = ONE_SIDED.search(text)
+    if side:  # one bound only: the other is None
+        bound = number(side.group(2))
+        upper = side.group(1).lower().startswith(("<", "≤", "up"))
+        return (None, bound, side.start(), side.end()) if upper else (bound, None, side.start(), side.end())
     return None
 
 
@@ -233,6 +242,36 @@ def read_report(cells: list[dict], image: Image.Image, decide: Decide, model: st
     for c, a in zip(names, ask("name_roles", [(f'"{c["text"]}"', question, [crop(c["page_box"])]) for c in names])):
         c["role"] = a["role"]["choice"]
         c["role_confidence"] = round(a["role"]["confidence"], 3)
+    # Wrapped unit lines: a unit line directly beneath another, starting at the same place, with no number
+    # on its own line, continues the line above ("ml/min/1.73" + "m^2").
+    numbers_at = [center(c["box"])[1] for c in body if c["column"] == "result" and NUMBER.match(c["text"])]
+
+    def has_number(c):
+        half = 0.5 * (c["box"][3] - c["box"][1])
+        return any(abs(y - center(c["box"])[1]) < half for y in numbers_at)
+
+    ranges_at = [center(c["box"])[1] for c in body if c["column"] == "range"]
+
+    def has_range(c):  # a unit with a range beside it is a unit line of its own, not a wrapped one
+        half = 0.5 * (c["box"][3] - c["box"][1])
+        return any(abs(y - center(c["box"])[1]) < half for y in ranges_at)
+
+    merged = set()
+    for column in ("unit",):  # wrapped test names are joined during pairing, once numbers are placed
+        lines = sorted((c for c in body if c["column"] == column), key=lambda c: c["box"][1])
+        for above, below in zip(lines, lines[1:]):
+            if id(above) in merged:
+                continue
+            height = above["box"][3] - above["box"][1]
+            if (abs(below["box"][0] - above["box"][0]) < 0.012 and below["box"][1] - above["box"][3] < 0.6 * height
+                    and not has_number(below) and not has_range(below) and not RANGE.search(below["text"])):
+                above["text"] += " " + below["text"]
+                above["box"] = [min(above["box"][0], below["box"][0]), above["box"][1], max(above["box"][2], below["box"][2]), below["box"][3]]
+                above["page_box"] = [min(above["page_box"][0], below["page_box"][0]), above["page_box"][1],
+                                     max(above["page_box"][2], below["page_box"][2]), below["page_box"][3]]
+                merged.add(id(below))
+    body = [c for c in body if id(c) not in merged]
+    names = [c for c in names if id(c) not in merged]
     step("names_read", {"roles": {role: sum(c["role"] == role for c in names) for role in NAME_ROLES}})
     tests = [c for c in names if c["role"] == "test_name"]
     if not tests:
@@ -272,10 +311,23 @@ def read_report(cells: list[dict], image: Image.Image, decide: Decide, model: st
         for dist, k, j in pairs:
             if k not in found and j not in used and dist < 0.02:
                 found[k], used = [numeric[j]], used | {j}
+        # A wrapped test name: a name line with no number of its own, directly beneath a test that has one
+        # and starting at the same place, continues it ("Alkaline Phosphatase{IFCC Amp" + "Buffer}").
+        for k, t in enumerate(sec["tests"]):
+            if k in found or k == 0 or (k - 1) not in found:
+                continue
+            above = sec["tests"][k - 1]
+            if (abs(t["box"][0] - above["box"][0]) < 0.012
+                    and t["box"][1] - above["box"][3] < 0.6 * (above["box"][3] - above["box"][1])):
+                above["text"] += " " + t["text"]
+                found[k] = None  # joined: no record of its own
+        for k in [k for k, v in found.items() if v is None]:
+            del found[k]
+            sec["tests"][k] = dict(sec["tests"][k], joined=True)
         # Written findings go, in order, to the tests that got no number (a heading read as a test may
         # be left over at the end, without one).
         words = group_rows([c for c in result_cells if not NUMBER.match(c["text"])])
-        for k, group in zip([k for k in range(len(sec["tests"])) if k not in found], words):
+        for k, group in zip([k for k in range(len(sec["tests"])) if k not in found and not sec["tests"][k].get("joined")], words):
             found[k] = group
         valued = [k for k in range(len(sec["tests"])) if k in found and NUMBER.match(found[k][0]["text"])]
         for k, test in enumerate(sec["tests"]):
@@ -308,7 +360,7 @@ def read_report(cells: list[dict], image: Image.Image, decide: Decide, model: st
         unit_text = " ".join(c["text"] for c in slot if c["column"] == "unit")
         range_text = " ".join(c["text"] for c in slot if c["column"] == "range")
         joined = f"{unit_text} {range_text}".strip()
-        parsed = parse_range(joined)
+        parsed = parse_range(joined) if range_text else (parse_range(unit_text) if RANGE.search(unit_text) else None)
         if parsed:
             record["low"], record["high"], range_start, _ = parsed
             unit_part, qualifier = joined[:range_start], ""
@@ -338,18 +390,39 @@ def read_report(cells: list[dict], image: Image.Image, decide: Decide, model: st
                                              for r in with_unit])):
         r["unit"] = a["unit"]["choice"] if a["unit"]["choice"] != "other" else r["unit_text"]
         r["unit_confidence"] = round(a["unit"]["confidence"], 3)
-    for sec_title in {r["section"] for r in records}:  # a unit the scan lost: the section's common unit
-        units = [r["unit"] for r in records if r["section"] == sec_title and r.get("unit")]
-        for r in records:
-            if r["section"] == sec_title and "value" in r and not r.get("unit") and units and len(set(units)) == 1:
-                r["unit"], r["unit_inferred"] = units[0], True
+    # Units printed once per group: a test without one may use the unit printed above it, have none (a ratio
+    # or index), or have one the scan lost. d1 decides; the candidate is the nearest unit above in the section.
+    candidates = []
+    last: dict[str, str] = {}
+    for r in records:
+        if "value" not in r:
+            continue
+        if r.get("unit"):
+            last[r["section"]] = r["unit"]
+        elif r["section"] in last:
+            candidates.append((r, last[r["section"]]))
+    if candidates:
+        answers = ask("units", [(f'Lab test: "{r["test"]}". The unit printed for the test above it is "{u}".',
+                                 {"carry": {"type": "choice", "instructions": f'What unit does "{r["test"]}" have?',
+                                            "criteria": {"same": f"the same unit, {u}",
+                                                         "none": "no unit: it is a ratio or an index",
+                                                         "other": "a different unit that is not printed"}}}, [])
+                                for r, u in candidates])
+        for (r, u), a in zip(candidates, answers):
+            choice = a["carry"]["choice"]
+            if choice == "same":
+                r["unit"], r["unit_inferred"] = u, True
+            elif choice == "none":
+                r["unit"], r["unit_inferred"] = "", True
 
     step("units_read", {"units": sorted({r["unit"] for r in records if r.get("unit")})})
 
     # 8. Flags from the numbers; then d1 vision checks the lab's own shaded box around each result.
     for r in records:
-        if "value" in r and "low" in r:
-            r["flag"] = "low" if r["value"] < r["low"] else "high" if r["value"] > r["high"] else "normal"
+        if "value" in r and (r.get("low") is not None or r.get("high") is not None):
+            low, high = r.get("low"), r.get("high")
+            r["flag"] = ("low" if low is not None and r["value"] < low
+                         else "high" if high is not None and r["value"] > high else "normal")
     crops, owners = [], []
     for r in records:
         if "value" in r and r.get("result_boxes"):
@@ -420,7 +493,7 @@ def run_lab_report(extract, d1, document: dict[str, Any], data: bytes, model: st
 
 # The answer keys write units as printed; these are their standard forms.
 CANONICAL_UNITS = {"gms%": "g/dL", "gms %": "g/dL", "mil/cu mm": "million/cu mm", "cells/cu mm": "cells/cu mm",
-                   "lakhs/cumm": "lakhs/cu mm", "mm": "mm/hr"}
+                   "lakhs/cumm": "lakhs/cu mm", "mm": "mm/hr", "ml/min/1.73 m^2": "mL/min/1.73m²"}
 
 
 def assign(records: list[dict], names: list[str]) -> list[dict | None]:
@@ -449,7 +522,7 @@ def score(records: list[dict], truth: dict) -> dict:
         row = {"test": t["test"], "got": r["test"] if r else None}
         if r:
             totals["found"] += 1
-            unit = CANONICAL_UNITS.get(t["unit"], t["unit"])
+            unit = CANONICAL_UNITS.get(t["unit"], t["unit"]) or ""
             checks = {
                 "value": r.get("value") == t["value"],
                 "unit": (r.get("unit") or "").replace(" ", "").lower() == unit.replace(" ", "").lower(),
