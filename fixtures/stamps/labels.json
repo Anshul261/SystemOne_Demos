@@ -1,0 +1,181 @@
+{
+ "split": "test",
+ "items": [
+  {
+   "id": "valid-1",
+   "file": "valid-1.jpg",
+   "label": "valid",
+   "capture": "photo",
+   "title": "Valid stamp",
+   "source_file": "docs/valid-0.jpg"
+  },
+  {
+   "id": "valid-2",
+   "file": "valid-2.jpg",
+   "label": "valid",
+   "capture": "clean",
+   "title": "Valid stamp",
+   "source_file": "docs/valid-2.jpg"
+  },
+  {
+   "id": "missing-1",
+   "file": "missing-1.jpg",
+   "label": "missing",
+   "capture": "clean",
+   "title": "No stamp",
+   "source_file": "docs/missing-0.jpg"
+  },
+  {
+   "id": "missing-2",
+   "file": "missing-2.jpg",
+   "label": "missing",
+   "capture": "photo",
+   "title": "No stamp",
+   "source_file": "docs/missing-1.jpg"
+  },
+  {
+   "id": "outside_box-1",
+   "file": "outside_box-1.jpg",
+   "label": "outside_box",
+   "capture": "photo",
+   "title": "Stamp outside the box",
+   "source_file": "docs/outside_box-0.jpg"
+  },
+  {
+   "id": "outside_box-2",
+   "file": "outside_box-2.jpg",
+   "label": "outside_box",
+   "capture": "scan",
+   "title": "Stamp outside the box",
+   "source_file": "docs/outside_box-1.jpg"
+  },
+  {
+   "id": "wrong_shape-1",
+   "file": "wrong_shape-1.jpg",
+   "label": "wrong_shape",
+   "capture": "clean",
+   "title": "Rectangular stamp",
+   "source_file": "docs/wrong_shape-0.jpg"
+  },
+  {
+   "id": "wrong_shape-2",
+   "file": "wrong_shape-2.jpg",
+   "label": "wrong_shape",
+   "capture": "photo",
+   "title": "Rectangular stamp",
+   "source_file": "docs/wrong_shape-1.jpg"
+  },
+  {
+   "id": "wrong_color-1",
+   "file": "wrong_color-1.jpg",
+   "label": "wrong_color",
+   "capture": "clean",
+   "title": "Red ink",
+   "source_file": "docs/wrong_color-0.jpg"
+  },
+  {
+   "id": "wrong_color-2",
+   "file": "wrong_color-2.jpg",
+   "label": "wrong_color",
+   "capture": "scan",
+   "title": "Red ink",
+   "source_file": "docs/wrong_color-2.jpg"
+  },
+  {
+   "id": "wrong_issuer-1",
+   "file": "wrong_issuer-1.jpg",
+   "label": "wrong_issuer",
+   "capture": "photo",
+   "title": "Different insurer",
+   "source_file": "docs/wrong_issuer-0.jpg"
+  },
+  {
+   "id": "wrong_issuer-2",
+   "file": "wrong_issuer-2.jpg",
+   "label": "wrong_issuer",
+   "capture": "clean",
+   "title": "Different insurer",
+   "source_file": "docs/wrong_issuer-1.jpg"
+  },
+  {
+   "id": "misspelled-1",
+   "file": "misspelled-1.jpg",
+   "label": "misspelled",
+   "capture": "photo",
+   "title": "Misspelled insurer",
+   "source_file": "docs/misspelled-0.jpg"
+  },
+  {
+   "id": "misspelled-2",
+   "file": "misspelled-2.jpg",
+   "label": "misspelled",
+   "capture": "scan",
+   "title": "Misspelled insurer",
+   "source_file": "docs/misspelled-1.jpg"
+  },
+  {
+   "id": "wrong_status-1",
+   "file": "wrong_status-1.jpg",
+   "label": "wrong_status",
+   "capture": "photo",
+   "title": "VOID stamp",
+   "source_file": "docs/wrong_status-0.jpg"
+  },
+  {
+   "id": "wrong_status-2",
+   "file": "wrong_status-2.jpg",
+   "label": "wrong_status",
+   "capture": "scan",
+   "title": "VOID stamp",
+   "source_file": "docs/wrong_status-2.jpg"
+  },
+  {
+   "id": "date_mismatch-1",
+   "file": "date_mismatch-1.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "title": "Wrong date",
+   "source_file": "docs/date_mismatch-0.jpg"
+  },
+  {
+   "id": "date_mismatch-2",
+   "file": "date_mismatch-2.jpg",
+   "label": "date_mismatch",
+   "capture": "photo",
+   "title": "Wrong date",
+   "source_file": "docs/date_mismatch-5.jpg"
+  },
+  {
+   "id": "photocopy-1",
+   "file": "photocopy-1.jpg",
+   "label": "photocopy",
+   "capture": "scan",
+   "title": "Photocopy",
+   "source_file": "docs/photocopy-0.jpg"
+  },
+  {
+   "id": "photocopy-2",
+   "file": "photocopy-2.jpg",
+   "label": "photocopy",
+   "capture": "clean",
+   "title": "Photocopy",
+   "source_file": "docs/photocopy-3.jpg"
+  },
+  {
+   "id": "pasted_digital-1",
+   "file": "pasted_digital-1.jpg",
+   "label": "pasted_digital",
+   "capture": "photo",
+   "title": "Pasted digital stamp",
+   "source_file": "docs/pasted_digital-0.jpg"
+  },
+  {
+   "id": "pasted_digital-2",
+   "file": "pasted_digital-2.jpg",
+   "label": "pasted_digital",
+   "capture": "clean",
+   "title": "Pasted digital stamp",
+   "source_file": "docs/pasted_digital-1.jpg"
+  }
+ ]
+}
