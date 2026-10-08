@@ -1,0 +1,267 @@
+=== Round 1/5, order: ['piko', 'rpa', 'piko-excel', 'parabank'] ===
+[piko] run 1/10
+[piko] run 2/10
+[piko] run 3/10
+[piko] run 4/10
+[piko] run 5/10
+[piko] run 6/10
+[piko] run 7/10
+[piko] run 8/10
+[piko] run 9/10
+[piko] run 10/10
+[rpa] run 1/10
+[rpa] run 2/10
+[rpa] run 3/10
+[rpa] run 4/10
+[rpa] run 5/10
+[rpa] run 6/10
+[rpa] run 7/10
+[rpa] run 8/10
+[rpa] run 9/10
+[rpa] run 10/10
+[piko-excel] run 1/10
+[piko-excel] run 2/10
+[piko-excel] run 3/10
+[piko-excel] run 4/10
+[piko-excel] run 5/10
+[piko-excel] run 6/10
+[piko-excel] run 7/10
+[piko-excel] run 8/10
+[piko-excel] run 9/10
+[piko-excel] run 10/10
+[parabank] run 1/10
+[parabank] run 2/10
+[parabank] run 3/10
+[parabank] run 4/10
+[parabank] run 5/10
+[parabank] run 6/10
+[parabank] run 7/10
+[parabank] run 8/10
+[parabank] run 9/10
+[parabank] run 10/10
+Round 1: {'mean_ms': 29.19, 'p50_ms': 28.44, 'p95_ms': 30.35, 'min_ms': 27.57, 'max_ms': 55.67}, passed 40/40
+=== Round 2/5, order: ['rpa', 'piko-excel', 'parabank', 'piko'] ===
+[rpa] run 1/10
+[rpa] run 2/10
+[rpa] run 3/10
+[rpa] run 4/10
+[rpa] run 5/10
+[rpa] run 6/10
+[rpa] run 7/10
+[rpa] run 8/10
+[rpa] run 9/10
+[rpa] run 10/10
+[piko-excel] run 1/10
+[piko-excel] run 2/10
+[piko-excel] run 3/10
+[piko-excel] run 4/10
+[piko-excel] run 5/10
+[piko-excel] run 6/10
+[piko-excel] run 7/10
+[piko-excel] run 8/10
+[piko-excel] run 9/10
+[piko-excel] run 10/10
+[parabank] run 1/10
+[parabank] run 2/10
+[parabank] run 3/10
+[parabank] run 4/10
+[parabank] run 5/10
+[parabank] run 6/10
+[parabank] run 7/10
+[parabank] run 8/10
+[parabank] run 9/10
+[parabank] run 10/10
+[piko] run 1/10
+[piko] run 2/10
+[piko] run 3/10
+[piko] run 4/10
+[piko] run 5/10
+[piko] run 6/10
+[piko] run 7/10
+[piko] run 8/10
+[piko] run 9/10
+[piko] run 10/10
+Round 2: {'mean_ms': 29.96, 'p50_ms': 28.97, 'p95_ms': 32.89, 'min_ms': 27.92, 'max_ms': 68.21}, passed 40/40
+=== Round 3/5, order: ['piko-excel', 'parabank', 'piko', 'rpa'] ===
+[piko-excel] run 1/10
+[piko-excel] run 2/10
+[piko-excel] run 3/10
+[piko-excel] run 4/10
+[piko-excel] run 5/10
+[piko-excel] run 6/10
+[piko-excel] run 7/10
+[piko-excel] run 8/10
+[piko-excel] run 9/10
+[piko-excel] run 10/10
+[parabank] run 1/10
+[parabank] run 2/10
+[parabank] run 3/10
+[parabank] run 4/10
+[parabank] run 5/10
+[parabank] run 6/10
+[parabank] run 7/10
+[parabank] run 8/10
+[parabank] run 9/10
+[parabank] run 10/10
+[piko] run 1/10
+[piko] run 2/10
+[piko] run 3/10
+[piko] run 4/10
+[piko] run 5/10
+[piko] run 6/10
+[piko] run 7/10
+[piko] run 8/10
+[piko] run 9/10
+[piko] run 10/10
+[rpa] run 1/10
+[rpa] run 2/10
+[rpa] run 3/10
+[rpa] run 4/10
+[rpa] run 5/10
+[rpa] run 6/10
+[rpa] run 7/10
+[rpa] run 8/10
+[rpa] run 9/10
+[rpa] run 10/10
+Round 3: {'mean_ms': 29.34, 'p50_ms': 28.57, 'p95_ms': 30.35, 'min_ms': 27.87, 'max_ms': 57.46}, passed 40/40
+=== Round 4/5, order: ['parabank', 'piko', 'rpa', 'piko-excel'] ===
+[parabank] run 1/10
+[parabank] run 2/10
+[parabank] run 3/10
+[parabank] run 4/10
+[parabank] run 5/10
+[parabank] run 6/10
+[parabank] run 7/10
+[parabank] run 8/10
+[parabank] run 9/10
+[parabank] run 10/10
+[piko] run 1/10
+[piko] run 2/10
+[piko] run 3/10
+[piko] run 4/10
+[piko] run 5/10
+[piko] run 6/10
+[piko] run 7/10
+[piko] run 8/10
+[piko] run 9/10
+[piko] run 10/10
+[rpa] run 1/10
+[rpa] run 2/10
+[rpa] run 3/10
+[rpa] run 4/10
+[rpa] run 5/10
+[rpa] run 6/10
+[rpa] run 7/10
+[rpa] run 8/10
+[rpa] run 9/10
+[rpa] run 10/10
+[piko-excel] run 1/10
+[piko-excel] run 2/10
+[piko-excel] run 3/10
+[piko-excel] run 4/10
+[piko-excel] run 5/10
+[piko-excel] run 6/10
+[piko-excel] run 7/10
+[piko-excel] run 8/10
+[piko-excel] run 9/10
+[piko-excel] run 10/10
+Round 4: {'mean_ms': 29.74, 'p50_ms': 28.95, 'p95_ms': 31.25, 'min_ms': 27.77, 'max_ms': 56.69}, passed 40/40
+=== Round 5/5, order: ['piko', 'rpa', 'piko-excel', 'parabank'] ===
+[piko] run 1/10
+[piko] run 2/10
+[piko] run 3/10
+[piko] run 4/10
+[piko] run 5/10
+[piko] run 6/10
+[piko] run 7/10
+[piko] run 8/10
+[piko] run 9/10
+[piko] run 10/10
+[rpa] run 1/10
+[rpa] run 2/10
+[rpa] run 3/10
+[rpa] run 4/10
+[rpa] run 5/10
+[rpa] run 6/10
+[rpa] run 7/10
+[rpa] run 8/10
+[rpa] run 9/10
+[rpa] run 10/10
+[piko-excel] run 1/10
+[piko-excel] run 2/10
+[piko-excel] run 3/10
+[piko-excel] run 4/10
+[piko-excel] run 5/10
+[piko-excel] run 6/10
+[piko-excel] run 7/10
+[piko-excel] run 8/10
+[piko-excel] run 9/10
+[piko-excel] run 10/10
+[parabank] run 1/10
+[parabank] run 2/10
+[parabank] run 3/10
+[parabank] run 4/10
+[parabank] run 5/10
+[parabank] run 6/10
+[parabank] run 7/10
+[parabank] run 8/10
+[parabank] run 9/10
+[parabank] run 10/10
+Round 5: {'mean_ms': 29.6, 'p50_ms': 28.72, 'p95_ms': 31.23, 'min_ms': 27.81, 'max_ms': 62.23}, passed 40/40
+# RTX 5070 Ti repeatability benchmark
+
+Measured from `2026-10-07T09:14:22.413134+00:00` to `2026-10-07T09:33:28.803308+00:00`.
+
+GPU: `NVIDIA GeForce RTX 5070 Ti, 617.14, 12.0`. Model: `fastino/GLiNER2.5-Decide`, CUDA.
+Model cache revision: `5a7adf72a23b4d311abae6ce050d7f0012bb3416`.
+
+Five rounds on one host and one continuously loaded model service. Each round uses 50 warmup requests, 500 measured requests, and ten runs of each of four browser workflows. Workflow order rotates between rounds. The earlier pilot run is excluded.
+
+## Decision latency
+
+| Requests | Mean | Median | p95 | Sequential throughput |
+|---:|---:|---:|---:|---:|
+| 2500 | 29.57 ms | 28.71 ms | 31.65 ms | 33.82/s |
+
+95% t interval for the mean across five round means: **29.18–29.95 ms**. Round mean range: 29.19–29.96 ms.
+
+| Round | Workflow order | Mean | Median | p95 | Requests/s |
+|---:|---|---:|---:|---:|---:|
+| 1 | piko → rpa → piko-excel → parabank | 29.19 ms | 28.44 ms | 30.35 ms | 34.25 |
+| 2 | rpa → piko-excel → parabank → piko | 29.96 ms | 28.97 ms | 32.89 ms | 33.37 |
+| 3 | piko-excel → parabank → piko → rpa | 29.34 ms | 28.57 ms | 30.35 ms | 34.08 |
+| 4 | parabank → piko → rpa → piko-excel | 29.74 ms | 28.95 ms | 31.25 ms | 33.62 |
+| 5 | piko → rpa → piko-excel → parabank | 29.60 ms | 28.72 ms | 31.23 ms | 33.78 |
+
+## Browser workflows
+
+Time summaries describe successful attempts. All attempted runs, including failures, remain in the raw data and success denominators.
+
+| Workflow | Passed | Mean ± run SD | Median | p95 | 95% t interval for mean across rounds |
+|---|---:|---:|---:|---:|---:|
+| piko | 50/50 | 3.53 ± 0.33 s | 3.49 s | 3.62 s | 3.40–3.65 s |
+| rpa | 50/50 | 4.69 ± 0.47 s | 4.56 s | 5.56 s | 4.51–4.87 s |
+| piko-excel | 50/50 | 9.07 ± 1.18 s | 9.11 s | 10.94 s | 8.44–9.69 s |
+| parabank | 50/50 | 3.84 ± 0.32 s | 3.83 s | 4.38 s | 3.71–3.97 s |
+
+## Interpretation and limits
+
+- Raw samples are pooled before calculating median and p95; round percentiles are not averaged. Throughput divides total requests by total measured wall time.
+- Latency includes HTTP and JSON overhead. Browser timings include network access, page loads and execution. Field caches reset per attempt; cache hits remain part of workflow timings.
+- Confidence intervals use the five round means, not 2,500 independent-request assumptions. Formula: mean ± t(0.975, df=4) × round SD / sqrt(5). These are approximate intervals conditional on roughly independent, approximately normal round means; five rounds cannot establish those assumptions strongly. Shared host state, temperature and network conditions can induce dependence.
+- Median and p95 are descriptive pooled estimates. Their confidence intervals are not estimated. Run SD describes spread and is not a confidence interval.
+- Repeated synthetic fixtures measure repeatability of these specific workflows. Passing every attempt does not establish 100% accuracy on unseen tasks or a general browser agent.
+- This is single-host, sequential, warmed-service testing. It does not measure cold starts, concurrent capacity, cross-machine reproducibility, or production reliability.
+- Default Chromium fonts failed to render locally. The saved fontconfig.xml is scoped to benchmark processes and uses installed DejaVu fonts. Browser workflow source code is unchanged.
+- Source hashes and environment details are in protocol.json. Each round contains raw latencies, browser runs, logs and telemetry. No measured outliers are removed.
+- The LinkedIn footage is from earlier recordings; only the benchmark overlays are regenerated from this experiment.
+
+Method reference: [NIST confidence limits for the mean](https://www.itl.nist.gov/div898/handbook/eda/section3/eda352.htm).
+
+## Reproduce
+
+```bash
+GLINER_DEVICE=cuda ./start-gliner.sh
+.venv/bin/python benchmarks/run_repeatability.py
+```
+

@@ -1,0 +1,8 @@
+{
+  "service_python": "3.13.7",
+  "torch": "2.14.1+cu130",
+  "torch_cuda": "13.0",
+  "gliner2": "2.0.0",
+  "benchmark_python": "3.13.7",
+  "precision_note": "No precision or quantization changes made for this experiment; service loads the checkpoint through AutoExtractor.from_pretrained."
+}
