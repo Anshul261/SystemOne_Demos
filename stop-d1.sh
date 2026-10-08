@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PID_FILE="$SCRIPT_DIR/.d1.pid"
 
 if [ ! -f "$PID_FILE" ]; then
-  echo "d1 is not managed by start-gliner.sh."
+  echo "d1 is not managed by start-d1.sh."
   exit 0
 fi
 
