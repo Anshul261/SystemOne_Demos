@@ -309,7 +309,24 @@ Results with d1-3B on an RTX 5070 Ti (`experiments/d1/eval_lab.py`):
 | Document | Tests found | Values | Units | Ranges | Flags | Lab's boxes |
 |---|---:|---:|---:|---:|---:|---:|
 | Real haematology report (the one the reader was built on) | 15/15 | 15/15 | 15/15 | 15/15 | 15/15 | 15/15 |
+| Real liver function report, first run (answer key written beforehand) | 10/16 | 10/16 | 5/16 | 8/16 | 8/16 | 10/16 |
+| Real liver function report, after the fixes it prompted | 16/16 | 16/16 | 14/16 | 16/16 | 16/16 | 16/16 |
 | Synthetic batch 3: 6 reports, scored once after development | 62/62 | 62/62 | 62/62 | 62/62 | 62/62 | 62/62 |
+
+The second real report is the honest test of a new layout: its first run is the held-out
+number. It used conventions the reader had not met: `*H` / `*L` markers, ranges such as
+`< 30`, units printed once per group, and test names wrapped over two lines. The fixes are
+general:
+
+- `*H` / `*L` are read as markers after the value.
+- One-sided ranges are parsed, and flags use whichever bound is printed.
+- When a test has no unit, d1 decides whether it shares the unit printed above it, has none
+  (a ratio or index), or has another one.
+- A name line with no value of its own, directly under a test that has one, is joined to
+  that test's name.
+
+Two unit judgements still miss: GGT's carried-over IU/L, and INR, which d1 gives the unit
+"seconds" when it has none.
 
 On the real report all three written findings are read too. The flags match the three values
 the lab boxed (PCV low, both ESR values high), and nothing else is flagged.
