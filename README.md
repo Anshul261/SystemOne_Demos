@@ -279,6 +279,61 @@ Known limits:
 The service pins `gliner2` to a GitHub commit: release 2.0.0 cannot load these
 checkpoints' tokenizers with `transformers` 4.57.
 
+## Lab report reader (OCR + d1)
+
+The **Lab Report Reader** workflow turns a photographed lab report into checked results: each test
+with its value, unit, reference range, and a low/high flag. The models only make judgements;
+plain code handles what has one right answer (`lab_report.py`):
+
+1. **OCR** (docTR, about 0.5 s) finds each cell on the page and its box.
+2. **d1 picks the columns.** It decides which title names the test, result, unit, and range columns,
+   so any wording works ("TEST DESCRIPTION", "Investigation", "Biological Ref. Interval"). Each
+   cell then joins the column under the nearest title.
+3. **d1 reads the test column.** It decides whether each line is a test, a method note, or a
+   section heading. It sees the cell's crop as well as its text, so bold underlined headings count.
+4. **Code pairs the cells.** Each test pairs with the number on its line. Units and ranges are
+   lined up with the tests in order (an order-preserving alignment with skips), because many
+   reports print them a line below their test. Pairing by row would give the next test's range.
+   Ranges are read by pattern, including ranges where OCR dropped the dash or read it as a "1".
+5. **d1 normalises units.** It maps each printed unit to a standard one, OCR damage included
+   ("L" next to MCV becomes fL).
+6. **Flags and the lab's marks.** Code flags values outside their range. d1 vision checks whether
+   the lab printed the value in a shaded box, and printed markers (`*`, `H`, `L`) come from the
+   text. The demo compares our flags with the lab's own marks.
+
+Start `./start-extract.sh` (OCR) and `./start-d1.sh`. The d1 service now has a
+`/system_one_batch` endpoint, so each step is one batched call.
+
+Results with d1-3B on an RTX 5070 Ti (`experiments/d1/eval_lab.py`):
+
+| Document | Tests found | Values | Units | Ranges | Flags | Lab's boxes |
+|---|---:|---:|---:|---:|---:|---:|
+| Real haematology report (the one the reader was built on) | 15/15 | 15/15 | 15/15 | 15/15 | 15/15 | 15/15 |
+| Synthetic batch 3: 6 reports, scored once after development | 62/62 | 62/62 | 62/62 | 62/62 | 62/62 | 62/62 |
+
+On the real report all three written findings are read too. The flags match the three values
+the lab boxed (PCV low, both ESR values high), and nothing else is flagged.
+
+How the evaluation was run:
+
+- The synthetic reports (`experiments/d1/make_lab_reports.py`) use three other labs' layouts,
+  header wordings, panels, and units. They are scanned or photographed with the stamp set's
+  capture model.
+- Batches 1 and 2 informed the fixes. Batch 3 was generated afterwards and scored once.
+- All three batches share the same three page designs, so batch 3 shows robustness to new
+  values and captures, not to new layouts.
+
+d1-omni-600M runs the same reader about 2.5 times faster. On the real report it gets the
+values, ranges, and flags right, but only 10 of 15 units, no findings, and 8 spurious records.
+On the synthetic layouts it finds about half the tests, so d1-3B is the default.
+
+Known limits:
+
+- d1 vision cannot tell bold from regular type (3 of 20 bold values found). A lab that marks
+  abnormal values only in bold shows no marks to compare.
+- OCR errors in test names stay as printed ("ESR I Hr." for ESR II Hr).
+- d1-3B takes about 3 to 8 s per page, mostly because it reads each test-column line with its image.
+
 ## Host all six demos on Hugging Face Spaces
 
 Create a **Docker Space** and push this repository's files to it. The root
