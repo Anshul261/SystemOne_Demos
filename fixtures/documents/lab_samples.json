@@ -1,0 +1,36 @@
+{
+ "documents": [
+  {
+   "id": "evya",
+   "title": "Real haematology report",
+   "subtitle": "Hospital report, photographed \u00b7 patient details redacted",
+   "file": "evya-haematology-report.webp",
+   "truth": "evya-haematology-report.truth.json",
+   "kind": "real"
+  },
+  {
+   "id": "synthetic-0",
+   "title": "Riverbend Diagnostics (synthetic)",
+   "subtitle": "Generated report, scan capture \u00b7 held-out from the reader's development",
+   "file": "lab/synthetic-0-scan.jpg",
+   "truth": "lab/synthetic-0-scan.truth.json",
+   "kind": "synthetic"
+  },
+  {
+   "id": "synthetic-1",
+   "title": "Northgate Pathology Lab (synthetic)",
+   "subtitle": "Generated report, clean capture \u00b7 held-out from the reader's development",
+   "file": "lab/synthetic-1-clean.jpg",
+   "truth": "lab/synthetic-1-clean.truth.json",
+   "kind": "synthetic"
+  },
+  {
+   "id": "synthetic-2",
+   "title": "Lakeside Clinical Laboratory (synthetic)",
+   "subtitle": "Generated report, photo capture \u00b7 held-out from the reader's development",
+   "file": "lab/synthetic-2-photo.jpg",
+   "truth": "lab/synthetic-2-photo.truth.json",
+   "kind": "synthetic"
+  }
+ ]
+}

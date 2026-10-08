@@ -1,0 +1,77 @@
+{
+ "facility": "Northgate Pathology Lab",
+ "tests": [
+  {
+   "section": "Lipid Profile",
+   "test": "Total Cholesterol",
+   "value": 168.0,
+   "unit": "mg/dL",
+   "low": 125,
+   "high": 200,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Lipid Profile",
+   "test": "Triglycerides",
+   "value": 131.0,
+   "unit": "mg/dL",
+   "low": 40,
+   "high": 150,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Lipid Profile",
+   "test": "HDL Cholesterol",
+   "value": 54.0,
+   "unit": "mg/dL",
+   "low": 40,
+   "high": 60,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Lipid Profile",
+   "test": "LDL Cholesterol",
+   "value": 118.0,
+   "unit": "mg/dL",
+   "low": 50,
+   "high": 130,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Thyroid Profile",
+   "test": "T3",
+   "value": 132.0,
+   "unit": "ng/dL",
+   "low": 80,
+   "high": 200,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Thyroid Profile",
+   "test": "T4",
+   "value": 10.3,
+   "unit": "\u00b5g/dL",
+   "low": 5.1,
+   "high": 14.1,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Thyroid Profile",
+   "test": "TSH",
+   "value": 5.62,
+   "unit": "\u00b5IU/mL",
+   "low": 0.27,
+   "high": 4.2,
+   "flag": "high",
+   "highlighted": false
+  }
+ ],
+ "findings": [],
+ "capture": "clean"
+}
