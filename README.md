@@ -212,6 +212,60 @@ evaluation, run the scripts in `experiments/d1/` (`make_stamps.py`,
 `calibrate.py`, `evaluate_flow.py`, `export_samples.py`) in that directory's
 own environment.
 
+## Long-span extraction on real PDFs
+
+The **Long-Span Extraction** workflow runs Fastino's GLiNER2.5 boundary models
+([multi-v1](https://huggingface.co/fastino/gliner2.5-multi-v1), 287M, and
+[base-v1](https://huggingface.co/fastino/gliner2.5-base-v1), 194M) over real PDF pages.
+Each span is drawn on the lines it covers, so a 60-word clause is highlighted line by line.
+
+- **Text and boxes:** `services/extract/document.py` reads every character and its box with
+  pdfium. It orders lines by layout (recursive XY-cut), joins words hyphenated across lines,
+  and maps each span back to one rectangle per text line.
+- **Reading order:** layout order matters on real files. Flattened form values are written at
+  the end of the content stream, and two-column pages need column order.
+- **Splitting:** by default the page is split where a numbered item or section starts, so a
+  span cannot run into the next item. On the flood policy's definitions page, whole-page
+  extraction returned a 177-word "definition" that covered five of them; with the split, no
+  span crosses an item boundary.
+- **The 8-word cap:** the toggle marks where a fixed-width span head (8 words) would have
+  stopped each long span.
+- **Labels and uploads:** you can edit the labels or upload your own text-layer PDF. Label
+  examples in the bundled schemas are paraphrased and never copied from the document.
+
+Samples (in `fixtures/documents/`):
+
+| Document | Source |
+|---|---|
+| FEMA Standard Flood Insurance Policy, Dwelling Form (16 pages) | 44 CFR 61 App. A(1), 2024, from [GovInfo](https://www.govinfo.gov/content/pkg/CFR-2024-title44-vol1/pdf/CFR-2024-title44-vol1-part61-appA1.pdf) |
+| Medicare Advance Beneficiary Notice, English and Spanish | CMS's official fillable CMS-R-131, filled with synthetic data by `experiments/d1/make_abn.py` |
+
+Start the service (it loads both models, about 2 GB of GPU memory) and the UI:
+
+```bash
+./start-extract.sh
+./start-ui.sh
+```
+
+Measured on an RTX 5070 Ti, with the default schema and numbered-item splitting:
+
+| | Whole policy (16 pages) |
+|---|---:|
+| Spans | 569 |
+| Spans longer than 8 words | 34 |
+| Model time | 4.0 s (250 ms per page; about 110 ms without splitting) |
+
+Known limits:
+
+- Scanned PDFs without a text layer need OCR first.
+- Long sentences inside table cells or checkbox options, such as the ABN's three options,
+  come back as short spans.
+- On the Spanish ABN, English labels find the tests, costs, and phone numbers, but fewer
+  fields than on the English form.
+
+The service pins `gliner2` to a GitHub commit: release 2.0.0 cannot load these
+checkpoints' tokenizers with `transformers` 4.57.
+
 ## Host all six demos on Hugging Face Spaces
 
 Create a **Docker Space** and push this repository's files to it. The root
