@@ -11,3 +11,4 @@ gradio.log
 d1.log
 .extract.pid
 extract.log
+fixtures/documents/local/

@@ -15,20 +15,26 @@ def test_schema_labels_must_be_safe_and_described():
             document_extract.validate_schema(bad)
 
 
-def test_uploads_must_be_pdfs():
+def test_uploads_must_be_pdfs_or_page_images():
     pdf = "data:application/pdf;base64," + base64.b64encode(b"%PDF-1.7 test").decode()
-    assert document_extract.decode_pdf(pdf).startswith(b"%PDF")
+    assert document_extract.decode_document(pdf).startswith(b"%PDF")
+    png = "data:image/png;base64," + base64.b64encode(b"\x89PNG\r\n").decode()
+    assert document_extract.decode_document(png).startswith(b"\x89PNG")
     with pytest.raises(ValueError):
-        document_extract.decode_pdf("data:application/pdf;base64," + base64.b64encode(b"not a pdf").decode())
+        document_extract.decode_document("data:application/pdf;base64," + base64.b64encode(b"not a pdf").decode())
     with pytest.raises(ValueError):
-        document_extract.decode_pdf("data:image/png;base64,AAAA")
+        document_extract.decode_document("data:image/png;base64," + base64.b64encode(b"%PDF pretending").decode())
+    with pytest.raises(ValueError):
+        document_extract.decode_document("data:text/plain;base64,AAAA")
 
 
 def test_samples_ship_their_pdfs_and_paraphrased_schemas():
     for doc in document_extract.load_samples():
+        document_extract.validate_schema(doc["schema"])
+        if doc.get("local"):
+            continue  # local-only documents are not part of the repository
         pdf = (document_extract.DOCUMENTS / doc["file"]).read_bytes()
         assert pdf.startswith(b"%PDF") and doc["source"].startswith("https://")
-        document_extract.validate_schema(doc["schema"])
 
 
 def test_every_page_streams_its_image_and_spans_and_the_summary_finds_the_longest(monkeypatch, tmp_path):

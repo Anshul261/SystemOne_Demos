@@ -30,6 +30,7 @@ class Page:
     boxes: list[tuple[float, float, float, float] | None]  # per model character, image fractions (x0, y0, x1, y1)
     image: bytes = field(repr=False, default=b"")  # rendered JPEG
     image_size: tuple[int, int] = (0, 0)
+    rows: list[tuple[int, int]] | None = None  # OCR pages: character range of each visual row
 
 
 def open_pdf(data: bytes) -> pdfium.PdfDocument:
@@ -106,10 +107,21 @@ def read_page(pdf: pdfium.PdfDocument, index: int, scale: float = 3.0) -> Page:
         last = b or last
     lines = [line for line in lines if any(b for c, b in line if not c.isspace())]
 
+    ordered = reading_order([union(b for _, b in line if b) for line in lines], width, height)
+    text, boxes, _ = assemble(lines, ordered)
+    image = page.render(scale=scale).to_pil().convert("RGB")
+    return finish(index + 1, width, height, text, boxes, image, crop=True)
+
+
+def assemble(lines: list[list[tuple[str, tuple | None]]], ordered: list[int],
+             separators: dict[int, str] | None = None) -> tuple[str, list, list[int]]:
+    """Ordered lines to one string and a box per character: spaces between lines (or `separators[k]`
+    before the k-th ordered line), words broken by a line-end hyphen joined back together. Also returns
+    where each ordered line starts in the text."""
     text: list[str] = []
     boxes: list[tuple[float, float, float, float] | None] = []
+    starts: list[int] = []
     join_next = False
-    ordered = reading_order([union(b for _, b in line if b) for line in lines], width, height)
     for k, li in enumerate(ordered):
         chars = lines[li]
         while chars and chars[-1][0].isspace():
@@ -121,8 +133,10 @@ def read_page(pdf: pdfium.PdfDocument, index: int, scale: float = 3.0) -> Page:
         if broken:  # a word broken across lines: drop the hyphen and keep the word whole
             chars = chars[:-1]
         if text and text[-1] != " " and not join_next:
-            text.append(" ")
-            boxes.append(None)
+            for ch in (separators or {}).get(k, " "):
+                text.append(ch)
+                boxes.append(None)
+        starts.append(len(text))
         for ch, b in chars:
             if ch.isspace():
                 if text and text[-1] != " ":
@@ -132,14 +146,15 @@ def read_page(pdf: pdfium.PdfDocument, index: int, scale: float = 3.0) -> Page:
                 text.append(ch)
                 boxes.append(b)
         join_next = broken
+    return "".join(text), boxes, starts
 
-    image = page.render(scale=scale).to_pil().convert("RGB")
-    joined = "".join(text)
-    lead = len(joined) - len(joined.lstrip())
-    text_boxes = boxes[lead: lead + len(joined.strip())]
-    # Crop the blank margins so the text fills the viewer; boxes move into the cropped frame.
+
+def finish(number: int, width: float, height: float, text: str, boxes: list, image, crop: bool) -> Page:
+    """Strip the text, optionally crop blank margins (boxes move into the cropped frame), encode the image."""
+    lead = len(text) - len(text.lstrip())
+    text_boxes = boxes[lead: lead + len(text.strip())]
     real = [b for b in text_boxes if b]
-    if real:
+    if crop and real:
         cx0 = max(0.0, min(b[0] for b in real) - TEXT_MARGIN)
         cy0 = max(0.0, min(b[1] for b in real) - TEXT_MARGIN)
         cx1 = min(1.0, max(b[2] for b in real) + TEXT_MARGIN)
@@ -151,7 +166,78 @@ def read_page(pdf: pdfium.PdfDocument, index: int, scale: float = 3.0) -> Page:
                       for b in text_boxes]
     buffer = io.BytesIO()
     image.save(buffer, "JPEG", quality=88)
-    return Page(index + 1, width, height, joined.strip(), text_boxes, buffer.getvalue(), image.size)
+    return Page(number, width, height, text.strip(), text_boxes, buffer.getvalue(), image.size)
+
+
+def raster_rows(boxes: list[tuple[float, float, float, float]]) -> list[list[int]]:
+    """Lines grouped into top-to-bottom rows, left to right within a row. For scanned tables this keeps a test, its result,
+    unit and range together, where XY-cut would read whole columns one after another."""
+    order = sorted(range(len(boxes)), key=lambda i: (boxes[i][1] + boxes[i][3]) / 2)
+    rows: list[list[int]] = []
+    for i in order:
+        mid = (boxes[i][1] + boxes[i][3]) / 2
+        if rows:
+            row = rows[-1]
+            row_mid = sum((boxes[j][1] + boxes[j][3]) / 2 for j in row) / len(row)
+            height = sum(boxes[j][3] - boxes[j][1] for j in row) / len(row)
+            if abs(mid - row_mid) < 0.5 * height:
+                row.append(i)
+                continue
+        rows.append([i])
+    return [sorted(row, key=lambda j: boxes[j][0]) for row in rows]
+
+
+_ocr = None
+
+
+def read_image(data: bytes) -> Page:
+    """A scanned or photographed page: docTR finds and reads each word; a word's characters share its
+    width evenly, which is close enough to outline a span."""
+    global _ocr
+    from PIL import Image
+
+    image = Image.open(io.BytesIO(data))
+    image.load()
+    image = image.convert("RGB")
+    if _ocr is None:
+        import torch
+        from doctr.models import ocr_predictor
+
+        _ocr = ocr_predictor(det_arch="db_resnet50", reco_arch="crnn_vgg16_bn", pretrained=True,
+                             assume_straight_pages=True)
+        if torch.cuda.is_available():
+            _ocr = _ocr.cuda()
+        _ocr.eval()
+    import numpy as np
+
+    result = _ocr([np.asarray(image)])
+    lines: list[list[tuple[str, tuple | None]]] = []
+    for block in result.pages[0].blocks:
+        for line in block.lines:
+            chars: list[tuple[str, tuple | None]] = []
+            for word in line.words:
+                (x0, y0), (x1, y1) = word.geometry
+                value = word.value
+                if chars:
+                    chars.append((" ", None))
+                step = (x1 - x0) / max(1, len(value))
+                chars += [(ch, (x0 + k * step, y0, x0 + (k + 1) * step, y1)) for k, ch in enumerate(value)]
+            if chars:
+                lines.append(chars)
+    rows = raster_rows([union(b for _, b in line if b) for line in lines])
+    ordered = [i for row in rows for i in row]
+    # Cells that share a row are separated by " | ", so a test name and its result read as two cells.
+    first_of_row, k = set(), 0
+    for row in rows:
+        first_of_row.add(k)
+        k += len(row)
+    separators = {k: " | " for k in range(1, len(ordered)) if k not in first_of_row}
+    text, boxes, starts = assemble(lines, ordered, separators)
+    bounds = [starts[k] for k in sorted(first_of_row)] + [len(text) + 1]
+    ranges = [(a, b - 1) for a, b in zip(bounds, bounds[1:])]
+    page = finish(1, float(image.width), float(image.height), text, boxes, image, crop=False)
+    page.rows = ranges
+    return page
 
 
 def blocks(text: str) -> list[tuple[int, int]]:

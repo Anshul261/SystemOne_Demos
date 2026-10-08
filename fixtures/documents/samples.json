@@ -18,7 +18,8 @@
     "flood_zone": "a flood zone designation, for example 'Zone X' or 'Zones B, C'",
     "law_or_agency": "a statute, regulation or government agency, for example 'Fair Credit Reporting Act' or 'Department of Labor'"
    },
-   "pages": 16
+   "pages": 16,
+   "model": "multi"
   },
   {
    "id": "abn-en",
@@ -38,7 +39,8 @@
     "phone_number": "a phone number, for example '1-888-555-0142'",
     "person_name": "the name of the person who signed, for example 'Jordan Lee'",
     "form_identifier": "a form number or control number, for example 'Form HHS-690'"
-   }
+   },
+   "model": "multi"
   },
   {
    "id": "abn-es",
@@ -58,7 +60,8 @@
     "phone_number": "a phone number, for example '1-888-555-0142'",
     "person_name": "the name of the person who signed, for example 'Jordan Lee'",
     "form_identifier": "a form number or control number, for example 'Form HHS-690'"
-   }
+   },
+   "model": "multi"
   }
  ]
 }

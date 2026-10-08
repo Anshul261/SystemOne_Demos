@@ -711,7 +711,9 @@ function xSelectDocument() {
   const doc = xDoc();
   xState.page = doc.default_page || 1;
   xState.pageCount = doc.pages || null;
-  $("x-source").innerHTML = `${escape(doc.subtitle)} · <a href="${escape(doc.source)}" target="_blank" rel="noreferrer">source PDF ↗</a> · ${escape(doc.license)}`;
+  const link = doc.source ? ` · <a href="${escape(doc.source)}" target="_blank" rel="noreferrer">source PDF ↗</a>` : "";
+  $("x-source").innerHTML = `${escape(doc.subtitle)}${link} · ${escape(doc.license)}${doc.note ? ` · ${escape(doc.note)}` : ""}`;
+  if (doc.model && $("model").value !== doc.model) $("model").value = doc.model;
   xSetRows(doc.schema);
   xInvalidate();
   xPagerLabel();
@@ -737,9 +739,10 @@ function xStats() {
   $("xs-longest-sub").textContent = longest ? `${pretty(longest.label)} · ${longest.lines.length} lines` : "no spans";
   pop("xs-beyond", String(r.spans.filter((s) => s.legacy_cut).length));
   pop("xs-spans", String(r.spans.length));
-  $("xs-spans-sub").textContent = `on page ${xState.page} · ${r.words} words · ${r.blocks > 1 ? `${r.blocks} blocks` : "whole page"}`;
+  const unit = r.split === "rows" ? "table rows" : "blocks";
+  $("xs-spans-sub").textContent = `${r.text_source === "ocr" ? "OCR · " : `page ${xState.page} · `}${r.words} words · ${r.blocks > 1 ? `${r.blocks} ${unit}` : "whole page"}`;
   pop("xs-ms", `${r.model_ms.toFixed(0)} ms`);
-  $("xs-ms-sub").textContent = r.blocks > 1 ? `${r.blocks} blocks in one batch` : "one pass over the whole page";
+  $("xs-ms-sub").textContent = r.blocks > 1 ? `${r.blocks} ${unit} in one batch` : "one pass over the whole page";
 }
 
 function xRenderPage(animate = true) {
@@ -832,7 +835,7 @@ function consumeExtract(record) {
     xRenderPage(false);
     status(`Page ${record.page} of ${record.page_count} · ${record.words} words · finding spans…`, "busy");
   } else if (record.event === "page_extracted") {
-    Object.assign(xState.results[record.page], { spans: record.spans, model_ms: record.model_ms, block_marks: record.block_marks, blocks: record.blocks });
+    Object.assign(xState.results[record.page], { spans: record.spans, model_ms: record.model_ms, block_marks: record.block_marks, blocks: record.blocks, split: record.split, text_source: record.text_source });
     $("x-scan").hidden = true;
     if (record.page === xState.page) xRenderPage(true);
     status(`Page ${record.page} · ${record.spans.length} spans · longest ${record.longest_words} words · ${record.model_ms.toFixed(0)} ms`, "busy");
@@ -962,16 +965,16 @@ $("x-list").addEventListener("click", (event) => {
 $("x-upload").addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (!file) return;
-  if (file.type !== "application/pdf" || file.size > 25 * 1024 * 1024) { fail(new Error("Upload a PDF under 25 MB.")); return; }
+  if (!["application/pdf", "image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 25 * 1024 * 1024) { fail(new Error("Upload a PDF, or a JPEG, PNG or WebP scan, under 25 MB.")); return; }
   const reader = new FileReader();
   reader.onload = () => {
     xState.upload = { name: file.name, data: reader.result };
     xState.page = 1;
     xState.pageCount = null;
     if (!$("x-document").querySelector('option[value="upload"]')) $("x-document").insertAdjacentHTML("beforeend", '<option value="upload"></option>');
-    $("x-document").querySelector('option[value="upload"]').textContent = `Your PDF · ${file.name}`;
+    $("x-document").querySelector('option[value="upload"]').textContent = `Your file · ${file.name}`;
     $("x-document").value = "upload";
-    $("x-source").textContent = `${file.name} · ${(file.size / 1024).toFixed(0)} KB · read on this machine. Scanned PDFs need a text layer.`;
+    $("x-source").textContent = `${file.name} · ${(file.size / 1024).toFixed(0)} KB · read on this machine${file.type.startsWith("image/") ? " with OCR" : ". Scanned PDFs need a text layer; upload a scan as an image"}.`;
     $("error").hidden = true;
     xInvalidate("PDF loaded. Edit the labels for your document, then extract a page.");
   };

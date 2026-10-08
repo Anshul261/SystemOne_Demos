@@ -17,16 +17,17 @@ from fastapi import FastAPI, HTTPException
 from gliner2 import AutoExtractor
 from pydantic import BaseModel, Field
 
-from document import Page, blocks, open_pdf, read_page, span_lines, word_boxes
+from document import Page, blocks, open_pdf, read_image, read_page, span_lines, word_boxes
 
 MODELS = {"multi": "fastino/gliner2.5-multi-v1", "base": "fastino/gliner2.5-base-v1"}
 DEVICE = os.getenv("EXTRACT_DEVICE", "cuda" if torch.cuda.is_available() else "cpu")
 PRELOAD = [m for m in os.getenv("EXTRACT_MODELS", "multi,base").split(",") if m]
 MAX_PDF_BYTES = 25 * 1024 * 1024
+IMAGE_MAGIC = (b"\xff\xd8\xff", b"\x89PNG", b"RIFF")  # JPEG, PNG, WebP
 LEGACY_SPAN_WIDTH = 8  # the old span-head architecture scored spans up to this many words
 
 loaded: dict[str, AutoExtractor] = {}
-locks = {name: threading.Lock() for name in MODELS}
+locks = {name: threading.Lock() for name in [*MODELS, "ocr"]}
 pages: OrderedDict[tuple[str, int], tuple[Page, int, float]] = OrderedDict()
 pages_lock = threading.Lock()
 app = FastAPI(title="SystemOne extraction service")
@@ -42,7 +43,7 @@ def load(name: str) -> AutoExtractor:
 
 
 def page_of(data: bytes, number: int) -> tuple[Page, int, float]:
-    """A parsed page from a small LRU cache: rendering is most of the parse time."""
+    """A parsed page from a small LRU cache: rendering, or OCR for an image, is most of the parse time."""
     key = (hashlib.sha256(data).hexdigest(), number)
     with pages_lock:
         if key in pages:
@@ -50,14 +51,20 @@ def page_of(data: bytes, number: int) -> tuple[Page, int, float]:
             page, count, _ = pages[key]
             return page, count, 0.0
     started = time.perf_counter()
-    pdf = open_pdf(data)
-    try:
-        count = len(pdf)
-        if not 1 <= number <= count:
-            raise HTTPException(422, f"Page {number} does not exist; the document has {count} pages")
-        page = read_page(pdf, number - 1)
-    finally:
-        pdf.close()
+    if data.startswith(IMAGE_MAGIC):
+        if number != 1:
+            raise HTTPException(422, "An image has one page")
+        with locks["ocr"]:
+            page, count = read_image(data), 1
+    else:
+        pdf = open_pdf(data)
+        try:
+            count = len(pdf)
+            if not 1 <= number <= count:
+                raise HTTPException(422, f"Page {number} does not exist; the document has {count} pages")
+            page = read_page(pdf, number - 1)
+        finally:
+            pdf.close()
     parse_ms = (time.perf_counter() - started) * 1000
     with pages_lock:
         pages[key] = (page, count, parse_ms)
@@ -68,7 +75,8 @@ def page_of(data: bytes, number: int) -> tuple[Page, int, float]:
 
 class Request(BaseModel):
     model: str = "multi"
-    pdf: str
+    pdf: str = ""
+    image: str = ""  # a scanned or photographed page (JPEG, PNG or WebP), read with OCR
     page: int = Field(1, ge=1)
     labels: dict[str, str] = Field(alias="schema", min_length=1, max_length=16)
     threshold: float = Field(0.5, ge=0.05, le=0.99)
@@ -84,15 +92,16 @@ def health():
 def extract(request: Request):
     if request.model not in MODELS:
         raise HTTPException(422, f"Unknown model {request.model!r}; choose one of {sorted(MODELS)}")
-    data = base64.b64decode(request.pdf, validate=True)
-    if len(data) > MAX_PDF_BYTES or not data.startswith(b"%PDF"):
-        raise HTTPException(422, "Send a PDF under 25 MB")
+    data = base64.b64decode(request.pdf or request.image, validate=True)
+    if len(data) > MAX_PDF_BYTES or not (data.startswith(b"%PDF") or data.startswith(IMAGE_MAGIC)):
+        raise HTTPException(422, "Send a PDF or a JPEG, PNG or WebP image under 25 MB")
     page, count, parse_ms = page_of(data, request.page)
     response = {"page": request.page, "page_count": count, "width": page.width, "height": page.height,
                 "image": base64.b64encode(page.image).decode("ascii"), "image_type": "image/jpeg",
                 "image_size": list(page.image_size),
                 "chars": len(page.text), "words": len(page.text.split()), "parse_ms": round(parse_ms, 1),
-                "spans": [], "model_ms": 0.0, "model": MODELS[request.model]}
+                "spans": [], "model_ms": 0.0, "model": MODELS[request.model],
+                "text_source": "ocr" if data.startswith(IMAGE_MAGIC) else "pdf"}
     if not page.text.strip():
         response["note"] = "This page has no text layer. Scanned pages need OCR first."
         return response
@@ -101,16 +110,18 @@ def extract(request: Request):
         if DEVICE == "cuda":
             torch.cuda.synchronize()
         started = time.perf_counter()
-        ranges = blocks(page.text) if request.segment else [(0, len(page.text))]
+        # Split before extracting: scanned tables by visual row, PDFs at numbered items.
+        ranges = ((page.rows or blocks(page.text)) if request.segment else [(0, len(page.text))])
         results = model.batch_extract_entities([page.text[a:b] for a, b in ranges], request.labels, batch_size=16,
                                                include_spans=True, include_confidence=True, threshold=request.threshold)
         if DEVICE == "cuda":
             torch.cuda.synchronize()
         response["model_ms"] = round((time.perf_counter() - started) * 1000, 1)
     response["blocks"] = len(ranges)
-    # A mark where each block starts, so the split is visible on the page.
+    response["split"] = "none" if not request.segment else "rows" if page.rows else "items"
+    # A mark where each numbered item starts, so the split is visible on the page (rows need none).
     response["block_marks"] = ([next((b for b in page.boxes[a:z] if b), None) for a, z in ranges[1:]]
-                               if request.segment else [])
+                               if response["split"] == "items" else [])
     spans = []
     for (offset, _), result in zip(ranges, results):
         for label, entries in result.get("entities", {}).items():

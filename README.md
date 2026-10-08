@@ -255,9 +255,21 @@ Measured on an RTX 5070 Ti, with the default schema and numbered-item splitting:
 | Spans longer than 8 words | 34 |
 | Model time | 4.0 s (250 ms per page; about 110 ms without splitting) |
 
+**Scans and photos:** upload a JPEG, PNG, or WebP page and the service reads it with
+[docTR](https://github.com/mindee/doctr) OCR on the GPU (about 300 ms per page once warm). It
+reads scanned tables row by row and writes " | " between cells that share a row, so a test
+name, its result, and its range stay separate. On one real haematology report, GLiNER2.5
+Base found 10 test names, 13 values, and 14 of 15 reference ranges. Multi did far worse on
+that English OCR text. Each document can name its own default model.
+
+**Documents that stay on your machine:** list them in `fixtures/documents/local/samples.json`,
+with their files in the same folder. The folder is git-ignored. The UI shows those documents
+only when their files are present.
+
 Known limits:
 
-- Scanned PDFs without a text layer need OCR first.
+- A scanned PDF is read from its text layer; upload the page as an image to use OCR.
+- OCR mistakes reach the extractor: "fL" can be read as "L", and "27.0" as "27,0".
 - Long sentences inside table cells or checkbox options, such as the ABN's three options,
   come back as short spans.
 - On the Spanish ABN, English labels find the tests, costs, and phone numbers, but fewer

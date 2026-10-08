@@ -18,6 +18,9 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parent
 DOCUMENTS = ROOT / "fixtures" / "documents"
+LOCAL_DOCUMENTS = DOCUMENTS / "local" / "samples.json"  # git-ignored: documents that stay on this machine
+UPLOAD_TYPES = {"data:application/pdf;base64": b"%PDF", "data:image/jpeg;base64": b"\xff\xd8\xff",
+                "data:image/png;base64": b"\x89PNG", "data:image/webp;base64": b"RIFF"}
 MODEL_NAMES = {"multi": "GLiNER2.5 Multi", "base": "GLiNER2.5 Base"}
 MODEL_SIZES = {"multi": "287M · multilingual", "base": "194M · English"}
 LABEL = re.compile(r"^[a-z][a-z0-9_]{0,39}$")
@@ -26,7 +29,12 @@ MAX_PAGES = 40
 
 
 def load_samples() -> list[dict[str, Any]]:
-    return json.loads((DOCUMENTS / "samples.json").read_text(encoding="utf-8"))["documents"]
+    """Bundled public documents, then any local-only ones whose files are present."""
+    docs = json.loads((DOCUMENTS / "samples.json").read_text(encoding="utf-8"))["documents"]
+    if LOCAL_DOCUMENTS.exists():
+        local = json.loads(LOCAL_DOCUMENTS.read_text(encoding="utf-8"))["documents"]
+        docs += [{**doc, "local": True} for doc in local if (DOCUMENTS / doc["file"]).exists()]
+    return docs
 
 
 def validate_schema(schema: dict[str, str]) -> dict[str, str]:
@@ -44,13 +52,15 @@ def validate_schema(schema: dict[str, str]) -> dict[str, str]:
     return clean
 
 
-def decode_pdf(data_url: str) -> bytes:
+def decode_document(data_url: str) -> bytes:
+    """An uploaded PDF, or a JPEG, PNG or WebP scan that the service will read with OCR."""
     header, _, payload = data_url.partition(",")
-    if header != "data:application/pdf;base64" or not payload:
-        raise ValueError("Upload a PDF file.")
+    magic = UPLOAD_TYPES.get(header)
+    if magic is None or not payload:
+        raise ValueError("Upload a PDF, or a JPEG, PNG or WebP image of a page.")
     data = base64.b64decode(payload, validate=True)
-    if len(data) > 25 * 1024 * 1024 or not data.startswith(b"%PDF"):
-        raise ValueError("Upload a PDF under 25 MB.")
+    if len(data) > 25 * 1024 * 1024 or not data.startswith(magic):
+        raise ValueError("Upload a PDF or image under 25 MB.")
     return data
 
 
@@ -98,6 +108,7 @@ def run_extraction(
         beyond = sum(1 for s in spans if s["legacy_cut"])
         emit("page_extracted", doc_id=document["id"], page=number, spans=spans, model_ms=result["model_ms"],
              blocks=result.get("blocks", 1), block_marks=result.get("block_marks", []),
+             split=result.get("split", "none"), text_source=result.get("text_source", "pdf"),
              elapsed_ms=round((time.monotonic() - started) * 1000, 1), beyond_cap=beyond,
              longest_words=longest["words"] if longest else 0)
         done.append(number)

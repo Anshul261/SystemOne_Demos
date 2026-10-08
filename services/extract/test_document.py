@@ -51,3 +51,22 @@ def test_span_lines_merge_by_line_including_punctuation():
     end = p.text.index("on all sides.", start) + len("on all sides.")
     lines = span_lines(p, start, end)
     assert 3 <= len(lines) <= 5  # the definition wraps over a few lines, not one box per comma
+
+
+def test_scanned_tables_read_row_by_row_with_cells_kept_apart():
+    from document import assemble, raster_rows
+
+    def line(text, x0, y0):
+        step = 0.01
+        return [(c, (x0 + i * step, y0, x0 + (i + 1) * step, y0 + 0.015)) for i, c in enumerate(text)]
+
+    # A slightly skewed two-row table, given in column order as OCR often returns it.
+    lines = [line("Haemoglobin", 0.1, 0.30), line("RBC Count", 0.1, 0.35),
+             line("12.5", 0.4, 0.302), line("4.62", 0.4, 0.352), line("11.5-16.0", 0.7, 0.305)]
+    rows = raster_rows([(b[0][1][0], b[0][1][1], b[-1][1][2], b[-1][1][3]) for b in lines])
+    assert rows == [[0, 2, 4], [1, 3]]
+    ordered = [i for row in rows for i in row]
+    text, boxes, starts = assemble(lines, ordered, {1: " | ", 2: " | ", 4: " | "})
+    assert text == "Haemoglobin | 12.5 | 11.5-16.0 RBC Count | 4.62"
+    assert len(text) == len(boxes) and boxes[text.index("|")] is None
+    assert [text[s:s + 3] for s in starts] == ["Hae", "12.", "11.", "RBC", "4.6"]

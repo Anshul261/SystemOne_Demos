@@ -350,8 +350,8 @@ def stream_extraction(
     if model not in document_extract.MODEL_NAMES:
         raise ValueError("Choose GLiNER2.5 Multi or Base.")
     if upload:
-        pdf = document_extract.decode_pdf(upload)
-        doc = {"id": f"upload-{uuid4().hex[:6]}", "title": "Your PDF", "source": "upload"}
+        pdf = document_extract.decode_document(upload)
+        doc = {"id": f"upload-{uuid4().hex[:6]}", "title": "Your document", "source": "upload"}
     else:
         doc = next((d for d in document_extract.load_samples() if d["id"] == document), None)
         if doc is None:
