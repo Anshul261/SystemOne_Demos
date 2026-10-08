@@ -13,6 +13,7 @@ let runFailed = false, finished = false, currentStage = 0;
 
 function isSimulation() { return workflow === "clinic" || workflow === "helpdesk"; }
 function isStamp() { return workflow === "stamp"; }
+function isExtract() { return workflow === "extract"; }
 
 function status(text, state = "") {
   $("status").textContent = text;
@@ -28,7 +29,8 @@ function fail(error) {
 
 function setBusy(value) {
   running = value;
-  document.querySelectorAll(".nav-button, #model, #sample, #send, #inbox, #run-browser, #stamp-sample, #stamp-batch, #stamp-upload").forEach((el) => { el.disabled = value; });
+  document.querySelectorAll(".nav-button, #model, #sample, #send, #inbox, #run-browser, #stamp-sample, #stamp-batch, #stamp-upload, #x-document, #x-threshold, #x-upload, #x-run, #x-run-all, #x-add, #x-reset, #x-segment").forEach((el) => { el.disabled = value; });
+  if (typeof xPagerLabel === "function" && config) xPagerLabel();
   $("stamp-check").disabled = value || (!uploadData && !$("stamp-sample").value);
   $("stamp-download").disabled = value || !stampLedger.length;
   $("subject").readOnly = value;
@@ -165,6 +167,21 @@ function selectWorkflow(id) {
   $("workflow-title").textContent = item.name;
   fillModels();
   $("stamp-demo").hidden = !isStamp();
+  $("extract-demo").hidden = !isExtract();
+  if (isExtract()) {
+    $("workflow-kind").textContent = "Document vision / 08";
+    $("workflow-description").textContent = "Extract spans of any length from a real PDF and see exactly which lines each one covers.";
+    $("mode-badge").textContent = "Live extraction · GPU";
+    $("simulation").hidden = true;
+    $("browser-demo").hidden = true;
+    $("footer-note").textContent = "Public-domain U.S. government documents. Real model predictions.";
+    resetRun();
+    $("run-count").textContent = "0 spans";
+    $("model-time").textContent = "Model time · waiting";
+    if (!xState.docId) xSelectDocument(); else xRenderPage(false);
+    status("Ready. Extract this page, or every page of the document.");
+    return;
+  }
   if (isStamp()) {
     $("workflow-kind").textContent = "Document vision / 07";
     $("workflow-description").textContent = "Check that a certificate carries the right official stamp, from a scan or a phone photo.";
@@ -202,7 +219,9 @@ function selectWorkflow(id) {
 }
 
 function fillModels() {
-  const options = isStamp()
+  const options = isExtract()
+    ? config.extract.models.map((m) => [m.id, m.name])
+    : isStamp()
     ? config.stamp.models.map((m) => [m.id, m.name])
     : config.models.map((m) => [m, m === "gliner" ? "GLiNER2.5 Decide" : "JPT 0.8B"]);
   if ([...$("model").options].map((o) => o.value).join() === options.map(([id]) => id).join()) return;
@@ -211,6 +230,7 @@ function fillModels() {
 
 function updateModel() {
   if (isStamp()) { renderReliability(); updateVisionTitle(); return; }
+  if (isExtract()) return;
   $("model-title").textContent = `${modelName()} reads it`;
   document.querySelector(".model-icon").textContent = modelName()[0];
   const item = config.workflows.find((item) => item.id === workflow);
@@ -644,11 +664,325 @@ $("stamp-download").addEventListener("click", () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
+// ---- Long-span extraction -------------------------------------------------
+const xPalette = ["#2563eb", "#16a34a", "#dc2626", "#9333ea", "#d97706", "#0891b2", "#db2777", "#65a30d", "#4f46e5", "#ea580c", "#0d9488", "#be123c"];
+const xState = { docId: "", upload: null, page: 1, pageCount: null, results: {}, rows: [], hidden: new Set(), records: [], summary: null, longest: null };
+const xLabelPattern = /^[a-z][a-z0-9_]{0,39}$/;
+const xDoc = () => config.extract.documents.find((d) => d.id === xState.docId);
+const xColor = (label) => xPalette[Math.max(0, xState.rows.findIndex((r) => r.label === label)) % xPalette.length];
+const xSchema = () => Object.fromEntries(xState.rows.map((r) => [r.label.trim(), r.description.trim()]));
+const pct = (v) => `${(v * 100).toFixed(3)}%`;
+
+function xSetRows(schema) {
+  xState.rows = Object.entries(schema || {}).map(([label, description]) => ({ label, description }));
+  xState.hidden.clear();
+  xRenderRows();
+}
+
+function xRenderRows() {
+  $("x-label-count").textContent = xState.rows.length;
+  $("x-labels").innerHTML = xState.rows.map((r, i) => `<div class="x-label-row" style="--c:${xPalette[i % xPalette.length]}"><span class="swatch"></span>
+    <input data-row="${i}" data-field="label" value="${escape(r.label)}" maxlength="40" aria-label="Label ${i + 1} name" ${running ? "disabled" : ""}>
+    <textarea data-row="${i}" data-field="description" maxlength="400" aria-label="Label ${i + 1} description" ${running ? "disabled" : ""}>${escape(r.description)}</textarea>
+    <button type="button" data-remove="${i}" aria-label="Remove ${escape(r.label)}" ${running ? "disabled" : ""}>×</button></div>`).join("");
+  $("x-add").disabled = running || xState.rows.length >= config.extract.max_labels;
+}
+
+function xInvalidate(message) {
+  xState.results = {};
+  xState.summary = null;
+  $("x-pages").hidden = true;
+  xRenderPage();
+  if (message) status(message);
+}
+
+function xPagerLabel() {
+  $("x-page-label").textContent = xState.pageCount ? `Page ${xState.page} of ${xState.pageCount}` : `Page ${xState.page}`;
+  $("x-prev").disabled = running || xState.page <= 1;
+  $("x-next").disabled = running || (xState.pageCount ? xState.page >= xState.pageCount : true);
+}
+
+function xSelectDocument() {
+  const value = $("x-document").value;
+  if (value === "upload") return;
+  xState.docId = value;
+  xState.upload = null;
+  $("x-upload").value = "";
+  const doc = xDoc();
+  xState.page = doc.default_page || 1;
+  xState.pageCount = doc.pages || null;
+  $("x-source").innerHTML = `${escape(doc.subtitle)} · <a href="${escape(doc.source)}" target="_blank" rel="noreferrer">source PDF ↗</a> · ${escape(doc.license)}`;
+  xSetRows(doc.schema);
+  xInvalidate();
+  xPagerLabel();
+}
+
+function xStats() {
+  const r = xState.results[xState.page];
+  const all = xState.summary;
+  const pop = (id, text) => { const el = $(id); if (el.textContent !== text) { el.textContent = text; el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); } };
+  if (all && all.pages.length > 1) {
+    pop("xs-longest", all.longest ? `${all.longest.words} words` : "—");
+    $("xs-longest-sub").textContent = all.longest ? `${pretty(all.longest.label)} · page ${all.longest.page} · ${all.longest.lines} lines` : "";
+    pop("xs-beyond", String(all.beyond_cap));
+    pop("xs-spans", String(all.spans));
+    $("xs-spans-sub").textContent = `across ${all.pages.length} pages`;
+    pop("xs-ms", `${all.model_ms.toFixed(0)} ms`);
+    $("xs-ms-sub").textContent = `${(all.model_ms / all.pages.length).toFixed(0)} ms per page`;
+    return;
+  }
+  if (!r?.spans) { ["xs-longest", "xs-beyond", "xs-spans", "xs-ms"].forEach((id) => { $(id).textContent = "—"; }); $("xs-longest-sub").textContent = "words"; return; }
+  const longest = r.spans.reduce((a, s) => (!a || s.words > a.words ? s : a), null);
+  pop("xs-longest", longest ? `${longest.words} words` : "—");
+  $("xs-longest-sub").textContent = longest ? `${pretty(longest.label)} · ${longest.lines.length} lines` : "no spans";
+  pop("xs-beyond", String(r.spans.filter((s) => s.legacy_cut).length));
+  pop("xs-spans", String(r.spans.length));
+  $("xs-spans-sub").textContent = `on page ${xState.page} · ${r.words} words · ${r.blocks > 1 ? `${r.blocks} blocks` : "whole page"}`;
+  pop("xs-ms", `${r.model_ms.toFixed(0)} ms`);
+  $("xs-ms-sub").textContent = r.blocks > 1 ? `${r.blocks} blocks in one batch` : "one pass over the whole page";
+}
+
+function xRenderPage(animate = true) {
+  const r = xState.results[xState.page];
+  xPagerLabel();
+  $("x-empty").hidden = Boolean(r?.image_key);
+  $("x-page").hidden = !r?.image_key;
+  if (r?.image_key && !$("x-page").src.endsWith(`${r.image_key}.jpg`)) $("x-page").src = `extract-pages/${r.image_key}.jpg`;
+  $("x-viewer").style.aspectRatio = r?.image_size ? `${r.image_size[0]} / ${r.image_size[1]}` : "";
+  if (!r) {
+    $("x-empty").querySelector("h3").textContent = Object.keys(xState.results).length ? `Page ${xState.page} has not been extracted yet` : "Pick a page and extract it";
+  }
+  const spans = r?.spans || [];
+  const order = spans.map((s, i) => i).sort((a, b) => spans[a].start - spans[b].start);
+  const rank = new Map(order.map((i, k) => [i, k]));
+  const step = Math.min(70, 2400 / Math.max(1, spans.length));
+  const delay = (i, line) => (animate ? rank.get(i) * step + line * 45 : 0);
+  const cap = $("x-cap").checked;
+  const byLength = spans.map((s, i) => i).sort((a, b) => spans[b].words - spans[a].words);
+  xState.longest = byLength.find((i) => spans[i].legacy_cut && !xState.hidden.has(spans[i].label)) ?? null;
+  let html = (r?.block_marks || []).filter(Boolean).map(([x0, y0, , y1]) => `<div class="xmark" style="left:${pct(x0)};top:${pct(y0)};height:${pct(y1 - y0)}"></div>`).join("");
+  for (const i of byLength) {
+    const s = spans[i];
+    const c = xColor(s.label);
+    const off = xState.hidden.has(s.label) ? " off" : "";
+    s.lines.forEach(([x0, y0, x1, y1], j) => {
+      html += `<div class="xbox${s.words >= 8 ? " long" : ""}${off}" data-s="${i}" data-l="${escape(s.label)}" style="--c:${c};--d:${delay(i, j)}ms;left:${pct(x0 - 0.002)};top:${pct(y0 - 0.0015)};width:${pct(x1 - x0 + 0.004)};height:${pct(y1 - y0 + 0.003)}"></div>`;
+    });
+    if (s.words >= 8 && s.lines.length) {
+      const [x0, y0] = s.lines[0];
+      html += `<div class="xchip${off}" data-l="${escape(s.label)}" style="--c:${c};--d:${delay(i, 0)}ms;left:${pct(x0 - 0.002)};top:${pct(y0 - 0.002)}">${escape(pretty(s.label))}<b>${s.words}w</b></div>`;
+    }
+    if (cap && s.legacy_cut) {
+      const [cx0, cy0, cx1, cy1] = s.legacy_cut;
+      const show = i === xState.longest ? " show" : "";
+      html += `<div class="xcut${off}${show}" data-s="${i}" data-l="${escape(s.label)}" style="left:${pct(cx1 + 0.002)};top:${pct(cy0 - 0.003)};height:${pct(cy1 - cy0 + 0.006)}"></div>`;
+      for (const [x0, y0, x1, y1] of s.lines) {
+        const sameLine = Math.min(y1, cy1) - Math.max(y0, cy0) > 0.3 * (y1 - y0);
+        if (sameLine && x1 > cx1) html += `<div class="xhatch${off}${show}" data-s="${i}" data-l="${escape(s.label)}" style="left:${pct(cx1 + 0.002)};top:${pct(y0)};width:${pct(x1 - cx1)};height:${pct(y1 - y0)}"></div>`;
+        else if (y0 > cy1 - 0.001) html += `<div class="xhatch${off}${show}" data-s="${i}" data-l="${escape(s.label)}" style="left:${pct(x0)};top:${pct(y0)};width:${pct(x1 - x0)};height:${pct(y1 - y0)}"></div>`;
+      }
+    }
+  }
+  $("x-boxes").innerHTML = html;
+  $("x-boxes").classList.remove("focus");
+  $("x-rail").innerHTML = spans.map((s, i) => {
+    if (!s.lines.length || xState.hidden.has(s.label)) return "";
+    const top = s.lines[0][1], bottom = s.lines[s.lines.length - 1][3];
+    return `<i style="--c:${xColor(s.label)};--d:${delay(i, 0)}ms;top:${pct(top)};height:${pct(Math.max(0.004, bottom - top))}"></i>`;
+  }).join("");
+  const counts = {};
+  spans.forEach((s) => { counts[s.label] = (counts[s.label] || 0) + 1; });
+  $("x-legend").innerHTML = xState.rows.map((row) => `<button type="button" data-legend="${escape(row.label)}" class="${xState.hidden.has(row.label) ? "off" : ""}" style="--c:${xColor(row.label)}"><i></i>${escape(pretty(row.label))}<b>${counts[row.label] || 0}</b></button>`).join("");
+  $("x-list").innerHTML = r?.note ? `<li class="x-item"><p>${escape(r.note)}</p></li>` : byLength.filter((i) => !xState.hidden.has(spans[i].label)).map((i, k) => {
+    const s = spans[i];
+    return `<li class="x-item" data-s="${i}" style="--c:${xColor(s.label)};--d:${animate ? Math.min(k * 30, 900) : 0}ms"><div class="x-item-head"><i></i><strong>${escape(pretty(s.label))}</strong>${s.score.toFixed(2)}<span class="len${s.legacy_cut ? " beyond" : ""}">${s.words} words · ${s.lines.length} line${s.lines.length === 1 ? "" : "s"}</span></div><p>${escape(s.text)}</p></li>`;
+  }).join("") || (r ? '<li class="x-item"><p>No spans above the threshold on this page.</p></li>' : "");
+  xStats();
+  xRenderThumbs();
+}
+
+function xRenderThumbs() {
+  const pages = Object.keys(xState.results).map(Number).filter((p) => xState.results[p].image_key).sort((a, b) => a - b);
+  $("x-pages").hidden = pages.length < 2;
+  $("x-pages").innerHTML = pages.map((p) => {
+    const r = xState.results[p];
+    return `<button type="button" class="x-thumb${p === xState.page ? " current" : ""}" data-page="${p}" aria-label="Show page ${p}"><img src="extract-pages/${r.image_key}.jpg" alt="" loading="lazy"><span><b>${p}</b>${r.spans ? r.spans.length : "…"}</span></button>`;
+  }).join("");
+}
+
+function xFocus(i, on) {
+  $("x-boxes").classList.toggle("focus", on);
+  document.querySelectorAll("#x-boxes .xbox.on, #x-list .x-item.on").forEach((el) => el.classList.remove("on"));
+  if (on) document.querySelectorAll(`#x-boxes .xbox[data-s="${i}"], #x-list .x-item[data-s="${i}"]`).forEach((el) => el.classList.add("on"));
+  // The 8-word cap is drawn for one span at a time: the focused one, else the longest.
+  const target = on && document.querySelector(`#x-boxes .xcut[data-s="${i}"]`) ? i : xState.longest;
+  document.querySelectorAll("#x-boxes .xcut, #x-boxes .xhatch").forEach((el) => el.classList.toggle("show", String(el.dataset.s) === String(target)));
+}
+
+function consumeExtract(record) {
+  xState.records.push(record);
+  $("event-log").textContent = xState.records.map((item) => JSON.stringify(item, null, 2)).join("\n\n");
+  if (record.event === "extraction_started") {
+    status(`${record.model_name} is reading ${record.title}…`, "busy");
+  } else if (record.event === "page_ready") {
+    xState.pageCount = record.page_count;
+    xState.results[record.page] = { ...record };
+    xState.page = record.page;
+    $("x-scan").hidden = false;
+    xRenderPage(false);
+    status(`Page ${record.page} of ${record.page_count} · ${record.words} words · finding spans…`, "busy");
+  } else if (record.event === "page_extracted") {
+    Object.assign(xState.results[record.page], { spans: record.spans, model_ms: record.model_ms, block_marks: record.block_marks, blocks: record.blocks });
+    $("x-scan").hidden = true;
+    if (record.page === xState.page) xRenderPage(true);
+    status(`Page ${record.page} · ${record.spans.length} spans · longest ${record.longest_words} words · ${record.model_ms.toFixed(0)} ms`, "busy");
+    const done = Object.values(xState.results).filter((r) => r.spans);
+    $("run-count").textContent = `${done.reduce((n, r) => n + r.spans.length, 0)} spans · ${done.length} page${done.length === 1 ? "" : "s"}`;
+    $("model-time").textContent = `Model time · ${done.reduce((n, r) => n + r.model_ms, 0).toFixed(0)} ms`;
+  } else if (record.event === "completed") {
+    finished = true;
+    xState.summary = record;
+    if (record.pages.length > 1 && record.longest) { xState.page = record.longest.page; xRenderPage(true); }
+    else xStats();
+    status(record.longest ? `Complete · ${record.spans} spans · longest ${record.longest.words} words (${pretty(record.longest.label)}, page ${record.longest.page})` : `Complete · ${record.spans} spans`);
+  } else if (record.event === "run_failed") {
+    fail(record.error);
+  }
+}
+
+async function startExtract(mode) {
+  if (running) return;
+  const schema = xSchema();
+  const bad = xState.rows.find((r) => !xLabelPattern.test(r.label.trim()) || !r.description.trim());
+  if (!xState.rows.length || bad || Object.keys(schema).length !== xState.rows.length) {
+    $("x-schema").open = true;
+    fail(new Error(bad ? `Label "${bad.label}" needs a lowercase name (letters, digits, _) and a description.` : "Labels must be unique, and you need at least one."));
+    return;
+  }
+  const input = { model: $("model").value, document: xState.upload ? "" : xState.docId, upload: xState.upload?.data || "", pages: mode, page: xState.page, schema: JSON.stringify(schema), threshold: Number($("x-threshold").value), segment: $("x-segment").checked };
+  const thisRun = ++generation;
+  runFailed = false;
+  finished = false;
+  $("error").hidden = true;
+  xState.records = [];
+  if (mode === "all") { xState.results = {}; xState.summary = null; }
+  else xState.summary = null;
+  setBusy(true);
+  status("Connecting to the Gradio queue…", "busy");
+  try {
+    await getClient();
+    if (thisRun !== generation) return;
+    job = client.submit("/extract_document", input);
+    let seen = 0;
+    for await (const update of job) {
+      if (thisRun !== generation) return;
+      if (update.type === "status" && update.stage === "error") throw new Error(update.message || "The extraction failed.");
+      if (update.type === "status" && update.stage === "pending") status("Queued. Waiting for the previous run to finish…", "busy");
+      if (update.type !== "data") continue;
+      const payload = update.data[0];
+      if (!Array.isArray(payload?.events)) throw new Error("The server returned an invalid event stream.");
+      for (const record of payload.events.slice(seen)) {
+        if (thisRun !== generation) return;
+        consumeExtract(record);
+        seen++;
+        if (record.event === "page_extracted" && mode === "all") await delay($("pace").value === "guided" ? 1100 : 120);
+      }
+    }
+    if (!finished && !runFailed) throw new Error("The connection ended before the extraction finished. Try again.");
+  } catch (error) {
+    if (thisRun === generation) fail(error);
+  } finally {
+    if (thisRun === generation) { job = null; $("x-scan").hidden = true; setBusy(false); xRenderRows(); xPagerLabel(); }
+  }
+}
+
+$("x-document").addEventListener("change", xSelectDocument);
+$("x-prev").addEventListener("click", () => { if (xState.page > 1) { xState.page--; xRenderPage(true); } });
+$("x-next").addEventListener("click", () => { if (!xState.pageCount || xState.page < xState.pageCount) { xState.page++; xRenderPage(true); } });
+$("x-run").addEventListener("click", () => startExtract("one"));
+$("x-run-all").addEventListener("click", () => startExtract("all"));
+$("x-threshold").addEventListener("change", () => xInvalidate("Threshold changed. Extract again to apply it."));
+$("x-cap").addEventListener("change", () => xRenderPage(false));
+$("x-segment").addEventListener("change", () => xInvalidate($("x-segment").checked ? "Splitting at numbered items. Extract again to compare." : "Reading whole pages. Extract again to see spans run into the next item."));
+$("x-labels").addEventListener("input", (event) => {
+  const el = event.target.closest("[data-row]");
+  if (!el) return;
+  xState.rows[Number(el.dataset.row)][el.dataset.field] = el.value;
+  if (el.dataset.field === "label") el.value = el.value.toLowerCase().replace(/[^a-z0-9_]/g, "_");
+  xState.rows[Number(el.dataset.row)][el.dataset.field] = el.value;
+  status("Labels edited. Extract again to see the new spans.");
+});
+$("x-labels").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-remove]");
+  if (!button || running) return;
+  xState.rows.splice(Number(button.dataset.remove), 1);
+  xRenderRows();
+  xRenderPage(false);
+});
+$("x-add").addEventListener("click", () => {
+  if (xState.rows.length >= config.extract.max_labels) return;
+  xState.rows.push({ label: `label_${xState.rows.length + 1}`, description: "describe what to extract, with a short example" });
+  xRenderRows();
+  $("x-labels").querySelector(`[data-row="${xState.rows.length - 1}"][data-field="label"]`)?.select();
+});
+$("x-reset").addEventListener("click", () => { xSetRows(xDoc()?.schema || {}); xRenderPage(false); status("Labels reset. Extract again to compare."); });
+$("x-legend").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-legend]");
+  if (!button) return;
+  const label = button.dataset.legend;
+  if (xState.hidden.has(label)) xState.hidden.delete(label); else xState.hidden.add(label);
+  xRenderPage(false);
+});
+$("x-pages").addEventListener("click", (event) => {
+  const thumb = event.target.closest("[data-page]");
+  if (!thumb || running) return;
+  xState.page = Number(thumb.dataset.page);
+  xRenderPage(true);
+});
+for (const id of ["x-boxes", "x-list"]) {
+  $(id).addEventListener("mouseover", (event) => { const el = event.target.closest("[data-s]"); if (el) xFocus(el.dataset.s, true); });
+  $(id).addEventListener("mouseout", (event) => { if (!event.relatedTarget?.closest?.(`#${id} [data-s]`)) { xFocus(null, false); $("x-tip").hidden = true; } });
+}
+$("x-boxes").addEventListener("mousemove", (event) => {
+  const el = event.target.closest(".xbox");
+  const s = el && xState.results[xState.page]?.spans?.[Number(el.dataset.s)];
+  if (!s) { $("x-tip").hidden = true; return; }
+  $("x-tip").innerHTML = `<b style="color:${xColor(s.label)}">${escape(pretty(s.label))}</b> ${escape(s.text.length > 220 ? s.text.slice(0, 220) + "…" : s.text)}<span>confidence ${s.score.toFixed(2)} · ${s.words} words · ${s.lines.length} lines${s.legacy_cut ? " · past an 8-word cap" : ""}</span>`;
+  $("x-tip").hidden = false;
+  const x = Math.min(event.clientX + 14, innerWidth - 380), y = Math.min(event.clientY + 14, innerHeight - 140);
+  Object.assign($("x-tip").style, { left: `${x}px`, top: `${y}px` });
+});
+$("x-list").addEventListener("click", (event) => {
+  const item = event.target.closest("[data-s]");
+  if (!item) return;
+  const box = $("x-boxes").querySelector(`.xbox[data-s="${item.dataset.s}"]`);
+  box?.scrollIntoView({ behavior: "smooth", block: "center" });
+  xFocus(item.dataset.s, true);
+});
+$("x-upload").addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.type !== "application/pdf" || file.size > 25 * 1024 * 1024) { fail(new Error("Upload a PDF under 25 MB.")); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    xState.upload = { name: file.name, data: reader.result };
+    xState.page = 1;
+    xState.pageCount = null;
+    if (!$("x-document").querySelector('option[value="upload"]')) $("x-document").insertAdjacentHTML("beforeend", '<option value="upload"></option>');
+    $("x-document").querySelector('option[value="upload"]').textContent = `Your PDF · ${file.name}`;
+    $("x-document").value = "upload";
+    $("x-source").textContent = `${file.name} · ${(file.size / 1024).toFixed(0)} KB · read on this machine. Scanned PDFs need a text layer.`;
+    $("error").hidden = true;
+    xInvalidate("PDF loaded. Edit the labels for your document, then extract a page.");
+  };
+  reader.readAsDataURL(file);
+});
+
 $("request-form").addEventListener("submit", (event) => { event.preventDefault(); startRun("single"); });
 $("inbox").addEventListener("click", () => startRun("inbox"));
 $("run-browser").addEventListener("click", () => startRun("single"));
 $("sample").addEventListener("change", selectSample);
-$("model").addEventListener("change", () => { resetRun(); if (isStamp()) resetStamp(); updateModel(); status("Model changed. Ready for a new run."); });
+$("model").addEventListener("change", () => { resetRun(); if (isStamp()) resetStamp(); if (isExtract()) xInvalidate(); updateModel(); status("Model changed. Ready for a new run."); });
 $("message").addEventListener("input", updateMessageCount);
 for (const id of ["subject", "message"]) {
   $(id).addEventListener("input", () => {
@@ -707,11 +1041,12 @@ try {
   const response = await fetch("demo-config");
   if (!response.ok) throw new Error("Could not load the demo configuration. Reload the page to try again.");
   config = await response.json();
-  const group = (name, entries) => `<div class="nav-group">${name}</div>` + entries.map((item) => `<button class="nav-button" data-workflow="${escape(item.id)}"><span class="nav-icon">${item.id === "stamp" ? "◎" : ["clinic", "helpdesk"].includes(item.id) ? "↗" : "▣"}</span>${escape(item.name)}</button>`).join("");
+  const group = (name, entries) => `<div class="nav-group">${name}</div>` + entries.map((item) => `<button class="nav-button" data-workflow="${escape(item.id)}"><span class="nav-icon">${item.id === "extract" ? "¶" : item.id === "stamp" ? "◎" : ["clinic", "helpdesk"].includes(item.id) ? "↗" : "▣"}</span>${escape(item.name)}</button>`).join("");
   const simulated = ["clinic", "helpdesk"];
   $("workflows").innerHTML = group("Request simulations", config.workflows.filter((item) => simulated.includes(item.id)))
-    + group("Live browser", config.workflows.filter((item) => !simulated.includes(item.id) && item.id !== "stamp"))
-    + group("Document vision", config.workflows.filter((item) => item.id === "stamp"));
+    + group("Live browser", config.workflows.filter((item) => !simulated.includes(item.id) && !["stamp", "extract"].includes(item.id)))
+    + group("Document vision", config.workflows.filter((item) => ["stamp", "extract"].includes(item.id)));
+  $("x-document").innerHTML = config.extract.documents.map((d) => `<option value="${escape(d.id)}">${escape(d.title)} · ${d.pages} page${d.pages === 1 ? "" : "s"}</option>`).join("");
   $("stamp-sample").innerHTML = config.stamp.samples.map((s) => `<option value="${escape(s.id)}">${escape(s.title)} · ${escape(s.capture)}</option>`).join("") + '<option value="" hidden>Your upload</option>';
   fillModels();
   const requested = location.hash.slice(1);

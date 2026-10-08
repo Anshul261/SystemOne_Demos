@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import json
 import os
 import queue
 import threading
@@ -15,10 +16,16 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from playwright.sync_api import sync_playwright
 
+from collections import OrderedDict
+
+from fastapi import HTTPException
+from fastapi.responses import Response
 from PIL import Image
 
+import document_extract
 import stamp_check
 from d1_client import D1Client
+from extract_client import ExtractClient
 from intake import intake_schema, load_tickets, run_intake_simulation
 from jpt_client import make_client
 from run import DEMOS
@@ -26,6 +33,7 @@ from run import DEMOS
 GLINER_URL = os.getenv("GLINER_URL", "http://127.0.0.1:8010")
 JPT_URL = os.getenv("JPT_URL", "http://127.0.0.1:8085")
 D1_URL = os.getenv("D1_URL", "http://127.0.0.1:8020")
+EXTRACT_URL = os.getenv("EXTRACT_URL", "http://127.0.0.1:8030")
 HOST = os.getenv("DEMO_UI_HOST", "127.0.0.1")
 PORT = int(os.getenv("DEMO_UI_PORT", "7863"))
 WEB = Path(__file__).resolve().parent / "web"
@@ -38,6 +46,7 @@ DEMO_NAMES = {
     "Clinic Requests": "clinic",
     "Employee Help Desk": "helpdesk",
     "Document Stamp Check": "stamp",
+    "Long-Span Extraction": "extract",
 }
 
 DEMO_GUIDES = {
@@ -83,6 +92,12 @@ DEMO_GUIDES = {
         "<li>d1 reads the stamp region and answers narrow visual questions in one forward pass.</li>"
         "<li>Calibrated thresholds and rules accept, reject with a reason, or send to review.</li></ol>"
     ),
+    "Long-Span Extraction": (
+        "<strong>Spans of any length, located on the page</strong>"
+        "<ol><li>Open a real PDF or upload your own.</li>"
+        "<li>GLiNER2.5 pairs span starts and ends, so a clause can run as long as it needs.</li>"
+        "<li>Every span is mapped back to the lines it covers on the page.</li></ol>"
+    ),
 }
 
 def demo_guide(display_name: str, model: str = "gliner") -> str:
@@ -111,6 +126,12 @@ def demo_config():
         "schemas": {"clinic": intake_schema(True), "helpdesk": intake_schema(False)},
         "models": ["gliner", "jpt"] if os.getenv("JPT_URL") or not os.getenv("SPACE_ID") else ["gliner"],
         "stamp": stamp_config(),
+        "extract": {
+            "models": [{"id": key, "name": name, "size": document_extract.MODEL_SIZES[key]}
+                       for key, name in document_extract.MODEL_NAMES.items()],
+            "documents": [{k: v for k, v in doc.items() if k != "file"} for doc in document_extract.load_samples()],
+            "max_labels": document_extract.MAX_LABELS,
+        },
     }
 
 
@@ -296,6 +317,96 @@ def stream_stamp_check(model: str = "omni", mode: str = "single", sample: str = 
             elif record["event"] == "region_selected" and image:
                 current = {**current, "region": data_url(image)}
             yield {"events": list(records), "doc_images": current, "elapsed_s": round(time.monotonic() - started, 2)}
+    finally:
+        cancelled.set()
+        worker_thread.join()
+
+
+PAGE_IMAGES: OrderedDict[str, bytes] = OrderedDict()
+PAGE_IMAGES_LOCK = threading.Lock()
+
+
+@app.get("/extract-pages/{key}.jpg")
+def extract_page_image(key: str):
+    with PAGE_IMAGES_LOCK:
+        image = PAGE_IMAGES.get(key)
+    if image is None:
+        raise HTTPException(404, "Page image expired; extract the page again.")
+    return Response(image, media_type="image/jpeg", headers={"Cache-Control": "private, max-age=3600"})
+
+
+@app.api(name="extract_document", concurrency_limit=1, stream_every=0.1)
+def stream_extraction(
+    model: str = "multi",
+    document: str = "sfip",
+    upload: str = "",
+    pages: str = "one",
+    page: int = 1,
+    schema: str = "",
+    threshold: float = 0.5,
+    segment: bool = True,
+) -> Iterator[dict[str, Any]]:
+    """Stream each page image, its spans with line boxes, and a run summary."""
+    if model not in document_extract.MODEL_NAMES:
+        raise ValueError("Choose GLiNER2.5 Multi or Base.")
+    if upload:
+        pdf = document_extract.decode_pdf(upload)
+        doc = {"id": f"upload-{uuid4().hex[:6]}", "title": "Your PDF", "source": "upload"}
+    else:
+        doc = next((d for d in document_extract.load_samples() if d["id"] == document), None)
+        if doc is None:
+            raise ValueError("Choose a sample document or upload a PDF.")
+        pdf = (document_extract.DOCUMENTS / doc["file"]).read_bytes()
+    try:
+        labels = json.loads(schema) if schema else doc.get("schema", {})
+    except json.JSONDecodeError as exc:
+        raise ValueError("The label schema is not valid JSON.") from exc
+    labels = document_extract.validate_schema(labels)
+    if pages not in {"one", "all"} or page < 1:
+        raise ValueError("Choose one page or all pages.")
+    if not 0.05 <= threshold <= 0.99:
+        raise ValueError("Use a threshold between 0.05 and 0.99.")
+    events: queue.Queue = queue.Queue()
+    cancelled = threading.Event()
+    started = time.monotonic()
+
+    def publish(record: dict[str, Any], image: bytes | None) -> None:
+        if cancelled.is_set():
+            raise RunCancelled()
+        if image and record.get("image_key"):
+            with PAGE_IMAGES_LOCK:
+                PAGE_IMAGES[record["image_key"]] = image
+                PAGE_IMAGES.move_to_end(record["image_key"])
+                while len(PAGE_IMAGES) > 160:
+                    PAGE_IMAGES.popitem(last=False)
+        events.put(record)
+
+    def worker() -> None:
+        try:
+            artifact = document_extract.run_extraction(
+                ExtractClient(EXTRACT_URL), model, doc, pdf, "all" if pages == "all" else [page],
+                labels, threshold, on_event=publish, segment=bool(segment))
+            publish({"event": "run_finished", "artifact": artifact.name}, None)
+        except RunCancelled:
+            pass
+        except Exception as exc:  # noqa: BLE001 - surface worker failures in the UI
+            message = str(exc)
+            if "Connection refused" in message or "ConnectError" in type(exc).__name__:
+                message = f"The extraction service is not reachable at {EXTRACT_URL}. Start it with ./start-extract.sh."
+            events.put({"event": "run_failed", "error": message})
+        finally:
+            events.put(None)
+
+    worker_thread = threading.Thread(target=worker, daemon=True)
+    worker_thread.start()
+    records = []
+    try:
+        while True:
+            record = events.get()
+            if record is None:
+                break
+            records.append(record)
+            yield {"events": list(records), "elapsed_s": round(time.monotonic() - started, 2)}
     finally:
         cancelled.set()
         worker_thread.join()

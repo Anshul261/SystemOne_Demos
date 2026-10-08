@@ -128,6 +128,48 @@
           <div class="table-scroll" id="stamp-ledger-table" hidden><table><thead><tr><th>Document</th><th>Capture</th><th>Known defect</th><th>Verdict</th><th>Result</th><th>Model time</th></tr></thead><tbody id="stamp-rows"></tbody></table></div>
         </section>
       </section>
+      <section id="extract-demo" hidden aria-label="Long-span extraction">
+        <div class="x-toolbar">
+          <div class="x-field x-doc"><label for="x-document">Document</label><select id="x-document"></select></div>
+          <div class="x-field"><label>Page</label><div class="x-pager"><button id="x-prev" type="button" aria-label="Previous page">‹</button><span id="x-page-label">Page 1</span><button id="x-next" type="button" aria-label="Next page">›</button></div></div>
+          <div class="x-field"><label for="x-threshold">Threshold</label><select id="x-threshold"><option value="0.3">0.3 · more spans</option><option value="0.5" selected>0.5 · default</option><option value="0.7">0.7 · stricter</option></select></div>
+          <div class="x-actions"><button class="primary-button" id="x-run" type="button" disabled>Extract this page <span aria-hidden="true">→</span></button><button class="secondary-button" id="x-run-all" type="button" disabled>Extract every page</button></div>
+        </div>
+        <div class="x-subbar">
+          <p id="x-source" class="x-source"></p>
+          <label class="x-toggle x-seg" title="Split the page where a numbered item or section starts, so a span cannot run into the next one. Turn it off to see the raw whole-page behaviour."><input type="checkbox" id="x-segment" checked> Split at numbered items</label>
+          <label class="upload x-upload" for="x-upload"><input id="x-upload" type="file" accept="application/pdf"><span>Upload your own PDF</span></label>
+        </div>
+        <details class="x-schema" id="x-schema">
+          <summary>Labels the model looks for <span class="small-badge" id="x-label-count">0</span><span class="quiet">Edit them and extract again. Examples are paraphrased, never copied from the document.</span></summary>
+          <div id="x-labels"></div>
+          <div class="x-schema-actions"><button class="text-button" id="x-add" type="button">+ Add a label</button><button class="text-button" id="x-reset" type="button">Reset to this document's labels</button></div>
+        </details>
+        <div class="x-stats" id="x-stats">
+          <div class="x-stat hero"><span>Longest span</span><strong id="xs-longest">—</strong><em id="xs-longest-sub">words</em></div>
+          <div class="x-stat"><span>Past an 8-word cap</span><strong id="xs-beyond">—</strong><em>spans a fixed-width head could not return</em></div>
+          <div class="x-stat"><span>Spans</span><strong id="xs-spans">—</strong><em id="xs-spans-sub">on this page</em></div>
+          <div class="x-stat"><span>Model time</span><strong id="xs-ms">—</strong><em id="xs-ms-sub">one forward pass</em></div>
+        </div>
+        <div class="x-grid">
+          <div class="x-viewer-wrap">
+            <div class="x-viewer" id="x-viewer">
+              <img id="x-page" alt="The PDF page being read" hidden>
+              <div class="x-boxes" id="x-boxes"></div>
+              <div class="scan-line" id="x-scan" hidden></div>
+              <div class="x-empty" id="x-empty"><h3>Pick a page and extract it</h3><p>The page renders here with every span outlined on the lines it covers.</p></div>
+            </div>
+            <div class="x-rail" id="x-rail" aria-hidden="true"></div>
+          </div>
+          <aside class="x-panel">
+            <div class="x-legend" id="x-legend"></div>
+            <label class="x-toggle"><input type="checkbox" id="x-cap"> Show where an 8-word span head would stop</label>
+            <ol class="x-list" id="x-list"></ol>
+          </aside>
+        </div>
+        <div class="x-pages" id="x-pages" hidden></div>
+        <div class="x-tip" id="x-tip" hidden></div>
+      </section>
       <details class="trace" id="trace"><summary>Under the hood <span>Model input, decisions, and execution events</span></summary><pre id="event-log">No events yet.</pre></details>
       <footer><span>SystemOne demos</span><span id="footer-note">Real model predictions. Simulated request delivery.</span><a href="https://www.gradio.app/guides/server-mode" target="_blank" rel="noreferrer">Built with Gradio Server ↗</a></footer>
     </main>
