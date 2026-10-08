@@ -14,6 +14,7 @@ let runFailed = false, finished = false, currentStage = 0;
 function isSimulation() { return workflow === "clinic" || workflow === "helpdesk"; }
 function isStamp() { return workflow === "stamp"; }
 function isExtract() { return workflow === "extract"; }
+function isLab() { return workflow === "lab"; }
 
 function status(text, state = "") {
   $("status").textContent = text;
@@ -29,7 +30,7 @@ function fail(error) {
 
 function setBusy(value) {
   running = value;
-  document.querySelectorAll(".nav-button, #model, #sample, #send, #inbox, #run-browser, #stamp-sample, #stamp-batch, #stamp-upload, #x-document, #x-threshold, #x-upload, #x-run, #x-run-all, #x-add, #x-reset, #x-segment").forEach((el) => { el.disabled = value; });
+  document.querySelectorAll(".nav-button, #model, #sample, #send, #inbox, #run-browser, #stamp-sample, #stamp-batch, #stamp-upload, #x-document, #x-threshold, #x-upload, #x-run, #x-run-all, #x-add, #x-reset, #x-segment, #lab-document, #lab-run, #lab-upload").forEach((el) => { el.disabled = value; });
   if (typeof xPagerLabel === "function" && config) xPagerLabel();
   $("stamp-check").disabled = value || (!uploadData && !$("stamp-sample").value);
   $("stamp-download").disabled = value || !stampLedger.length;
@@ -168,6 +169,21 @@ function selectWorkflow(id) {
   fillModels();
   $("stamp-demo").hidden = !isStamp();
   $("extract-demo").hidden = !isExtract();
+  $("lab-demo").hidden = !isLab();
+  if (isLab()) {
+    $("workflow-kind").textContent = "Document vision / 09";
+    $("workflow-description").textContent = "Read a photographed lab report into checked results: tests, values, units, ranges and flags.";
+    $("mode-badge").textContent = "OCR · d1 decisions · d1 vision";
+    $("simulation").hidden = true;
+    $("browser-demo").hidden = true;
+    $("footer-note").textContent = "One real report with patient details redacted, and synthetic reports with answer keys.";
+    resetRun();
+    $("run-count").textContent = "0 tests read";
+    $("model-time").textContent = "Model time · waiting";
+    if (!labState.docId) labSelect();
+    status("Ready. Read a sample report, or upload a photo of one.");
+    return;
+  }
   if (isExtract()) {
     $("workflow-kind").textContent = "Document vision / 08";
     $("workflow-description").textContent = "Extract spans of any length from a real PDF and see exactly which lines each one covers.";
@@ -219,7 +235,9 @@ function selectWorkflow(id) {
 }
 
 function fillModels() {
-  const options = isExtract()
+  const options = isLab()
+    ? config.lab.models.map((m) => [m.id, m.name])
+    : isExtract()
     ? config.extract.models.map((m) => [m.id, m.name])
     : isStamp()
     ? config.stamp.models.map((m) => [m.id, m.name])
@@ -230,7 +248,7 @@ function fillModels() {
 
 function updateModel() {
   if (isStamp()) { renderReliability(); updateVisionTitle(); return; }
-  if (isExtract()) return;
+  if (isExtract() || isLab()) return;
   $("model-title").textContent = `${modelName()} reads it`;
   document.querySelector(".model-icon").textContent = modelName()[0];
   const item = config.workflows.find((item) => item.id === workflow);
@@ -981,11 +999,254 @@ $("x-upload").addEventListener("change", (event) => {
   reader.readAsDataURL(file);
 });
 
+// ---- Lab report reader -----------------------------------------------------
+const labColors = { title: "#7c3aed", test: "#2563eb", result: "#16a34a", slot: "#d97706", method: "#64748b", section: "#db2777" };
+const bandColors = { test: "#2563eb", result: "#16a34a", unit: "#d97706", range: "#ea580c" };
+const labState = { docId: "", upload: null, size: null, key: null, records: [], summary: null, scored: null, events: [] };
+const labDoc = () => config.lab.documents.find((d) => d.id === labState.docId);
+const box = ([x0, y0, x1, y1], pad = 0.002) => `left:${pct(x0 - pad)};top:${pct(y0 - pad)};width:${pct(x1 - x0 + 2 * pad)};height:${pct(y1 - y0 + 2 * pad)}`;
+const fmtNum = (v) => (Number.isInteger(v) ? String(v) : String(+v.toFixed(3)));
+
+function labStage(n) {
+  document.querySelectorAll("[data-lstage]").forEach((el) => {
+    const k = Number(el.dataset.lstage);
+    el.classList.toggle("active", k === n);
+    el.classList.toggle("done", k < n);
+  });
+}
+
+function labReset(keepDoc = true) {
+  Object.assign(labState, { size: null, key: null, records: [], summary: null, scored: null, events: [] });
+  ["lab-bands", "lab-boxes"].forEach((id) => { $(id).innerHTML = ""; });
+  $("lab-links").innerHTML = "";
+  $("lab-page").hidden = true;
+  $("lab-empty").hidden = false;
+  $("lab-scan").hidden = true;
+  $("lab-rows").innerHTML = '<tr><td colspan="6" class="lab-wait">Results appear here.</td></tr>';
+  ["ls-tests", "ls-flags", "ls-agree", "ls-key", "ls-ms"].forEach((id) => { $(id).textContent = "—"; });
+  $("ls-key-sub").textContent = labState.upload ? "no answer key for uploads" : "sample reports only";
+  labStage(0);
+  if (!keepDoc) labState.docId = "";
+}
+
+function labSelect() {
+  const value = $("lab-document").value;
+  if (value === "upload") return;
+  labState.docId = value;
+  labState.upload = null;
+  $("lab-upload").value = "";
+  const doc = labDoc();
+  $("lab-source").textContent = `${doc.subtitle}${doc.kind === "real" ? "" : " · answer key from construction"}`;
+  labReset();
+}
+
+function labPage(record) {
+  labState.size = record.image_size;
+  labState.key = record.image_key;
+  $("lab-viewer").style.aspectRatio = `${record.image_size[0]} / ${record.image_size[1]}`;
+  $("lab-page").src = `extract-pages/${record.image_key}.jpg`;
+  $("lab-page").hidden = false;
+  $("lab-empty").hidden = true;
+  $("lab-links").setAttribute("viewBox", `0 0 ${record.image_size[0]} ${record.image_size[1]}`);
+}
+
+function labOcr(cells) {
+  const step = Math.min(8, 900 / Math.max(1, cells.length));
+  $("lab-boxes").innerHTML = cells.map((c, i) => `<div class="lbox ocr" style="--d:${(i * step).toFixed(0)}ms;${box(c.box)}"></div>`).join("");
+}
+
+function labBands(headers) {
+  const kinds = Object.keys(headers).sort((a, b) => (headers[a].box[0] + headers[a].box[2]) - (headers[b].box[0] + headers[b].box[2]));
+  const centres = kinds.map((k) => (headers[k].box[0] + headers[k].box[2]) / 2);
+  const top = Math.min(...kinds.map((k) => headers[k].box[1])) - 0.004;
+  $("lab-bands").innerHTML = kinds.map((k, i) => {
+    const left = i ? (centres[i - 1] + centres[i]) / 2 : 0.01;
+    const right = i < kinds.length - 1 ? (centres[i] + centres[i + 1]) / 2 : 0.99;
+    return `<div class="lband" style="--c:${bandColors[k] || "#64748b"};left:${pct(left)};width:${pct(right - left)};top:${pct(top)}"><span>${escape(k)}</span></div>`;
+  }).join("") + kinds.map((k) => `<div class="lbox" style="--c:${labColors.title};${box(headers[k].box)}"></div>`).join("");
+}
+
+function labRoleColor(cell) {
+  if (cell.column === "test") return { test_name: labColors.test, method: labColors.method, section: labColors.section }[cell.role] || null;
+  if (cell.column === "result") return labColors.result;
+  return labColors.slot;
+}
+
+function labDraw(result) {
+  const [w, h] = labState.size;
+  $("lab-boxes").innerHTML = result.cells.map((c, i) => {
+    const colour = labRoleColor(c);
+    return colour ? `<div class="lbox" style="--c:${colour};--d:${Math.min(i * 6, 700)}ms;${box(c.box)}"></div>`
+      : `<div class="lbox ignored" style="${box(c.box)}"></div>`;
+  }).join("");
+  const mid = (b, side) => [((side === "right" ? b[2] : b[0]) * w), ((b[1] + b[3]) / 2) * h];
+  const curve = ([x1, y1], [x2, y2]) => `M${x1.toFixed(1)},${y1.toFixed(1)} C${((x1 + x2) / 2).toFixed(1)},${y1.toFixed(1)} ${((x1 + x2) / 2).toFixed(1)},${y2.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`;
+  $("lab-links").innerHTML = result.records.map((r, i) => {
+    if (!r.result_boxes) return "";
+    const d = `${(i * 70).toFixed(0)}ms`;
+    let paths = `<path class="result" data-r="${i}" pathLength="1" style="--len:1;--d:${d}" d="${curve(mid(r.test_box, "right"), mid(r.result_boxes[0], "left"))}"/>`;
+    if (r.slot_boxes?.length) paths += `<path class="slot" data-r="${i}" style="--d:${d}" d="${curve(mid(r.result_boxes[0], "right"), mid(r.slot_boxes[0], "left"))}"/>`;
+    return paths;
+  }).join("");
+  // Flag rings around out-of-range results.
+  $("lab-boxes").insertAdjacentHTML("beforeend", result.records.filter((r) => r.flag === "low" || r.flag === "high")
+    .map((r) => `<div class="lbox flag" style="--c:#dc2626;${box(r.result_boxes[0], 0.004)}"></div>`).join(""));
+}
+
+function labTable() {
+  const records = labState.records;
+  if (!records.length) { $("lab-rows").innerHTML = '<tr><td colspan="6" class="lab-wait">No results table was found.</td></tr>'; return; }
+  let section = null;
+  $("lab-rows").innerHTML = records.map((r, i) => {
+    let head = "";
+    if (r.section !== section) { section = r.section; head = `<tr class="sec"><td colspan="6">${escape(section || "Results")}</td></tr>`; }
+    const check = r.check;
+    const key = !check ? '<span class="lab-na">·</span>'
+      : Object.entries(check).filter(([k]) => k !== "expected").every(([, ok]) => ok) ? '<span class="lab-ok" title="Matches the answer key">✓</span>'
+      : `<span class="lab-miss" title="Expected ${escape(JSON.stringify(check.expected))}">✗</span>`;
+    if ("finding" in r) {
+      return `${head}<tr class="rec" data-r="${i}" style="--d:${i * 25}ms"><td class="test">${escape(r.test)}</td><td colspan="3">${escape(r.finding)}</td><td class="mark"><span class="lab-na">·</span></td><td class="mark">${key}</td></tr>`;
+    }
+    const flag = r.flag === "high" ? '<span class="lab-flag high">↑ HIGH</span>' : r.flag === "low" ? '<span class="lab-flag low">↓ LOW</span>' : "";
+    const lab = r.printed_box ? '<span class="lab-ok" title="The lab printed this value in a shaded box">▣</span>'
+      : r.printed_flag ? `<span class="lab-ok" title="The lab printed a ${escape(r.printed_flag)} marker">${escape(r.printed_flag)}</span>` : '<span class="lab-na" title="No box or marker from the lab">·</span>';
+    const range = r.low != null ? `${fmtNum(r.low)} – ${fmtNum(r.high)}${r.qualifier ? ` <small>(${escape(r.qualifier)})</small>` : ""}` : '<span class="lab-na">none</span>';
+    const unit = r.unit ? `${escape(r.unit)}${r.unit_inferred ? ' <small class="lab-na" title="Not legible on the scan; the section\'s unit">*</small>' : ""}` : '<span class="lab-na">—</span>';
+    return `${head}<tr class="rec" data-r="${i}" style="--d:${i * 25}ms"><td class="test">${escape(r.test)}</td><td class="val">${fmtNum(r.value)}${flag}</td><td>${unit}</td><td>${range}</td><td class="mark">${lab}</td><td class="mark">${key}</td></tr>`;
+  }).join("");
+}
+
+function labStats() {
+  const s = labState.summary;
+  if (!s) return;
+  const pop = (id, text) => { const el = $(id); el.textContent = text; el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); };
+  pop("ls-tests", String(s.tests));
+  $("ls-tests-sub").textContent = `${s.findings ? `plus ${s.findings} written findings · ` : ""}values, units and ranges`;
+  pop("ls-flags", String(s.out_of_range));
+  $("ls-flags-sub").textContent = s.out_of_range ? labState.records.filter((r) => r.flag === "low" || r.flag === "high").map((r) => r.test).slice(0, 3).join(", ") : "everything within range";
+  pop("ls-agree", s.compared ? `${s.agree}/${s.compared}` : "none");
+  $("ls-agree-sub").textContent = s.compared ? `our flags vs the ${s.lab_boxed} values the lab boxed or starred` : "no boxes or * marks to compare (bold is not detected)";
+  pop("ls-ms", `${((s.ocr_ms + s.model_ms) / 1000).toFixed(1)} s`);
+  $("ls-ms-sub").textContent = `OCR ${(s.ocr_ms / 1000).toFixed(1)} s · d1 ${(s.model_ms / 1000).toFixed(1)} s`;
+  const stages = Object.entries(s.stage_ms).map(([k, v]) => `<b>${escape(pretty(k))}</b> ${v.toFixed(0)} ms`).join(" · ");
+  $("lab-how").innerHTML = `<ol><li><b>OCR</b> (docTR) finds each cell and its box.</li><li><b>d1</b> decides which title names each column, then whether each line in the test column is a test, a method note or a section heading (it sees the crop, so bold underlined headings count).</li><li><b>Code</b> pairs each test with the number on its line, then lines up units and ranges in order, because many reports print them a line low.</li><li><b>d1</b> maps each printed unit to a standard one, and its <b>vision</b> checks whether the lab boxed the value.</li><li><b>Code</b> flags values outside their range and compares with the lab's marks.</li></ol><p>${stages}</p>`;
+}
+
+function labFocus(i, on) {
+  $("lab-links").classList.toggle("focus", on);
+  $("lab-boxes").classList.toggle("focus", on);
+  document.querySelectorAll("#lab-links path.on, #lab-rows tr.on").forEach((el) => el.classList.remove("on"));
+  document.querySelectorAll("#lab-boxes .lbox.hl").forEach((el) => el.remove());
+  if (!on) return;
+  document.querySelectorAll(`#lab-links path[data-r="${i}"], #lab-rows tr[data-r="${i}"]`).forEach((el) => el.classList.add("on"));
+  const r = labState.records[i];
+  const boxes = [[r.test_box, labColors.test], ...(r.result_boxes || []).map((b) => [b, labColors.result]), ...(r.slot_boxes || []).map((b) => [b, labColors.slot])];
+  $("lab-boxes").insertAdjacentHTML("beforeend", boxes.map(([b, c]) => `<div class="lbox hl on" style="--c:${c};${box(b, 0.004)}"></div>`).join(""));
+}
+
+function consumeLab(record) {
+  labState.events.push(record);
+  $("event-log").textContent = labState.events.map((item) => JSON.stringify(item, null, 2)).join("\n\n");
+  const ev = record.event;
+  if (ev === "report_received") { status(`Reading ${record.title} with ${record.model === "3b" ? "d1-3B" : "d1-omni-600M"}…`, "busy"); $("lab-scan").hidden = false; }
+  else if (ev === "ocr_done") { labPage(record); labOcr(record.cells); labStage(1); status(`OCR found ${record.cells.length} cells in ${(record.ocr_ms / 1000).toFixed(1)} s`, "busy"); }
+  else if (ev === "columns_found") { labBands(record.headers); labStage(2); status(`d1 found the columns: ${Object.values(record.headers).map((h) => `“${h.text}”`).join(", ")}`, "busy"); }
+  else if (ev === "names_read") { labStage(3); status(`Test column read: ${record.roles.test_name} tests, ${record.roles.method} method notes, ${record.roles.section} section headings`, "busy"); }
+  else if (ev === "table_found") { labStage(3); }
+  else if (ev === "records_paired") { labStage(4); status(`Paired ${record.records} results; ${record.with_range} have a reference range`, "busy"); }
+  else if (ev === "units_read") { labStage(5); status(`Units: ${record.units.join(", ")}`, "busy"); }
+  else if (ev === "report_read") {
+    $("lab-scan").hidden = true;
+    labStage(6);
+    labState.records = record.records;
+    labState.summary = record.summary;
+    labDraw(record);
+    labTable();
+    labStats();
+    $("run-count").textContent = `${record.summary.tests} tests read`;
+    $("model-time").textContent = `Model time · ${(record.summary.model_ms / 1000).toFixed(1)} s`;
+    status(`Read ${record.summary.tests} tests · ${record.summary.out_of_range} out of range · lab's marks agree on ${record.summary.agree}/${record.summary.compared}`, "busy");
+  } else if (ev === "report_scored") {
+    labState.records = record.records;
+    labTable();
+    const t = record.totals;
+    const fields = ["value", "unit", "range", "flag"];
+    const right = fields.reduce((n, k) => n + t[k][0], 0), all = fields.reduce((n, k) => n + t[k][1], 0);
+    $("ls-key").textContent = `${right}/${all}`;
+    $("ls-key-sub").textContent = `fields right · ${t.found[0]}/${t.found[1]} tests found${t.findings[1] ? ` · findings ${t.findings[0]}/${t.findings[1]}` : ""}`;
+  } else if (ev === "run_finished") {
+    finished = true;
+    status(`Complete · ${labState.summary ? `${labState.summary.tests} tests read` : "done"}`);
+  } else if (ev === "run_failed") {
+    $("lab-scan").hidden = true;
+    fail(record.error);
+  }
+}
+
+async function startLab() {
+  if (running) return;
+  const input = { model: $("model").value, document: labState.upload ? "" : labState.docId, upload: labState.upload || "" };
+  const thisRun = ++generation;
+  runFailed = false;
+  finished = false;
+  $("error").hidden = true;
+  labReset();
+  setBusy(true);
+  status("Connecting to the Gradio queue…", "busy");
+  try {
+    await getClient();
+    if (thisRun !== generation) return;
+    job = client.submit("/read_lab_report", input);
+    let seen = 0;
+    for await (const update of job) {
+      if (thisRun !== generation) return;
+      if (update.type === "status" && update.stage === "error") throw new Error(update.message || "Reading the report failed.");
+      if (update.type === "status" && update.stage === "pending") status("Queued. Waiting for the previous run to finish…", "busy");
+      if (update.type !== "data") continue;
+      const payload = update.data[0];
+      if (!Array.isArray(payload?.events)) throw new Error("The server returned an invalid event stream.");
+      for (const record of payload.events.slice(seen)) {
+        if (thisRun !== generation) return;
+        consumeLab(record);
+        seen++;
+        if ($("pace").value === "guided" && ["ocr_done", "columns_found", "names_read", "records_paired", "units_read"].includes(record.event)) await delay(650);
+      }
+    }
+    if (!finished && !runFailed) throw new Error("The connection ended before the report was read. Try again.");
+  } catch (error) {
+    if (thisRun === generation) fail(error);
+  } finally {
+    if (thisRun === generation) { job = null; $("lab-scan").hidden = true; setBusy(false); }
+  }
+}
+
+$("lab-document").addEventListener("change", labSelect);
+$("lab-run").addEventListener("click", startLab);
+$("lab-rows").addEventListener("mouseover", (event) => { const row = event.target.closest("tr[data-r]"); if (row) labFocus(row.dataset.r, true); });
+$("lab-rows").addEventListener("mouseleave", () => labFocus(null, false));
+$("lab-upload").addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 25 * 1024 * 1024) { fail(new Error("Upload a JPEG, PNG or WebP photo of the report, under 25 MB.")); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    labState.upload = reader.result;
+    if (!$("lab-document").querySelector('option[value="upload"]')) $("lab-document").insertAdjacentHTML("beforeend", '<option value="upload"></option>');
+    $("lab-document").querySelector('option[value="upload"]').textContent = `Your report · ${file.name}`;
+    $("lab-document").value = "upload";
+    $("lab-source").textContent = `${file.name} · read on this machine · no answer key, so results are not scored`;
+    $("error").hidden = true;
+    labReset();
+    status("Report loaded. Read it to see the results.");
+  };
+  reader.readAsDataURL(file);
+});
+
 $("request-form").addEventListener("submit", (event) => { event.preventDefault(); startRun("single"); });
 $("inbox").addEventListener("click", () => startRun("inbox"));
 $("run-browser").addEventListener("click", () => startRun("single"));
 $("sample").addEventListener("change", selectSample);
-$("model").addEventListener("change", () => { resetRun(); if (isStamp()) resetStamp(); if (isExtract()) xInvalidate(); updateModel(); status("Model changed. Ready for a new run."); });
+$("model").addEventListener("change", () => { resetRun(); if (isStamp()) resetStamp(); if (isExtract()) xInvalidate(); if (isLab()) labReset(); updateModel(); status("Model changed. Ready for a new run."); });
 $("message").addEventListener("input", updateMessageCount);
 for (const id of ["subject", "message"]) {
   $(id).addEventListener("input", () => {
@@ -1044,11 +1305,12 @@ try {
   const response = await fetch("demo-config");
   if (!response.ok) throw new Error("Could not load the demo configuration. Reload the page to try again.");
   config = await response.json();
-  const group = (name, entries) => `<div class="nav-group">${name}</div>` + entries.map((item) => `<button class="nav-button" data-workflow="${escape(item.id)}"><span class="nav-icon">${item.id === "extract" ? "¶" : item.id === "stamp" ? "◎" : ["clinic", "helpdesk"].includes(item.id) ? "↗" : "▣"}</span>${escape(item.name)}</button>`).join("");
+  const group = (name, entries) => `<div class="nav-group">${name}</div>` + entries.map((item) => `<button class="nav-button" data-workflow="${escape(item.id)}"><span class="nav-icon">${item.id === "lab" ? "⚕" : item.id === "extract" ? "¶" : item.id === "stamp" ? "◎" : ["clinic", "helpdesk"].includes(item.id) ? "↗" : "▣"}</span>${escape(item.name)}</button>`).join("");
   const simulated = ["clinic", "helpdesk"];
   $("workflows").innerHTML = group("Request simulations", config.workflows.filter((item) => simulated.includes(item.id)))
-    + group("Live browser", config.workflows.filter((item) => !simulated.includes(item.id) && !["stamp", "extract"].includes(item.id)))
-    + group("Document vision", config.workflows.filter((item) => ["stamp", "extract"].includes(item.id)));
+    + group("Live browser", config.workflows.filter((item) => !simulated.includes(item.id) && !["stamp", "extract", "lab"].includes(item.id)))
+    + group("Document vision", config.workflows.filter((item) => ["stamp", "extract", "lab"].includes(item.id)));
+  $("lab-document").innerHTML = config.lab.documents.map((d) => `<option value="${escape(d.id)}">${escape(d.title)}</option>`).join("");
   $("x-document").innerHTML = config.extract.documents.map((d) => `<option value="${escape(d.id)}">${escape(d.title)} · ${d.pages} page${d.pages === 1 ? "" : "s"}</option>`).join("");
   $("stamp-sample").innerHTML = config.stamp.samples.map((s) => `<option value="${escape(s.id)}">${escape(s.title)} · ${escape(s.capture)}</option>`).join("") + '<option value="" hidden>Your upload</option>';
   fillModels();

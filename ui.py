@@ -23,6 +23,7 @@ from fastapi.responses import Response
 from PIL import Image
 
 import document_extract
+import lab_report
 import stamp_check
 from d1_client import D1Client
 from extract_client import ExtractClient
@@ -47,6 +48,7 @@ DEMO_NAMES = {
     "Employee Help Desk": "helpdesk",
     "Document Stamp Check": "stamp",
     "Long-Span Extraction": "extract",
+    "Lab Report Reader": "lab",
 }
 
 DEMO_GUIDES = {
@@ -98,6 +100,12 @@ DEMO_GUIDES = {
         "<li>GLiNER2.5 pairs span starts and ends, so a clause can run as long as it needs.</li>"
         "<li>Every span is mapped back to the lines it covers on the page.</li></ol>"
     ),
+    "Lab Report Reader": (
+        "<strong>A scanned lab report, read into checked results</strong>"
+        "<ol><li>OCR finds every cell on the page.</li>"
+        "<li>d1 decides the table's columns, which lines are tests, the units, and the lab's own highlights.</li>"
+        "<li>Code pairs each test with its result and range, and flags values outside the range.</li></ol>"
+    ),
 }
 
 def demo_guide(display_name: str, model: str = "gliner") -> str:
@@ -132,7 +140,15 @@ def demo_config():
             "documents": [{k: v for k, v in doc.items() if k != "file"} for doc in document_extract.load_samples()],
             "max_labels": document_extract.MAX_LABELS,
         },
+        "lab": {
+            "models": [{"id": "3b", "name": "d1-3B"}, {"id": "omni", "name": "d1-omni-600M"}],
+            "documents": lab_samples(),
+        },
     }
+
+
+def lab_samples() -> list[dict[str, Any]]:
+    return json.loads((document_extract.DOCUMENTS / "lab_samples.json").read_text(encoding="utf-8"))["documents"]
 
 
 def stamp_config() -> dict[str, Any]:
@@ -393,6 +409,78 @@ def stream_extraction(
             message = str(exc)
             if "Connection refused" in message or "ConnectError" in type(exc).__name__:
                 message = f"The extraction service is not reachable at {EXTRACT_URL}. Start it with ./start-extract.sh."
+            events.put({"event": "run_failed", "error": message})
+        finally:
+            events.put(None)
+
+    worker_thread = threading.Thread(target=worker, daemon=True)
+    worker_thread.start()
+    records = []
+    try:
+        while True:
+            record = events.get()
+            if record is None:
+                break
+            records.append(record)
+            yield {"events": list(records), "elapsed_s": round(time.monotonic() - started, 2)}
+    finally:
+        cancelled.set()
+        worker_thread.join()
+
+
+@app.api(name="read_lab_report", concurrency_limit=1, stream_every=0.1)
+def stream_lab_report(model: str = "3b", document: str = "evya", upload: str = "") -> Iterator[dict[str, Any]]:
+    """Stream OCR, each d1 reading stage, the paired records and, for samples, the answer-key check."""
+    if model not in {"3b", "omni"}:
+        raise ValueError("Choose d1-3B or d1-omni-600M.")
+    truth = None
+    if upload:
+        data = document_extract.decode_document(upload)
+        if data.startswith(b"%PDF"):
+            raise ValueError("Upload the report as an image (JPEG, PNG or WebP).")
+        doc = {"id": f"upload-{uuid4().hex[:6]}", "title": "Your report"}
+    else:
+        doc = next((d for d in lab_samples() if d["id"] == document), None)
+        if doc is None:
+            raise ValueError("Choose a sample report or upload one.")
+        data = (document_extract.DOCUMENTS / doc["file"]).read_bytes()
+        truth = json.loads((document_extract.DOCUMENTS / doc["truth"]).read_text(encoding="utf-8"))
+    events: queue.Queue = queue.Queue()
+    cancelled = threading.Event()
+    started = time.monotonic()
+    key = "lab-" + __import__("hashlib").sha256(data).hexdigest()[:16]
+
+    def publish(record: dict[str, Any], image: bytes | None) -> None:
+        if cancelled.is_set():
+            raise RunCancelled()
+        if image:
+            with PAGE_IMAGES_LOCK:
+                PAGE_IMAGES[key] = image
+            record = {**record, "image_key": key}
+        events.put(record)
+
+    def worker() -> None:
+        try:
+            records_holder: dict[str, Any] = {}
+
+            def capture(record: dict[str, Any], image: bytes | None) -> None:
+                if record["event"] == "report_read":
+                    records_holder["records"] = record["records"]
+                publish(record, image)
+
+            artifact = lab_report.run_lab_report(ExtractClient(EXTRACT_URL), D1Client(D1_URL), doc, data, model,
+                                                 on_event=capture)
+            if truth is not None and "records" in records_holder:
+                result = lab_report.score(records_holder["records"], truth)
+                publish({"event": "report_scored", "totals": result["totals"], "rows": result["rows"],
+                         "records": records_holder["records"], "extra_records": result["extra_records"]}, None)
+            publish({"event": "run_finished", "artifact": artifact.name}, None)
+        except RunCancelled:
+            pass
+        except Exception as exc:  # noqa: BLE001 - surface worker failures in the UI
+            message = str(exc)
+            if "Connection refused" in message or "ConnectError" in type(exc).__name__:
+                message = "A model service is not reachable. Start ./start-extract.sh and ./start-d1.sh."
             events.put({"event": "run_failed", "error": message})
         finally:
             events.put(None)

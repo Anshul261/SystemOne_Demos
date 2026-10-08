@@ -170,6 +170,46 @@
         <div class="x-pages" id="x-pages" hidden></div>
         <div class="x-tip" id="x-tip" hidden></div>
       </section>
+      <section id="lab-demo" hidden aria-label="Lab report reader">
+        <ol class="steps lab-steps" aria-label="Reading stages">
+          <li data-lstage="1"><span>01</span> OCR <i>→</i></li>
+          <li data-lstage="2"><span>02</span> Columns <i>→</i></li>
+          <li data-lstage="3"><span>03</span> Tests and sections <i>→</i></li>
+          <li data-lstage="4"><span>04</span> Pairing <i>→</i></li>
+          <li data-lstage="5"><span>05</span> Units <i>→</i></li>
+          <li data-lstage="6"><span>06</span> Flags and the lab's marks</li>
+        </ol>
+        <div class="x-toolbar lab-toolbar">
+          <div class="x-field x-doc"><label for="lab-document">Report</label><select id="lab-document"></select></div>
+          <div class="x-actions"><button class="primary-button" id="lab-run" type="button" disabled>Read this report <span aria-hidden="true">→</span></button></div>
+          <label class="upload x-upload" for="lab-upload"><input id="lab-upload" type="file" accept="image/jpeg,image/png,image/webp"><span>Upload a report photo</span></label>
+        </div>
+        <p id="lab-source" class="x-source"></p>
+        <div class="x-stats lab-stats">
+          <div class="x-stat hero"><span>Tests read</span><strong id="ls-tests">—</strong><em id="ls-tests-sub">values with units and ranges</em></div>
+          <div class="x-stat"><span>Out of range</span><strong id="ls-flags">—</strong><em id="ls-flags-sub">from the numbers</em></div>
+          <div class="x-stat"><span>Lab's own marks</span><strong id="ls-agree">—</strong><em id="ls-agree-sub">d1 vision checks each value</em></div>
+          <div class="x-stat"><span>Answer key</span><strong id="ls-key">—</strong><em id="ls-key-sub">sample reports only</em></div>
+          <div class="x-stat"><span>Time</span><strong id="ls-ms">—</strong><em id="ls-ms-sub">OCR plus d1</em></div>
+        </div>
+        <div class="x-grid lab-grid">
+          <div class="x-viewer-wrap lab-viewer-wrap">
+            <div class="x-viewer" id="lab-viewer">
+              <img id="lab-page" alt="The report page being read" hidden>
+              <div class="x-boxes" id="lab-bands"></div>
+              <svg id="lab-links" class="lab-links" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="x-boxes" id="lab-boxes"></div>
+              <div class="scan-line" id="lab-scan" hidden></div>
+              <div class="x-empty" id="lab-empty"><h3>Pick a report and read it</h3><p>Every OCR cell, the table's columns, and how each test pairs with its result and range appear here.</p></div>
+            </div>
+          </div>
+          <aside class="x-panel lab-panel">
+            <div class="lab-legend"><span style="--c:#7c3aed">Column title</span><span style="--c:#2563eb">Test</span><span style="--c:#16a34a">Result</span><span style="--c:#d97706">Unit and range</span><span style="--c:#64748b">Method note</span><span style="--c:#db2777">Section</span></div>
+            <div class="table-scroll lab-table-wrap"><table class="lab-table"><thead><tr><th>Test</th><th>Result</th><th>Unit</th><th>Range</th><th title="Did the lab mark this value?">Lab</th><th title="Answer key check">Key</th></tr></thead><tbody id="lab-rows"><tr><td colspan="6" class="lab-wait">Results appear here.</td></tr></tbody></table></div>
+            <details class="taxonomy"><summary>How it reads the report</summary><div class="lab-how" id="lab-how"></div></details>
+          </aside>
+        </div>
+      </section>
       <details class="trace" id="trace"><summary>Under the hood <span>Model input, decisions, and execution events</span></summary><pre id="event-log">No events yet.</pre></details>
       <footer><span>SystemOne demos</span><span id="footer-note">Real model predictions. Simulated request delivery.</span><a href="https://www.gradio.app/guides/server-mode" target="_blank" rel="noreferrer">Built with Gradio Server ↗</a></footer>
     </main>
