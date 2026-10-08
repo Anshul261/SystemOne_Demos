@@ -9,3 +9,5 @@ gradio.log
 *.pyc
 .d1.pid
 d1.log
+.extract.pid
+extract.log

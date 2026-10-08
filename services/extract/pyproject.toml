@@ -1,0 +1,17 @@
+[project]
+name = "systemone-extract-service"
+version = "0.1.0"
+description = "GLiNER2.5 span extraction over real documents for SystemOne Demos"
+requires-python = ">=3.12"
+dependencies = [
+    "gliner2[local] @ git+https://github.com/fastino-ai/GLiNER2.git@55656fbfa01d3d4a77485e1a1eeeaf682990ccdf",
+    "protobuf",
+    "sentencepiece",
+    "pypdfium2",
+    "pillow",
+    "fastapi==0.142.2",
+    "uvicorn==0.54.0",
+]
+
+[tool.uv]
+package = false
