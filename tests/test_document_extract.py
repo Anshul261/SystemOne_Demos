@@ -33,8 +33,9 @@ def test_samples_ship_their_pdfs_and_paraphrased_schemas():
         document_extract.validate_schema(doc["schema"])
         if doc.get("local"):
             continue  # local-only documents are not part of the repository
-        pdf = (document_extract.DOCUMENTS / doc["file"]).read_bytes()
-        assert pdf.startswith(b"%PDF") and doc["source"].startswith("https://")
+        data = (document_extract.DOCUMENTS / doc["file"]).read_bytes()
+        assert data.startswith(tuple(document_extract.UPLOAD_TYPES.values()))
+        assert doc["source"].startswith("https://") or not data.startswith(b"%PDF")
 
 
 def test_every_page_streams_its_image_and_spans_and_the_summary_finds_the_longest(monkeypatch, tmp_path):

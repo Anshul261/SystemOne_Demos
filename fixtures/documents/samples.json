@@ -62,6 +62,29 @@
     "form_identifier": "a form number or control number, for example 'Form HHS-690'"
    },
    "model": "multi"
+  },
+  {
+   "id": "lab-report",
+   "title": "Scanned hospital lab report",
+   "subtitle": "Haematology report, photographed page · read with OCR, then extracted",
+   "file": "evya-haematology-report.webp",
+   "source": "",
+   "license": "Real hospital report shared as a sample; patient details redacted",
+   "pages": 1,
+   "default_page": 1,
+   "schema": {
+    "test_name": "the name of a lab test, for example 'Serum creatinine'",
+    "result_value": "the measured result of one test, for example '1.1'",
+    "unit": "a unit of measurement, for example 'mg/dL'",
+    "reference_range": "the normal reference range for a test, for example '0.6 - 1.2'",
+    "test_method": "the method used for a test, for example 'Method: enzymatic'",
+    "section_heading": "a section heading in the report, for example 'LIVER FUNCTION TEST'",
+    "finding": "a written observation about cells or tissue, for example 'mild anisocytosis'",
+    "doctor": "the doctor who signed the report, with qualification, for example 'Dr. A. Rao, MD Pathologist'",
+    "facility": "the hospital or lab that issued the report, for example 'Lakeside Diagnostics'"
+   },
+   "model": "base",
+   "note": "English-only GLiNER2.5 Base reads this English OCR text far better than the multilingual model."
   }
  ]
 }

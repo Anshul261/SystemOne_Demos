@@ -239,6 +239,7 @@ Samples (in `fixtures/documents/`):
 |---|---|
 | FEMA Standard Flood Insurance Policy, Dwelling Form (16 pages) | 44 CFR 61 App. A(1), 2024, from [GovInfo](https://www.govinfo.gov/content/pkg/CFR-2024-title44-vol1/pdf/CFR-2024-title44-vol1-part61-appA1.pdf) |
 | Medicare Advance Beneficiary Notice, English and Spanish | CMS's official fillable CMS-R-131, filled with synthetic data by `experiments/d1/make_abn.py` |
+| Scanned haematology report (1 photographed page) | A real hospital report shared as a sample, with patient details redacted; read with OCR |
 
 Start the service (it loads both models, about 2 GB of GPU memory) and the UI:
 
