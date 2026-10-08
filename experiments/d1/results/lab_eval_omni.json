@@ -1,0 +1,6052 @@
+{
+ "real haematology report omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     15,
+     15
+    ],
+    "value": [
+     15,
+     15
+    ],
+    "unit": [
+     10,
+     15
+    ],
+    "range": [
+     15,
+     15
+    ],
+    "flag": [
+     15,
+     15
+    ],
+    "printed_box": [
+     12,
+     15
+    ],
+    "findings": [
+     0,
+     3
+    ]
+   },
+   "rows": [
+    {
+     "test": "Haemoglobin",
+     "got": "Haemoglobin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "RBC Count",
+     "got": "RBC Count",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "PCV (Haematocrit)",
+     "got": "PCV (Haematocrit)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "got False"
+    },
+    {
+     "test": "WBC Count",
+     "got": "WBC Count",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Platelet Count",
+     "got": "Platelet Count",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "MCV",
+     "got": "MCV",
+     "value": "ok",
+     "unit": "got L",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "MCH",
+     "got": "MCH",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "MCHC",
+     "got": "MCHC",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Neutrophils",
+     "got": "Neutrophils",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Lymphocytes",
+     "got": "Lymphocytes",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Monocytes",
+     "got": "Monocytes",
+     "value": "ok",
+     "unit": "got None",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Eosinophils",
+     "got": "Eosinophils",
+     "value": "ok",
+     "unit": "got None",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Basophils",
+     "got": "Basophils",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "ESR I Hr",
+     "got": "ESRI Hr",
+     "value": "ok",
+     "unit": "got mm",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "got False"
+    },
+    {
+     "test": "ESR II Hr",
+     "got": "ESR I Hr.",
+     "value": "ok",
+     "unit": "got mm",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "got False"
+    }
+   ],
+   "extra_records": 8
+  },
+  "headers": {
+   "test": {
+    "text": "TEST DESCRIPTION",
+    "box": [
+     0.09638,
+     0.26758,
+     0.22908,
+     0.28516
+    ],
+    "confidence": 0.731
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.32722,
+     0.27539,
+     0.38527,
+     0.29004
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNITS",
+    "box": [
+     0.59538,
+     0.28418,
+     0.64237,
+     0.29883
+    ],
+    "confidence": 0.919
+   },
+   "range": {
+    "text": "REFERENCE RANGES",
+    "box": [
+     0.6949,
+     0.28711,
+     0.84418,
+     0.30664
+    ],
+    "confidence": 0.606
+   }
+  },
+  "model_ms": {
+   "columns": 615.9,
+   "name_roles": 1236.0,
+   "units": 102.8,
+   "highlight": 325.0
+  },
+  "ocr_ms": 2076.3
+ },
+ "real haematology report omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     15,
+     15
+    ],
+    "value": [
+     15,
+     15
+    ],
+    "unit": [
+     10,
+     15
+    ],
+    "range": [
+     15,
+     15
+    ],
+    "flag": [
+     15,
+     15
+    ],
+    "printed_box": [
+     15,
+     15
+    ],
+    "findings": [
+     0,
+     3
+    ]
+   },
+   "rows": [
+    {
+     "test": "Haemoglobin",
+     "got": "Haemoglobin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "RBC Count",
+     "got": "RBC Count",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "PCV (Haematocrit)",
+     "got": "PCV (Haematocrit)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "WBC Count",
+     "got": "WBC Count",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Platelet Count",
+     "got": "Platelet Count",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "MCV",
+     "got": "MCV",
+     "value": "ok",
+     "unit": "got L",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "MCH",
+     "got": "MCH",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "MCHC",
+     "got": "MCHC",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Neutrophils",
+     "got": "Neutrophils",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Lymphocytes",
+     "got": "Lymphocytes",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Monocytes",
+     "got": "Monocytes",
+     "value": "ok",
+     "unit": "got None",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Eosinophils",
+     "got": "Eosinophils",
+     "value": "ok",
+     "unit": "got None",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Basophils",
+     "got": "Basophils",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "ESR I Hr",
+     "got": "ESRI Hr",
+     "value": "ok",
+     "unit": "got mm",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "ESR II Hr",
+     "got": "ESR I Hr.",
+     "value": "ok",
+     "unit": "got mm",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 8
+  },
+  "headers": {
+   "test": {
+    "text": "TEST DESCRIPTION",
+    "box": [
+     0.09638,
+     0.26758,
+     0.22908,
+     0.28516
+    ],
+    "confidence": 0.731
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.32722,
+     0.27539,
+     0.38527,
+     0.29004
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNITS",
+    "box": [
+     0.59538,
+     0.28418,
+     0.64237,
+     0.29883
+    ],
+    "confidence": 0.919
+   },
+   "range": {
+    "text": "REFERENCE RANGES",
+    "box": [
+     0.6949,
+     0.28711,
+     0.84418,
+     0.30664
+    ],
+    "confidence": 0.606
+   }
+  },
+  "model_ms": {
+   "columns": 166.9,
+   "name_roles": 781.4,
+   "units": 118.3,
+   "highlight": 1340.4
+  },
+  "ocr_ms": 2076.3
+ },
+ "lab_reports report-0-0.jpg (photo) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     11,
+     12
+    ],
+    "value": [
+     11,
+     12
+    ],
+    "unit": [
+     11,
+     12
+    ],
+    "range": [
+     11,
+     12
+    ],
+    "flag": [
+     11,
+     12
+    ],
+    "printed_box": [
+     11,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": "Potassium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 1
+  },
+  "headers": {
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.32457,
+     0.12402,
+     0.44889,
+     0.13965
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.52763,
+     0.12207,
+     0.57045,
+     0.13379
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.6257,
+     0.11523,
+     0.8039,
+     0.13477
+    ],
+    "confidence": 0.876
+   },
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.06349,
+     0.13086,
+     0.16985,
+     0.14844
+    ],
+    "confidence": 0.826
+   }
+  },
+  "model_ms": {
+   "columns": 195.8,
+   "name_roles": 607.7,
+   "highlight": 263.3
+  },
+  "ocr_ms": 700.3
+ },
+ "lab_reports report-0-0.jpg (photo) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     11,
+     12
+    ],
+    "value": [
+     11,
+     12
+    ],
+    "unit": [
+     11,
+     12
+    ],
+    "range": [
+     11,
+     12
+    ],
+    "flag": [
+     11,
+     12
+    ],
+    "printed_box": [
+     11,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": "Potassium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 1
+  },
+  "headers": {
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.32457,
+     0.12402,
+     0.44889,
+     0.13965
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.52763,
+     0.12207,
+     0.57045,
+     0.13379
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.6257,
+     0.11523,
+     0.8039,
+     0.13477
+    ],
+    "confidence": 0.876
+   },
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.06349,
+     0.13086,
+     0.16985,
+     0.14844
+    ],
+    "confidence": 0.826
+   }
+  },
+  "model_ms": {
+   "columns": 207.0,
+   "name_roles": 573.7,
+   "highlight": 1113.4
+  },
+  "ocr_ms": 700.3
+ },
+ "lab_reports report-0-1.jpg (clean) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     12,
+     12
+    ],
+    "value": [
+     12,
+     12
+    ],
+    "unit": [
+     12,
+     12
+    ],
+    "range": [
+     12,
+     12
+    ],
+    "flag": [
+     12,
+     12
+    ],
+    "printed_box": [
+     12,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": "Uric Acid",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": "Potassium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.06487,
+     0.12207,
+     0.16709,
+     0.13379
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33009,
+     0.12109,
+     0.4558,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.5373,
+     0.12109,
+     0.5815,
+     0.13281
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.6409,
+     0.12109,
+     0.81909,
+     0.13379
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 187.9,
+   "name_roles": 591.6,
+   "highlight": 254.3
+  },
+  "ocr_ms": 585.7
+ },
+ "lab_reports report-0-1.jpg (clean) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     12,
+     12
+    ],
+    "value": [
+     12,
+     12
+    ],
+    "unit": [
+     12,
+     12
+    ],
+    "range": [
+     12,
+     12
+    ],
+    "flag": [
+     12,
+     12
+    ],
+    "printed_box": [
+     12,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": "Uric Acid",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": "Potassium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.06487,
+     0.12207,
+     0.16709,
+     0.13379
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33009,
+     0.12109,
+     0.4558,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.5373,
+     0.12109,
+     0.5815,
+     0.13281
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.6409,
+     0.12109,
+     0.81909,
+     0.13379
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 197.0,
+   "name_roles": 546.6,
+   "highlight": 1087.8
+  },
+  "ocr_ms": 585.7
+ },
+ "lab_reports report-1-0.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.07178,
+     0.11523,
+     0.16571,
+     0.12793
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.36739,
+     0.12012,
+     0.42679,
+     0.13086
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.51105,
+     0.12109,
+     0.55387,
+     0.13281
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.64781,
+     0.12402,
+     0.77627,
+     0.13574
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 112.8,
+   "name_roles": 235.8,
+   "units": 58.9,
+   "highlight": 156.3
+  },
+  "ocr_ms": 512.6
+ },
+ "lab_reports report-1-0.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.07178,
+     0.11523,
+     0.16571,
+     0.12793
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.36739,
+     0.12012,
+     0.42679,
+     0.13086
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.51105,
+     0.12109,
+     0.55387,
+     0.13281
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.64781,
+     0.12402,
+     0.77627,
+     0.13574
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 103.9,
+   "name_roles": 201.2,
+   "units": 46.2,
+   "highlight": 627.9
+  },
+  "ocr_ms": 512.6
+ },
+ "lab_reports report-1-1.jpg (photo) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.05658,
+     0.12207,
+     0.15328,
+     0.13379
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.36186,
+     0.12012,
+     0.42403,
+     0.13086
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.50967,
+     0.11719,
+     0.55525,
+     0.13184
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.65057,
+     0.11719,
+     0.78318,
+     0.12891
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 102.1,
+   "name_roles": 245.2,
+   "units": 50.7,
+   "highlight": 154.7
+  },
+  "ocr_ms": 657.8
+ },
+ "lab_reports report-1-1.jpg (photo) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.05658,
+     0.12207,
+     0.15328,
+     0.13379
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.36186,
+     0.12012,
+     0.42403,
+     0.13086
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.50967,
+     0.11719,
+     0.55525,
+     0.13184
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.65057,
+     0.11719,
+     0.78318,
+     0.12891
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 87.1,
+   "name_roles": 210.4,
+   "units": 50.1,
+   "highlight": 633.8
+  },
+  "ocr_ms": 657.8
+ },
+ "lab_reports report-2-0.jpg (clean) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 181.4,
+   "name_roles": 1218.1
+  },
+  "ocr_ms": 809.4
+ },
+ "lab_reports report-2-0.jpg (clean) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 192.1,
+   "name_roles": 1220.8
+  },
+  "ocr_ms": 809.4
+ },
+ "lab_reports report-2-1.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 208.2,
+   "name_roles": 1235.2
+  },
+  "ocr_ms": 714.3
+ },
+ "lab_reports report-2-1.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07316,
+     0.14355,
+     0.27622,
+     0.15723
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 193.6,
+   "name_roles": 1199.3
+  },
+  "ocr_ms": 714.3
+ },
+ "lab_reports_fresh report-0-0.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     10,
+     12
+    ],
+    "value": [
+     10,
+     12
+    ],
+    "unit": [
+     10,
+     12
+    ],
+    "range": [
+     10,
+     12
+    ],
+    "flag": [
+     10,
+     12
+    ],
+    "printed_box": [
+     10,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    }
+   ],
+   "extra_records": 2
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.06487,
+     0.12207,
+     0.16847,
+     0.13379
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33009,
+     0.12109,
+     0.4558,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.5373,
+     0.12109,
+     0.58288,
+     0.13281
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.6409,
+     0.12109,
+     0.81909,
+     0.13379
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 191.4,
+   "name_roles": 567.4,
+   "highlight": 254.4
+  },
+  "ocr_ms": 999.2
+ },
+ "lab_reports_fresh report-0-0.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     10,
+     12
+    ],
+    "value": [
+     10,
+     12
+    ],
+    "unit": [
+     10,
+     12
+    ],
+    "range": [
+     10,
+     12
+    ],
+    "flag": [
+     10,
+     12
+    ],
+    "printed_box": [
+     10,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    }
+   ],
+   "extra_records": 2
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.06487,
+     0.12207,
+     0.16847,
+     0.13379
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33009,
+     0.12109,
+     0.4558,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.5373,
+     0.12109,
+     0.58288,
+     0.13281
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.6409,
+     0.12109,
+     0.81909,
+     0.13379
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 200.1,
+   "name_roles": 534.9,
+   "highlight": 1086.5
+  },
+  "ocr_ms": 999.2
+ },
+ "lab_reports_fresh report-0-1.jpg (photo) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     11,
+     12
+    ],
+    "value": [
+     11,
+     12
+    ],
+    "unit": [
+     11,
+     12
+    ],
+    "range": [
+     11,
+     12
+    ],
+    "flag": [
+     11,
+     12
+    ],
+    "printed_box": [
+     11,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": "Potassium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 1
+  },
+  "headers": {
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.31904,
+     0.12012,
+     0.44475,
+     0.13281
+    ],
+    "confidence": 0.889
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.52901,
+     0.11719,
+     0.57321,
+     0.12891
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.62985,
+     0.1123,
+     0.81219,
+     0.12988
+    ],
+    "confidence": 0.876
+   },
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.04829,
+     0.12402,
+     0.15742,
+     0.1416
+    ],
+    "confidence": 0.826
+   }
+  },
+  "model_ms": {
+   "columns": 215.1,
+   "name_roles": 562.0,
+   "highlight": 259.1
+  },
+  "ocr_ms": 638.0
+ },
+ "lab_reports_fresh report-0-1.jpg (photo) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     11,
+     12
+    ],
+    "value": [
+     11,
+     12
+    ],
+    "unit": [
+     11,
+     12
+    ],
+    "range": [
+     11,
+     12
+    ],
+    "flag": [
+     11,
+     12
+    ],
+    "printed_box": [
+     11,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": "Potassium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 1
+  },
+  "headers": {
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.31904,
+     0.12012,
+     0.44475,
+     0.13281
+    ],
+    "confidence": 0.889
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.52901,
+     0.11719,
+     0.57321,
+     0.12891
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.62985,
+     0.1123,
+     0.81219,
+     0.12988
+    ],
+    "confidence": 0.876
+   },
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.04829,
+     0.12402,
+     0.15742,
+     0.1416
+    ],
+    "confidence": 0.826
+   }
+  },
+  "model_ms": {
+   "columns": 189.1,
+   "name_roles": 601.7,
+   "highlight": 1103.1
+  },
+  "ocr_ms": 638.0
+ },
+ "lab_reports_fresh report-1-0.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.05106,
+     0.125,
+     0.14499,
+     0.13965
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.34529,
+     0.12305,
+     0.40607,
+     0.13379
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.48895,
+     0.11914,
+     0.53315,
+     0.13379
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.62709,
+     0.11719,
+     0.75555,
+     0.12988
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 107.5,
+   "name_roles": 225.2,
+   "units": 48.8,
+   "highlight": 162.8
+  },
+  "ocr_ms": 511.8
+ },
+ "lab_reports_fresh report-1-0.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.05106,
+     0.125,
+     0.14499,
+     0.13965
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.34529,
+     0.12305,
+     0.40607,
+     0.13379
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.48895,
+     0.11914,
+     0.53315,
+     0.13379
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.62709,
+     0.11719,
+     0.75555,
+     0.12988
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 103.6,
+   "name_roles": 217.9,
+   "units": 55.7,
+   "highlight": 641.7
+  },
+  "ocr_ms": 511.8
+ },
+ "lab_reports_fresh report-1-1.jpg (photo) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.05658,
+     0.11914,
+     0.15052,
+     0.13086
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.35634,
+     0.12402,
+     0.41712,
+     0.13477
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.50414,
+     0.125,
+     0.54558,
+     0.13672
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.64228,
+     0.12695,
+     0.77213,
+     0.13965
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 134.5,
+   "name_roles": 210.0,
+   "units": 62.0,
+   "highlight": 185.5
+  },
+  "ocr_ms": 545.8
+ },
+ "lab_reports_fresh report-1-1.jpg (photo) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.05658,
+     0.11914,
+     0.15052,
+     0.13086
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.35634,
+     0.12402,
+     0.41712,
+     0.13477
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.50414,
+     0.125,
+     0.54558,
+     0.13672
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.64228,
+     0.12695,
+     0.77213,
+     0.13965
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 114.0,
+   "name_roles": 208.7,
+   "units": 49.5,
+   "highlight": 635.6
+  },
+  "ocr_ms": 545.8
+ },
+ "lab_reports_fresh report-2-0.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 193.4,
+   "name_roles": 1194.8
+  },
+  "ocr_ms": 617.4
+ },
+ "lab_reports_fresh report-2-0.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.05796,
+     0.15039,
+     0.26102,
+     0.16504
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 192.6,
+   "name_roles": 1167.5
+  },
+  "ocr_ms": 617.4
+ },
+ "lab_reports_fresh report-2-1.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 222.9,
+   "name_roles": 1200.3
+  },
+  "ocr_ms": 680.4
+ },
+ "lab_reports_fresh report-2-1.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.14258,
+     0.28036,
+     0.1582
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 182.9,
+   "name_roles": 1168.9
+  },
+  "ocr_ms": 680.4
+ },
+ "lab_reports_final report-0-0.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     9,
+     12
+    ],
+    "value": [
+     9,
+     12
+    ],
+    "unit": [
+     9,
+     12
+    ],
+    "range": [
+     9,
+     12
+    ],
+    "flag": [
+     9,
+     12
+    ],
+    "printed_box": [
+     9,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": null
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    }
+   ],
+   "extra_records": 3
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.07178,
+     0.11621,
+     0.17814,
+     0.13086
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33838,
+     0.11914,
+     0.46408,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.54558,
+     0.12012,
+     0.59255,
+     0.13477
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.64919,
+     0.12305,
+     0.82738,
+     0.13574
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 189.1,
+   "name_roles": 603.6,
+   "highlight": 254.5
+  },
+  "ocr_ms": 790.7
+ },
+ "lab_reports_final report-0-0.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     9,
+     12
+    ],
+    "value": [
+     9,
+     12
+    ],
+    "unit": [
+     9,
+     12
+    ],
+    "range": [
+     9,
+     12
+    ],
+    "flag": [
+     9,
+     12
+    ],
+    "printed_box": [
+     9,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": null
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    }
+   ],
+   "extra_records": 3
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.07178,
+     0.11621,
+     0.17814,
+     0.13086
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33838,
+     0.11914,
+     0.46408,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.54558,
+     0.12012,
+     0.59255,
+     0.13477
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.64919,
+     0.12305,
+     0.82738,
+     0.13574
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 217.1,
+   "name_roles": 592.9,
+   "highlight": 1015.4
+  },
+  "ocr_ms": 790.7
+ },
+ "lab_reports_final report-0-1.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     11,
+     12
+    ],
+    "value": [
+     11,
+     12
+    ],
+    "unit": [
+     11,
+     12
+    ],
+    "range": [
+     11,
+     12
+    ],
+    "flag": [
+     11,
+     12
+    ],
+    "printed_box": [
+     11,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": "Uric Acid",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    }
+   ],
+   "extra_records": 1
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.07178,
+     0.11621,
+     0.17676,
+     0.13086
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33838,
+     0.12012,
+     0.4627,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.5442,
+     0.12012,
+     0.59117,
+     0.13477
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.64919,
+     0.12305,
+     0.82738,
+     0.13574
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 196.6,
+   "name_roles": 589.7,
+   "highlight": 281.4
+  },
+  "ocr_ms": 692.6
+ },
+ "lab_reports_final report-0-1.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     11,
+     12
+    ],
+    "value": [
+     11,
+     12
+    ],
+    "unit": [
+     11,
+     12
+    ],
+    "range": [
+     11,
+     12
+    ],
+    "flag": [
+     11,
+     12
+    ],
+    "printed_box": [
+     11,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Bilirubin",
+     "got": "Total Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Direct Bilirubin",
+     "got": "Direct Bilirubin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGOT (AST)",
+     "got": "SGOT (AST)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "SGPT (ALT)",
+     "got": "SGPT (ALT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase",
+     "got": "Alkaline Phosphatase",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein",
+     "got": "Total Protein",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin",
+     "got": "Albumin",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Blood Urea",
+     "got": "Blood Urea",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": "Serum Creatinine",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Uric Acid",
+     "got": "Uric Acid",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Sodium",
+     "got": "Sodium",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    }
+   ],
+   "extra_records": 1
+  },
+  "headers": {
+   "test": {
+    "text": "Investigation",
+    "box": [
+     0.07178,
+     0.11621,
+     0.17676,
+     0.13086
+    ],
+    "confidence": 0.826
+   },
+   "result": {
+    "text": "Observed Value",
+    "box": [
+     0.33838,
+     0.12012,
+     0.4627,
+     0.13184
+    ],
+    "confidence": 0.888
+   },
+   "unit": {
+    "text": "Units",
+    "box": [
+     0.5442,
+     0.12012,
+     0.59117,
+     0.13477
+    ],
+    "confidence": 0.944
+   },
+   "range": {
+    "text": "Biological Ref. Interval",
+    "box": [
+     0.64919,
+     0.12305,
+     0.82738,
+     0.13574
+    ],
+    "confidence": 0.876
+   }
+  },
+  "model_ms": {
+   "columns": 196.2,
+   "name_roles": 581.3,
+   "highlight": 1235.0
+  },
+  "ocr_ms": 692.6
+ },
+ "lab_reports_final report-1-0.jpg (clean) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dl",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.06211,
+     0.12109,
+     0.15604,
+     0.13281
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.35772,
+     0.12109,
+     0.41712,
+     0.13184
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.50138,
+     0.12109,
+     0.5442,
+     0.13281
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.63814,
+     0.12109,
+     0.7666,
+     0.13184
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 106.1,
+   "name_roles": 216.5,
+   "units": 41.9,
+   "highlight": 182.1
+  },
+  "ocr_ms": 617.2
+ },
+ "lab_reports_final report-1-0.jpg (clean) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dl",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.06211,
+     0.12109,
+     0.15604,
+     0.13281
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.35772,
+     0.12109,
+     0.41712,
+     0.13184
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.50138,
+     0.12109,
+     0.5442,
+     0.13281
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.63814,
+     0.12109,
+     0.7666,
+     0.13184
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 106.2,
+   "name_roles": 208.2,
+   "units": 56.3,
+   "highlight": 631.2
+  },
+  "ocr_ms": 617.2
+ },
+ "lab_reports_final report-1-1.jpg (scan) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.0552,
+     0.12402,
+     0.14775,
+     0.13574
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.35081,
+     0.12207,
+     0.41021,
+     0.13379
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.49309,
+     0.11914,
+     0.53868,
+     0.13379
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.63123,
+     0.11914,
+     0.7597,
+     0.13086
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 86.6,
+   "name_roles": 228.6,
+   "units": 55.8,
+   "highlight": 177.4
+  },
+  "ocr_ms": 510.1
+ },
+ "lab_reports_final report-1-1.jpg (scan) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     7,
+     7
+    ],
+    "value": [
+     7,
+     7
+    ],
+    "unit": [
+     5,
+     7
+    ],
+    "range": [
+     7,
+     7
+    ],
+    "flag": [
+     7,
+     7
+    ],
+    "printed_box": [
+     7,
+     7
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Total Cholesterol",
+     "got": "Total Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Triglycerides",
+     "got": "Triglycerides",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": "HDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": "LDL Cholesterol",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T3",
+     "got": "T3",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "T4",
+     "got": "T4",
+     "value": "ok",
+     "unit": "got ug/dL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "TSH",
+     "got": "TSH",
+     "value": "ok",
+     "unit": "got plU/mL",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST NAME",
+    "box": [
+     0.0552,
+     0.12402,
+     0.14775,
+     0.13574
+    ],
+    "confidence": 0.699
+   },
+   "result": {
+    "text": "RESULT",
+    "box": [
+     0.35081,
+     0.12207,
+     0.41021,
+     0.13379
+    ],
+    "confidence": 0.851
+   },
+   "unit": {
+    "text": "UNIT",
+    "box": [
+     0.49309,
+     0.11914,
+     0.53868,
+     0.13379
+    ],
+    "confidence": 0.959
+   },
+   "range": {
+    "text": "NORMAL RANGE",
+    "box": [
+     0.63123,
+     0.11914,
+     0.7597,
+     0.13086
+    ],
+    "confidence": 0.75
+   }
+  },
+  "model_ms": {
+   "columns": 110.2,
+   "name_roles": 244.1,
+   "units": 50.6,
+   "highlight": 621.6
+  },
+  "ocr_ms": 510.1
+ },
+ "lab_reports_final report-2-0.jpg (photo) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 195.1,
+   "name_roles": 1247.0
+  },
+  "ocr_ms": 814.1
+ },
+ "lab_reports_final report-2-0.jpg (photo) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.07454,
+     0.1416,
+     0.27484,
+     0.15625
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 203.9,
+   "name_roles": 1222.3
+  },
+  "ocr_ms": 814.1
+ },
+ "lab_reports_final report-2-1.jpg (clean) omni/omni": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 174.8,
+   "name_roles": 1192.1
+  },
+  "ocr_ms": 789.9
+ },
+ "lab_reports_final report-2-1.jpg (clean) omni/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     0,
+     12
+    ],
+    "value": [
+     0,
+     12
+    ],
+    "unit": [
+     0,
+     12
+    ],
+    "range": [
+     0,
+     12
+    ],
+    "flag": [
+     0,
+     12
+    ],
+    "printed_box": [
+     0,
+     12
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "Blood Urea",
+     "got": null
+    },
+    {
+     "test": "Serum Creatinine",
+     "got": null
+    },
+    {
+     "test": "Uric Acid",
+     "got": null
+    },
+    {
+     "test": "Sodium",
+     "got": null
+    },
+    {
+     "test": "Potassium",
+     "got": null
+    },
+    {
+     "test": "Total Cholesterol",
+     "got": null
+    },
+    {
+     "test": "Triglycerides",
+     "got": null
+    },
+    {
+     "test": "HDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "LDL Cholesterol",
+     "got": null
+    },
+    {
+     "test": "T3",
+     "got": null
+    },
+    {
+     "test": "T4",
+     "got": null
+    },
+    {
+     "test": "TSH",
+     "got": null
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.99
+   },
+   "result": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.915
+   },
+   "unit": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.988
+   },
+   "range": {
+    "text": "KIDNEY FUNCTION TEST",
+    "box": [
+     0.06487,
+     0.14844,
+     0.26793,
+     0.16016
+    ],
+    "confidence": 0.993
+   }
+  },
+  "model_ms": {
+   "columns": 173.3,
+   "name_roles": 1198.1
+  },
+  "ocr_ms": 789.9
+ }
+}
