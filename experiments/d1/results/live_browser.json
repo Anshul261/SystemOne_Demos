@@ -1,0 +1,162 @@
+[
+ {
+  "round": 1,
+  "model": "omni",
+  "demo": "rpa",
+  "passed": true,
+  "seconds": 5.7,
+  "error": null
+ },
+ {
+  "round": 1,
+  "model": "omni",
+  "demo": "parabank",
+  "passed": true,
+  "seconds": 5.33,
+  "error": null
+ },
+ {
+  "round": 1,
+  "model": "omni",
+  "demo": "piko",
+  "passed": true,
+  "seconds": 4.41,
+  "error": null
+ },
+ {
+  "round": 1,
+  "model": "omni",
+  "demo": "piko-excel",
+  "passed": true,
+  "seconds": 4.94,
+  "error": null
+ },
+ {
+  "round": 2,
+  "model": "omni",
+  "demo": "rpa",
+  "passed": true,
+  "seconds": 5.91,
+  "error": null
+ },
+ {
+  "round": 2,
+  "model": "omni",
+  "demo": "parabank",
+  "passed": true,
+  "seconds": 5.22,
+  "error": null
+ },
+ {
+  "round": 2,
+  "model": "omni",
+  "demo": "piko",
+  "passed": true,
+  "seconds": 3.3,
+  "error": null
+ },
+ {
+  "round": 2,
+  "model": "omni",
+  "demo": "piko-excel",
+  "passed": true,
+  "seconds": 5.01,
+  "error": null
+ },
+ {
+  "round": 3,
+  "model": "omni",
+  "demo": "rpa",
+  "passed": true,
+  "seconds": 4.88,
+  "error": null
+ },
+ {
+  "round": 3,
+  "model": "omni",
+  "demo": "parabank",
+  "passed": true,
+  "seconds": 4.53,
+  "error": null
+ },
+ {
+  "round": 3,
+  "model": "omni",
+  "demo": "piko",
+  "passed": true,
+  "seconds": 5.18,
+  "error": null
+ },
+ {
+  "round": 3,
+  "model": "omni",
+  "demo": "piko-excel",
+  "passed": false,
+  "seconds": 3.28,
+  "error": "Error: Page.goto: net::ERR_ADDRESS_UNREACHABLE at https://pikoautomation.pl/sandbox/automation-challenge/\nCall log:\n  - navigating to \"https://pikoautomation.pl/sandbo"
+ },
+ {
+  "round": 1,
+  "model": "3b",
+  "demo": "rpa",
+  "passed": true,
+  "seconds": 5.05,
+  "error": null
+ },
+ {
+  "round": 1,
+  "model": "3b",
+  "demo": "parabank",
+  "passed": true,
+  "seconds": 6.11,
+  "error": null
+ },
+ {
+  "round": 1,
+  "model": "3b",
+  "demo": "piko",
+  "passed": false,
+  "seconds": 30.0,
+  "error": "TimeoutError: Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://pikoautomation.pl/sandbox/healing-agent\", waiting until \"networkidle\"\n"
+ },
+ {
+  "round": 1,
+  "model": "3b",
+  "demo": "piko-excel",
+  "passed": false,
+  "seconds": 30.0,
+  "error": "TimeoutError: Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://pikoautomation.pl/sandbox/automation-challenge/\", waiting until \"networkidle\"\n"
+ },
+ {
+  "round": 1,
+  "model": "multi",
+  "demo": "rpa",
+  "passed": true,
+  "seconds": 6.74,
+  "error": null
+ },
+ {
+  "round": 1,
+  "model": "multi",
+  "demo": "parabank",
+  "passed": true,
+  "seconds": 4.42,
+  "error": null
+ },
+ {
+  "round": 1,
+  "model": "multi",
+  "demo": "piko",
+  "passed": false,
+  "seconds": 3.53,
+  "error": "Error: Page.goto: net::ERR_ADDRESS_UNREACHABLE at https://pikoautomation.pl/sandbox/healing-agent\nCall log:\n  - navigating to \"https://pikoautomation.pl/sandbox/healin"
+ },
+ {
+  "round": 1,
+  "model": "multi",
+  "demo": "piko-excel",
+  "passed": false,
+  "seconds": 3.25,
+  "error": "Error: Page.goto: net::ERR_ADDRESS_UNREACHABLE at https://pikoautomation.pl/sandbox/automation-challenge/\nCall log:\n  - navigating to \"https://pikoautomation.pl/sandbo"
+ }
+]

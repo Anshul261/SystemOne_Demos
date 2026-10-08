@@ -213,12 +213,242 @@
    }
   },
   "model_ms": {
-   "columns": 1296.9,
-   "name_roles": 3810.8,
-   "units": 1068.8,
-   "highlight": 1669.4
+   "columns": 1556.5,
+   "name_roles": 4579.3,
+   "units": 782.0,
+   "highlight": 1724.2
   },
   "ocr_ms": 2076.3
+ },
+ "real liver report 3b/3b": {
+  "score": {
+   "totals": {
+    "found": [
+     16,
+     16
+    ],
+    "value": [
+     16,
+     16
+    ],
+    "unit": [
+     14,
+     16
+    ],
+    "range": [
+     16,
+     16
+    ],
+    "flag": [
+     16,
+     16
+    ],
+    "printed_box": [
+     16,
+     16
+    ],
+    "findings": [
+     0,
+     0
+    ]
+   },
+   "rows": [
+    {
+     "test": "eGFR",
+     "got": "eGFR",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Bilirubin Total{DPD}",
+     "got": "Bilirubin Total(DPD}",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Bilirubin Direct{DPD}",
+     "got": "Bilirubin Direct(DPD}",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Bilirubin Indirect (Calculated)",
+     "got": "Bilirubin Indirect (Calculated)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "AST/SGOT {IFCC-Without P-5P}",
+     "got": "AST/SGOT (IFCC-Without P-5P}",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "ALT /SGPT (IFCC-Without P-5P)",
+     "got": "ALT /SGPT (IFCC-Without P-5P)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Alkaline Phosphatase{IFCC Amp Buffer}",
+     "got": "Alkaline Phosphatase(IFCC Amp",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "GGT {IFCC}",
+     "got": "GGT {IFCC}",
+     "value": "ok",
+     "unit": "got None",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Total Protein{Biuret}",
+     "got": "Total Protein(Biuret)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Albumin {BCP Bromocresol Green}",
+     "got": "Albumin {BCP Bromocresol Green}",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Globulin (Calculated)",
+     "got": "Globulin (Calculated)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "A\\G Ratio (Calculated)",
+     "got": "AIG Ratio (Calculated)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Magnesium (Xylldyl Blue-Colourimetric-Tris-B",
+     "got": "Magnesium (Xylldyl Blue-Colourimetric-Tris-B",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Test",
+     "got": "Test",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "Mean Normal Prothrombin Time(MNPT)",
+     "got": "Mean Normal Prothrombin Time(MNPT)",
+     "value": "ok",
+     "unit": "ok",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    },
+    {
+     "test": "INR",
+     "got": "INR",
+     "value": "ok",
+     "unit": "got seconds",
+     "range": "ok",
+     "flag": "ok",
+     "printed_box": "ok"
+    }
+   ],
+   "extra_records": 0
+  },
+  "headers": {
+   "test": {
+    "text": "TEST",
+    "box": [
+     0.03898,
+     0.34277,
+     0.08177,
+     0.35742
+    ],
+    "confidence": 0.981
+   },
+   "result": {
+    "text": "Result",
+    "box": [
+     0.4862,
+     0.34375,
+     0.53037,
+     0.35547
+    ],
+    "confidence": 0.75
+   },
+   "unit": {
+    "text": "Unit",
+    "box": [
+     0.61042,
+     0.34277,
+     0.64355,
+     0.35547
+    ],
+    "confidence": 0.975
+   },
+   "range": {
+    "text": "Reference Range",
+    "box": [
+     0.73189,
+     0.34375,
+     0.84231,
+     0.35547
+    ],
+    "confidence": 0.923
+   }
+  },
+  "model_ms": {
+   "columns": 1020.3,
+   "name_roles": 5023.8,
+   "units": 459.9,
+   "highlight": 1797.7
+  },
+  "ocr_ms": 3185.2
  },
  "lab_reports report-0-0.jpg (photo) 3b/3b": {
   "score": {
@@ -407,9 +637,9 @@
    }
   },
   "model_ms": {
-   "columns": 1091.3,
-   "name_roles": 3056.8,
-   "highlight": 1113.0
+   "columns": 832.6,
+   "name_roles": 4612.9,
+   "highlight": 1731.6
   },
   "ocr_ms": 700.3
  },
@@ -600,9 +830,9 @@
    }
   },
   "model_ms": {
-   "columns": 1048.3,
-   "name_roles": 2495.2,
-   "highlight": 1119.3
+   "columns": 1113.2,
+   "name_roles": 3510.6,
+   "highlight": 1438.6
   },
   "ocr_ms": 585.7
  },
@@ -748,10 +978,10 @@
    }
   },
   "model_ms": {
-   "columns": 616.8,
-   "name_roles": 889.6,
-   "units": 200.9,
-   "highlight": 596.5
+   "columns": 652.3,
+   "name_roles": 1205.5,
+   "units": 213.9,
+   "highlight": 820.4
   },
   "ocr_ms": 512.6
  },
@@ -897,10 +1127,10 @@
    }
   },
   "model_ms": {
-   "columns": 617.0,
-   "name_roles": 946.6,
-   "units": 224.6,
-   "highlight": 617.4
+   "columns": 643.6,
+   "name_roles": 1308.4,
+   "units": 246.8,
+   "highlight": 808.6
   },
   "ocr_ms": 657.8
  },
@@ -1091,10 +1321,10 @@
    }
   },
   "model_ms": {
-   "columns": 751.9,
-   "name_roles": 1501.5,
-   "units": 286.5,
-   "highlight": 1470.8
+   "columns": 801.8,
+   "name_roles": 2081.7,
+   "units": 225.3,
+   "highlight": 1431.8
   },
   "ocr_ms": 809.4
  },
@@ -1285,10 +1515,10 @@
    }
   },
   "model_ms": {
-   "columns": 1570.5,
-   "name_roles": 2226.8,
-   "units": 363.8,
-   "highlight": 1552.3
+   "columns": 795.0,
+   "name_roles": 2029.5,
+   "units": 473.1,
+   "highlight": 1846.8
   },
   "ocr_ms": 714.3
  },
@@ -1479,9 +1709,9 @@
    }
   },
   "model_ms": {
-   "columns": 2407.6,
-   "name_roles": 3807.2,
-   "highlight": 1526.0
+   "columns": 1169.8,
+   "name_roles": 3999.7,
+   "highlight": 1562.1
   },
   "ocr_ms": 999.2
  },
@@ -1672,9 +1902,9 @@
    }
   },
   "model_ms": {
-   "columns": 1704.2,
-   "name_roles": 3694.3,
-   "highlight": 1557.2
+   "columns": 1186.3,
+   "name_roles": 3391.0,
+   "highlight": 1401.8
   },
   "ocr_ms": 638.0
  },
@@ -1820,10 +2050,10 @@
    }
   },
   "model_ms": {
-   "columns": 1290.2,
-   "name_roles": 1392.0,
-   "units": 409.9,
-   "highlight": 578.0
+   "columns": 669.3,
+   "name_roles": 1181.7,
+   "units": 242.6,
+   "highlight": 799.2
   },
   "ocr_ms": 511.8
  },
@@ -1969,10 +2199,10 @@
    }
   },
   "model_ms": {
-   "columns": 582.2,
-   "name_roles": 920.8,
-   "units": 180.0,
-   "highlight": 621.6
+   "columns": 716.3,
+   "name_roles": 1227.4,
+   "units": 250.6,
+   "highlight": 837.0
   },
   "ocr_ms": 545.8
  },
@@ -2163,10 +2393,10 @@
    }
   },
   "model_ms": {
-   "columns": 727.5,
-   "name_roles": 1440.7,
-   "units": 195.9,
-   "highlight": 1071.6
+   "columns": 788.1,
+   "name_roles": 2042.4,
+   "units": 257.1,
+   "highlight": 1446.1
   },
   "ocr_ms": 617.4
  },
@@ -2357,10 +2587,10 @@
    }
   },
   "model_ms": {
-   "columns": 767.5,
-   "name_roles": 1509.7,
-   "units": 195.1,
-   "highlight": 1048.3
+   "columns": 807.3,
+   "name_roles": 2002.8,
+   "units": 246.8,
+   "highlight": 1373.0
   },
   "ocr_ms": 680.4
  },
@@ -2551,9 +2781,9 @@
    }
   },
   "model_ms": {
-   "columns": 1126.9,
-   "name_roles": 2592.8,
-   "highlight": 1184.7
+   "columns": 1158.5,
+   "name_roles": 3507.1,
+   "highlight": 1525.0
   },
   "ocr_ms": 790.7
  },
@@ -2744,9 +2974,9 @@
    }
   },
   "model_ms": {
-   "columns": 2368.6,
-   "name_roles": 3777.7,
-   "highlight": 1439.3
+   "columns": 2713.6,
+   "name_roles": 4630.5,
+   "highlight": 1913.8
   },
   "ocr_ms": 692.6
  },
@@ -2892,10 +3122,10 @@
    }
   },
   "model_ms": {
-   "columns": 1212.5,
-   "name_roles": 1327.5,
-   "units": 347.8,
-   "highlight": 632.7
+   "columns": 1622.2,
+   "name_roles": 1624.8,
+   "units": 455.4,
+   "highlight": 1083.0
   },
   "ocr_ms": 617.2
  },
@@ -3041,10 +3271,10 @@
    }
   },
   "model_ms": {
-   "columns": 595.1,
-   "name_roles": 875.4,
-   "units": 166.6,
-   "highlight": 646.3
+   "columns": 1429.1,
+   "name_roles": 1787.8,
+   "units": 508.6,
+   "highlight": 1123.6
   },
   "ocr_ms": 510.1
  },
@@ -3235,10 +3465,10 @@
    }
   },
   "model_ms": {
-   "columns": 698.1,
-   "name_roles": 1483.6,
-   "units": 221.5,
-   "highlight": 1057.7
+   "columns": 1949.3,
+   "name_roles": 2022.5,
+   "units": 226.0,
+   "highlight": 1468.2
   },
   "ocr_ms": 814.1
  },
@@ -3429,10 +3659,10 @@
    }
   },
   "model_ms": {
-   "columns": 742.6,
-   "name_roles": 1385.8,
-   "units": 186.4,
-   "highlight": 1032.7
+   "columns": 776.6,
+   "name_roles": 2029.6,
+   "units": 245.6,
+   "highlight": 1451.9
   },
   "ocr_ms": 789.9
  }
