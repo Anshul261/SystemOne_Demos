@@ -31,6 +31,7 @@ class Page:
     image: bytes = field(repr=False, default=b"")  # rendered JPEG
     image_size: tuple[int, int] = (0, 0)
     rows: list[tuple[int, int]] | None = None  # OCR pages: character range of each visual row
+    cells: list[dict] | None = None  # OCR pages: each OCR line with its text, box and row, in reading order
 
 
 def open_pdf(data: bytes) -> pdfium.PdfDocument:
@@ -237,6 +238,9 @@ def read_image(data: bytes) -> Page:
     ranges = [(a, b - 1) for a, b in zip(bounds, bounds[1:])]
     page = finish(1, float(image.width), float(image.height), text, boxes, image, crop=False)
     page.rows = ranges
+    page.cells = [{"text": "".join(c for c, _ in lines[i]).strip(), "box": [round(v, 5) for v in union(b for _, b in lines[i] if b)],
+                   "row": r, "start": starts[k]}
+                  for k, (r, i) in enumerate((r, i) for r, row in enumerate(rows) for i in row)]
     return page
 
 

@@ -48,8 +48,7 @@ def page_of(data: bytes, number: int) -> tuple[Page, int, float]:
     with pages_lock:
         if key in pages:
             pages.move_to_end(key)
-            page, count, _ = pages[key]
-            return page, count, 0.0
+            return pages[key]  # with the original parse time, so a cached page still reports its OCR cost
     started = time.perf_counter()
     if data.startswith(IMAGE_MAGIC):
         if number != 1:
@@ -140,6 +139,21 @@ def extract(request: Request):
     spans.sort(key=lambda s: (s["start"], -s["end"]))
     response["spans"] = spans
     return response
+
+
+class OcrRequest(BaseModel):
+    image: str
+
+
+@app.post("/ocr")
+def ocr(request: OcrRequest):
+    """A scanned page as cells: each OCR line with its text, box (image fractions) and visual row."""
+    data = base64.b64decode(request.image, validate=True)
+    if len(data) > MAX_PDF_BYTES or not data.startswith(IMAGE_MAGIC):
+        raise HTTPException(422, "Send a JPEG, PNG or WebP image under 25 MB")
+    page, _, parse_ms = page_of(data, 1)
+    return {"image": base64.b64encode(page.image).decode("ascii"), "image_size": list(page.image_size),
+            "cells": page.cells, "ocr_ms": round(parse_ms, 1)}
 
 
 if __name__ == "__main__":

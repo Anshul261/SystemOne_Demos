@@ -25,6 +25,16 @@ class ExtractClient:
                   "schema": schema, "threshold": threshold, "segment": segment},
             timeout=self.timeout,
         )
+        return self._json(response)
+
+    def ocr(self, image: bytes) -> dict[str, Any]:
+        """A scanned page as OCR cells (text, box, row) plus the page image (base64 JPEG)."""
+        response = httpx.post(f"{self.base_url}/ocr", json={"image": base64.b64encode(image).decode("ascii")},
+                              timeout=self.timeout)
+        return self._json(response)
+
+    @staticmethod
+    def _json(response: httpx.Response) -> dict[str, Any]:
         if response.status_code == 422:
             detail = response.json().get("detail")
             raise ValueError(detail if isinstance(detail, str) else "The extraction service rejected the request.")

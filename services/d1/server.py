@@ -81,6 +81,43 @@ def system_one(request: Request):
     return {**result, "model": MODELS[request.model][0], "model_ms": round(model_ms, 2)}
 
 
+class BatchItem(BaseModel):
+    state: Any = None
+    questions: dict[str, dict[str, Any]] = Field(min_length=1, max_length=32)
+    images: list[str] = Field(default_factory=list, max_length=4)
+
+
+class BatchRequest(BaseModel):
+    model: str
+    requests: list[BatchItem] = Field(min_length=1, max_length=1024)
+
+
+@app.post("/system_one_batch")
+def system_one_batch(request: BatchRequest):
+    """Many (state, questions, images) requests in one call; d1 packs single-question requests together."""
+    if request.model not in MODELS:
+        raise HTTPException(422, f"Unknown model {request.model!r}; choose one of {sorted(MODELS)}")
+    items = []
+    for item in request.requests:
+        images = []
+        for encoded in item.images:
+            raw = base64.b64decode(encoded, validate=True)
+            if len(raw) > MAX_IMAGE_BYTES:
+                raise HTTPException(413, "Each image must be under 12 MB")
+            images.append(Image.open(io.BytesIO(raw)).convert("RGB"))
+        items.append((item.state, item.questions, images or None))
+    model = load(request.model)
+    with locks[request.model], torch.inference_mode():
+        if DEVICE == "cuda":
+            torch.cuda.synchronize()
+        started = time.perf_counter()
+        results = model.system_one_batch(items)
+        if DEVICE == "cuda":
+            torch.cuda.synchronize()
+        model_ms = (time.perf_counter() - started) * 1000
+    return {"results": results, "model": MODELS[request.model][0], "model_ms": round(model_ms, 2)}
+
+
 if __name__ == "__main__":
     for name in PRELOAD:
         load(name)
