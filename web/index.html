@@ -81,6 +81,53 @@
         <div class="browser-frame"><div class="browser-chrome"><span></span><span></span><span></span><p>Live browser · Playwright</p></div><div id="browser-empty" class="empty-state"><h3>Ready to open the website</h3><p>Start the demo to follow each model decision and browser action.</p></div><img id="screenshot" alt="Latest screenshot of the automated browser" hidden></div>
         <div class="browser-decision"><div class="section-heading"><h2>Latest model decision</h2><span class="small-badge" id="browser-confidence">Waiting</span></div><pre id="browser-latest">Field and action classifications will appear here.</pre></div>
       </section>
+      <section id="stamp-demo" hidden aria-label="Document stamp check">
+        <ol class="steps" aria-label="Verification stages">
+          <li data-sstage="1"><span>01</span> Document <i>→</i></li>
+          <li data-sstage="2"><span>02</span> Stamp region <i>→</i></li>
+          <li data-sstage="3"><span>03</span> Visual checks <i>→</i></li>
+          <li data-sstage="4"><span>04</span> Verdict</li>
+        </ol>
+        <div class="flow-grid stamp-grid">
+          <section class="flow-card" id="doc-card">
+            <div class="card-top"><span class="card-icon">▤</span><div><h2>The document arrives</h2><p>A scan, a phone photo, or a clean PDF render</p></div><span id="doc-badge" class="small-badge">Sample</span></div>
+            <label for="stamp-sample">Sample certificate</label>
+            <select id="stamp-sample"></select>
+            <div class="doc-viewer" id="doc-viewer">
+              <img id="doc-image" alt="The certificate being checked">
+              <div class="region-box" id="region-box" hidden><span>Stamp region</span></div>
+              <div class="scan-line" id="doc-scan" hidden></div>
+            </div>
+            <div class="doc-meta"><span id="doc-capture">—</span><span id="doc-expected"></span></div>
+            <button class="primary-button" id="stamp-check" type="button" disabled>Check this document <span aria-hidden="true">→</span></button>
+            <button class="secondary-button" id="stamp-batch" type="button" disabled>Play all samples</button>
+            <label class="upload" for="stamp-upload"><input id="stamp-upload" type="file" accept="image/jpeg,image/png,image/webp"><span>Upload your own scan or photo</span></label>
+            <p class="card-footnote">Print the <a href="stamp-samples/certificate_template.png" download>blank certificate</a>, stamp it, photograph it, and upload it.</p>
+          </section>
+          <section class="flow-card model-card" id="vision-card">
+            <div class="card-top"><span class="card-icon model-icon" id="vision-icon">d1</span><div><h2 id="vision-title">d1 looks at the stamp</h2><p id="vision-sub">Narrow visual questions, one forward pass</p></div></div>
+            <div class="crop-viewer" id="crop-viewer">
+              <img id="crop-image" alt="The stamp region the model reads" hidden>
+              <div class="scan-line" id="crop-scan" hidden></div>
+              <div class="crop-empty" id="crop-empty">The stamp region appears here</div>
+            </div>
+            <div class="pass-info" id="pass-info">Waiting for a document</div>
+            <ul class="checks" id="checks"></ul>
+            <details class="taxonomy"><summary>What can each model verify?</summary><div id="reliability"></div></details>
+          </section>
+          <section class="flow-card output-card" id="verdict-card">
+            <div class="card-top"><span class="card-icon">✓</span><div><h2>Rules decide</h2><p>Calibrated thresholds, explicit rules, human review when unsure</p></div></div>
+            <div id="verdict-empty" class="empty-state"><div class="verdict-outline" aria-hidden="true"></div><h3>No verdict yet</h3><p>Accept, reject with a reason, or send to a person.</p></div>
+            <div id="verdict-output" hidden></div>
+            <div class="output-note"><span class="dot"></span> Synthetic certificates; your uploads stay on this machine</div>
+          </section>
+        </div>
+        <section class="ledger">
+          <div class="section-heading"><div><h2>Verification ledger <span id="stamp-count" class="small-badge">0</span></h2><p id="stamp-score">Each checked document gets a record. Samples are scored against their known defect.</p></div><button id="stamp-download" class="text-button" disabled>Download JSON ↓</button></div>
+          <div id="stamp-ledger-empty" class="ledger-empty">Checked documents will collect here.</div>
+          <div class="table-scroll" id="stamp-ledger-table" hidden><table><thead><tr><th>Document</th><th>Capture</th><th>Known defect</th><th>Verdict</th><th>Result</th><th>Model time</th></tr></thead><tbody id="stamp-rows"></tbody></table></div>
+        </section>
+      </section>
       <details class="trace" id="trace"><summary>Under the hood <span>Model input, decisions, and execution events</span></summary><pre id="event-log">No events yet.</pre></details>
       <footer><span>SystemOne demos</span><span id="footer-note">Real model predictions. Simulated request delivery.</span><a href="https://www.gradio.app/guides/server-mode" target="_blank" rel="noreferrer">Built with Gradio Server ↗</a></footer>
     </main>

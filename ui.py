@@ -15,12 +15,17 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from playwright.sync_api import sync_playwright
 
+from PIL import Image
+
+import stamp_check
+from d1_client import D1Client
 from intake import intake_schema, load_tickets, run_intake_simulation
 from jpt_client import make_client
 from run import DEMOS
 
 GLINER_URL = os.getenv("GLINER_URL", "http://127.0.0.1:8010")
 JPT_URL = os.getenv("JPT_URL", "http://127.0.0.1:8085")
+D1_URL = os.getenv("D1_URL", "http://127.0.0.1:8020")
 HOST = os.getenv("DEMO_UI_HOST", "127.0.0.1")
 PORT = int(os.getenv("DEMO_UI_PORT", "7863"))
 WEB = Path(__file__).resolve().parent / "web"
@@ -32,6 +37,7 @@ DEMO_NAMES = {
     "Piko Excel Challenge": "piko-excel",
     "Clinic Requests": "clinic",
     "Employee Help Desk": "helpdesk",
+    "Document Stamp Check": "stamp",
 }
 
 DEMO_GUIDES = {
@@ -71,6 +77,12 @@ DEMO_GUIDES = {
         "<li>GLiNER predicts a team, priority, and staff-review need.</li>"
         "<li>Routing rules produce a ticket and a simulated acknowledgment.</li></ol>"
     ),
+    "Document Stamp Check": (
+        "<strong>Required-stamp verification from an image</strong>"
+        "<ol><li>Pick a sample certificate or upload a scan or phone photo.</li>"
+        "<li>d1 reads the stamp region and answers narrow visual questions in one forward pass.</li>"
+        "<li>Calibrated thresholds and rules accept, reject with a reason, or send to review.</li></ol>"
+    ),
 }
 
 def demo_guide(display_name: str, model: str = "gliner") -> str:
@@ -80,6 +92,7 @@ def demo_guide(display_name: str, model: str = "gliner") -> str:
 
 app = gr.Server(title="SystemOne Decision Lab")
 app.mount("/assets", StaticFiles(directory=WEB), name="assets")
+app.mount("/stamp-samples", StaticFiles(directory=stamp_check.SAMPLES), name="stamp-samples")
 
 
 @app.get("/")
@@ -97,6 +110,25 @@ def demo_config():
         "samples": {"clinic": load_tickets(True), "helpdesk": load_tickets(False)},
         "schemas": {"clinic": intake_schema(True), "helpdesk": intake_schema(False)},
         "models": ["gliner", "jpt"] if os.getenv("JPT_URL") or not os.getenv("SPACE_ID") else ["gliner"],
+        "stamp": stamp_config(),
+    }
+
+
+def stamp_config() -> dict[str, Any]:
+    calibration = stamp_check.CALIBRATION["models"]
+    return {
+        "models": [{"id": key, "name": name} for key, name in stamp_check.MODEL_NAMES.items()],
+        "samples": stamp_check.load_samples(),
+        "checks": stamp_check.CHECKS,
+        "reliability": {
+            model: {check: {"calib_auroc": spec["calib_auroc"], "test_auroc": spec["test_auroc"],
+                            "trusted": stamp_check.reliable(model, check)}
+                    for check, spec in calibration[model]["checks"].items()}
+            for model in stamp_check.MODEL_NAMES
+        },
+        "reliable_auroc": stamp_check.RELIABLE_AUROC,
+        "region": stamp_check.REGION,
+        "reasons": stamp_check.REASONS,
     }
 
 
@@ -197,6 +229,75 @@ def stream_demo(
         cancelled.set()
         # Keep the shared queue slot until the browser or model call has stopped.
         # Cancellation takes effect at the next audit event.
+        worker_thread.join()
+
+
+def data_url(jpeg: bytes) -> str:
+    return "data:image/jpeg;base64," + base64.b64encode(jpeg).decode("ascii")
+
+
+@app.api(name="check_document", concurrency_limit=1, stream_every=0.1)
+def stream_stamp_check(model: str = "omni", mode: str = "single", sample: str = "", upload: str = "") -> Iterator[dict[str, Any]]:
+    """Stream each document, the stamp region, every check and the verdict."""
+    if model not in stamp_check.MODEL_NAMES:
+        raise ValueError("Choose d1-omni-600M or d1-3B.")
+    samples = {item["id"]: item for item in stamp_check.load_samples()}
+    if mode == "batch":
+        chosen = list(samples.values())
+    elif mode == "single" and upload:
+        chosen = None
+    elif mode == "single" and sample in samples:
+        chosen = [samples[sample]]
+    else:
+        raise ValueError("Choose a sample document or upload an image.")
+    documents = (
+        [(stamp_check.decode_upload(upload), {"id": f"UP-{uuid4().hex[:6].upper()}", "source": "upload"})]
+        if chosen is None
+        else [(Image.open(stamp_check.SAMPLES / item["file"]).convert("RGB"), {**item, "source": "sample"})
+              for item in chosen]
+    )
+    events: queue.Queue = queue.Queue()
+    cancelled = threading.Event()
+    started = time.monotonic()
+
+    def publish(record: dict[str, Any], image: bytes | None) -> None:
+        if cancelled.is_set():
+            raise RunCancelled()
+        events.put((record, image))
+
+    def worker() -> None:
+        try:
+            artifact = stamp_check.run_stamp_check(D1Client(D1_URL), model, documents, on_event=publish)
+            publish({"event": "run_finished", "artifact": artifact.name}, None)
+        except RunCancelled:
+            pass
+        except Exception as exc:  # noqa: BLE001 - surface worker failures in the UI
+            message = str(exc)
+            if "Connection refused" in message or "ConnectError" in type(exc).__name__:
+                message = f"The d1 service is not reachable at {D1_URL}. Start it with ./start-d1.sh."
+            events.put(({"event": "run_failed", "error": message}, None))
+        finally:
+            events.put(None)
+
+    worker_thread = threading.Thread(target=worker, daemon=True)
+    worker_thread.start()
+    records = []
+    current: dict[str, Any] = {}
+    try:
+        while True:
+            item = events.get()
+            if item is None:
+                break
+            record, image = item
+            records.append(record)
+            # Every update carries the current document's images, so merged stream updates lose nothing.
+            if record["event"] == "document_received":
+                current = {"doc_id": record["doc_id"], "page": data_url(image) if image else None, "region": None}
+            elif record["event"] == "region_selected" and image:
+                current = {**current, "region": data_url(image)}
+            yield {"events": list(records), "doc_images": current, "elapsed_s": round(time.monotonic() - started, 2)}
+    finally:
+        cancelled.set()
         worker_thread.join()
 
 

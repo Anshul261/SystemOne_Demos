@@ -15,6 +15,9 @@ def test_each_demo_has_a_short_dynamic_guide():
         guide = demo_guide(name)
         assert "<ol>" in guide
         assert guide.count("<li>") == 3
+        if DEMO_NAMES[name] == "stamp":
+            assert "d1" in guide  # the vision workflow names its own model family
+            continue
         assert "GLiNER" in guide
         assert "JPT" in demo_guide(name, "jpt")
 
