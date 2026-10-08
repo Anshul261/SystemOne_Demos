@@ -154,6 +154,64 @@ caller-supplied label descriptions and, for the clinic, multi-label topic tags.
 See the [GLiNER2.5-Decide model card](https://huggingface.co/fastino/GLiNER2.5-Decide)
 for the request, ticket-routing, described-label, and multi-decision examples.
 
+## Document stamp check (d1 vision)
+
+The **Document Stamp Check** workflow in the UI verifies that an insurance
+certificate carries its required official stamp: round, blue ink, issued by
+Springfield Mutual Insurance, reading APPROVED and the issue date, pressed in
+ink inside the "Official stamp" box. It uses LiquidAI's
+[d1-omni-600M](https://huggingface.co/LiquidAI/d1-omni-600M) or
+[d1-3B](https://huggingface.co/LiquidAI/d1-3B) decision models on the image.
+Neither model generates text. Each answers narrow visual questions about the
+stamp region in one forward pass, and `stamp_check.py` turns those answers into
+accept, reject with a reason, or human review.
+
+- Questions and thresholds were chosen on a separate calibration split and
+  frozen in `fixtures/stamp_calibration.json`.
+- A check is trusted only when its calibration AUROC is at least 0.95. The model
+  sends untrusted checks to a person instead of deciding them.
+- Answers within 0.75 log-odds of their threshold also go to review.
+- Photos that show a desk around the page are cropped to the paper first.
+
+Start the model service (it loads both models, about 7.5 GB of GPU memory),
+then the UI:
+
+```bash
+./start-d1.sh
+curl -fsS http://127.0.0.1:8020/health
+./start-ui.sh
+```
+
+Pick a sample, play all 22 samples, or upload your own scan or photo. You can
+print `fixtures/stamps/certificate_template.png`, stamp it, and photograph it.
+Set `D1_URL` if the service runs elsewhere and `D1_MODELS=omni` to load only
+the small model.
+
+Measured on an RTX 5070 Ti, using 110 held-out test certificates (11 classes:
+valid plus 10 defect types) captured as clean renders, flatbed scans, and phone
+photos:
+
+| | d1-omni-600M | d1-3B |
+|---|---:|---:|
+| Correct verdict and reason | 29/110 | 100/110 |
+| Bad stamps accepted | 0/100 | 8/100 (all misspelled insurer names) |
+| Valid stamps rejected | 0/10 | 0/10 |
+| Sent to human review | 75/110 | 4/110 |
+| Median model time per document (live samples) | 21 ms | 72 ms |
+
+d1-omni-600M is trusted only for "stamp in the box" and "centre word"; it cannot
+tell ink colours apart (it called a red ring blue at 0.94) and cannot read the
+issuer, so it routes most documents to review. d1-3B separates every visual
+check perfectly on the test split (AUROC 1.00) except spelling: it reads
+"SPRINGFEILD" as "SPRINGFIELD", so a misspelled issuer is a known blind spot.
+The real-ink check is the most sensitive to capture quality. Faint stamps on
+re-compressed or blurred photos land near its threshold and go to review.
+
+All certificates are synthetic. To regenerate the data, calibration, and
+evaluation, run the scripts in `experiments/d1/` (`make_stamps.py`,
+`calibrate.py`, `evaluate_flow.py`, `export_samples.py`) in that directory's
+own environment.
+
 ## Host all six demos on Hugging Face Spaces
 
 Create a **Docker Space** and push this repository's files to it. The root
