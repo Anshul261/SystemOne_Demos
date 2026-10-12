@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light">
   <title>SystemOne · Decision lab</title>
   <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/paper.css">
   <script type="module" src="assets/app.js"></script>
 </head>
 <body>
@@ -19,7 +20,8 @@
       <nav id="workflows" aria-label="Demo workflows"></nav>
       <div class="sidebar-settings">
         <label for="model">Decision model</label>
-        <select id="model"><option value="gliner">GLiNER2.5 Decide</option></select>
+        <select id="model"></select>
+        <p class="quiet model-note" id="model-note"></p>
         <label for="pace">Playback</label>
         <select id="pace"><option value="guided">Guided, step by step</option><option value="instant">As results arrive</option></select>
         <p class="quiet">Playback pacing is separate from measured model time.</p>
@@ -80,6 +82,135 @@
         <div class="browser-toolbar"><div id="browser-guide"></div><button id="run-browser" class="primary-button">Run browser demo →</button></div>
         <div class="browser-frame"><div class="browser-chrome"><span></span><span></span><span></span><p>Live browser · Playwright</p></div><div id="browser-empty" class="empty-state"><h3>Ready to open the website</h3><p>Start the demo to follow each model decision and browser action.</p></div><img id="screenshot" alt="Latest screenshot of the automated browser" hidden></div>
         <div class="browser-decision"><div class="section-heading"><h2>Latest model decision</h2><span class="small-badge" id="browser-confidence">Waiting</span></div><pre id="browser-latest">Field and action classifications will appear here.</pre></div>
+      </section>
+      <section id="stamp-demo" hidden aria-label="Document stamp check">
+        <ol class="steps" aria-label="Verification stages">
+          <li data-sstage="1"><span>01</span> Document <i>→</i></li>
+          <li data-sstage="2"><span>02</span> Stamp region <i>→</i></li>
+          <li data-sstage="3"><span>03</span> Visual checks <i>→</i></li>
+          <li data-sstage="4"><span>04</span> Verdict</li>
+        </ol>
+        <div class="flow-grid stamp-grid">
+          <section class="flow-card" id="doc-card">
+            <div class="card-top"><span class="card-icon">▤</span><div><h2>The document arrives</h2><p>A scan, a phone photo, or a clean PDF render</p></div><span id="doc-badge" class="small-badge">Sample</span></div>
+            <label for="stamp-sample">Sample certificate</label>
+            <select id="stamp-sample"></select>
+            <div class="doc-viewer" id="doc-viewer">
+              <img id="doc-image" alt="The certificate being checked">
+              <div class="region-box" id="region-box" hidden><span>Stamp region</span></div>
+              <div class="scan-line" id="doc-scan" hidden></div>
+            </div>
+            <div class="doc-meta"><span id="doc-capture">—</span><span id="doc-expected"></span></div>
+            <button class="primary-button" id="stamp-check" type="button" disabled>Check this document <span aria-hidden="true">→</span></button>
+            <button class="secondary-button" id="stamp-batch" type="button" disabled>Play all samples</button>
+            <label class="upload" for="stamp-upload"><input id="stamp-upload" type="file" accept="image/jpeg,image/png,image/webp"><span>Upload your own scan or photo</span></label>
+            <p class="card-footnote">Print the <a href="stamp-samples/certificate_template.png" download>blank certificate</a>, stamp it, photograph it, and upload it.</p>
+          </section>
+          <section class="flow-card model-card" id="vision-card">
+            <div class="card-top"><span class="card-icon model-icon" id="vision-icon">d1</span><div><h2 id="vision-title">d1 looks at the stamp</h2><p id="vision-sub">Narrow visual questions, one forward pass</p></div></div>
+            <div class="crop-viewer" id="crop-viewer">
+              <img id="crop-image" alt="The stamp region the model reads" hidden>
+              <div class="scan-line" id="crop-scan" hidden></div>
+              <div class="crop-empty" id="crop-empty">The stamp region appears here</div>
+            </div>
+            <div class="pass-info" id="pass-info">Waiting for a document</div>
+            <ul class="checks" id="checks"></ul>
+            <details class="taxonomy"><summary>What can each model verify?</summary><div id="reliability"></div></details>
+          </section>
+          <section class="flow-card output-card" id="verdict-card">
+            <div class="card-top"><span class="card-icon">✓</span><div><h2>Rules decide</h2><p>Calibrated thresholds, explicit rules, human review when unsure</p></div></div>
+            <div id="verdict-empty" class="empty-state"><div class="verdict-outline" aria-hidden="true"></div><h3>No verdict yet</h3><p>Accept, reject with a reason, or send to a person.</p></div>
+            <div id="verdict-output" hidden></div>
+            <div class="output-note"><span class="dot"></span> Synthetic certificates; your uploads stay on this machine</div>
+          </section>
+        </div>
+        <section class="ledger">
+          <div class="section-heading"><div><h2>Verification ledger <span id="stamp-count" class="small-badge">0</span></h2><p id="stamp-score">Each checked document gets a record. Samples are scored against their known defect.</p></div><button id="stamp-download" class="text-button" disabled>Download JSON ↓</button></div>
+          <div id="stamp-ledger-empty" class="ledger-empty">Checked documents will collect here.</div>
+          <div class="table-scroll" id="stamp-ledger-table" hidden><table><thead><tr><th>Document</th><th>Capture</th><th>Known defect</th><th>Verdict</th><th>Result</th><th>Model time</th></tr></thead><tbody id="stamp-rows"></tbody></table></div>
+        </section>
+      </section>
+      <section id="extract-demo" hidden aria-label="Long-span extraction">
+        <div class="x-toolbar">
+          <div class="x-field x-doc"><label for="x-document">Document</label><select id="x-document"></select></div>
+          <div class="x-field"><label>Page</label><div class="x-pager"><button id="x-prev" type="button" aria-label="Previous page">‹</button><span id="x-page-label">Page 1</span><button id="x-next" type="button" aria-label="Next page">›</button></div></div>
+          <div class="x-field"><label for="x-threshold">Threshold</label><select id="x-threshold"><option value="0.3">0.3 · more spans</option><option value="0.5" selected>0.5 · default</option><option value="0.7">0.7 · stricter</option></select></div>
+          <div class="x-actions"><button class="primary-button" id="x-run" type="button" disabled>Extract this page <span aria-hidden="true">→</span></button><button class="secondary-button" id="x-run-all" type="button" disabled>Extract every page</button></div>
+        </div>
+        <div class="x-subbar">
+          <p id="x-source" class="x-source"></p>
+          <label class="x-toggle x-seg" title="PDFs are split where a numbered item or section starts, so a span cannot run into the next one. Scanned tables are split into rows, with cells kept apart. Turn it off to see the raw whole-page behaviour."><input type="checkbox" id="x-segment" checked> Split into items and table rows</label>
+          <label class="upload x-upload" for="x-upload"><input id="x-upload" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"><span>Upload a PDF or a scan</span></label>
+        </div>
+        <details class="x-schema" id="x-schema">
+          <summary>Labels the model looks for <span class="small-badge" id="x-label-count">0</span><span class="quiet">Edit them and extract again. Examples are paraphrased, never copied from the document.</span></summary>
+          <div id="x-labels"></div>
+          <div class="x-schema-actions"><button class="text-button" id="x-add" type="button">+ Add a label</button><button class="text-button" id="x-reset" type="button">Reset to this document's labels</button></div>
+        </details>
+        <div class="x-stats" id="x-stats">
+          <div class="x-stat hero"><span>Longest span</span><strong id="xs-longest">—</strong><em id="xs-longest-sub">words</em></div>
+          <div class="x-stat"><span>Past an 8-word cap</span><strong id="xs-beyond">—</strong><em>spans a fixed-width head could not return</em></div>
+          <div class="x-stat"><span>Spans</span><strong id="xs-spans">—</strong><em id="xs-spans-sub">on this page</em></div>
+          <div class="x-stat"><span>Model time</span><strong id="xs-ms">—</strong><em id="xs-ms-sub">one forward pass</em></div>
+        </div>
+        <div class="x-grid">
+          <div class="x-viewer-wrap">
+            <div class="x-viewer" id="x-viewer">
+              <img id="x-page" alt="The PDF page being read" hidden>
+              <div class="x-boxes" id="x-boxes"></div>
+              <div class="scan-line" id="x-scan" hidden></div>
+              <div class="x-empty" id="x-empty"><h3>Pick a page and extract it</h3><p>The page renders here with every span outlined on the lines it covers.</p></div>
+            </div>
+            <div class="x-rail" id="x-rail" aria-hidden="true"></div>
+          </div>
+          <aside class="x-panel">
+            <div class="x-legend" id="x-legend"></div>
+            <label class="x-toggle"><input type="checkbox" id="x-cap"> Show where an 8-word span head would stop</label>
+            <ol class="x-list" id="x-list"></ol>
+          </aside>
+        </div>
+        <div class="x-pages" id="x-pages" hidden></div>
+        <div class="x-tip" id="x-tip" hidden></div>
+      </section>
+      <section id="lab-demo" hidden aria-label="Lab report reader">
+        <ol class="steps lab-steps" aria-label="Reading stages">
+          <li data-lstage="1"><span>01</span> OCR <i>→</i></li>
+          <li data-lstage="2"><span>02</span> Columns <i>→</i></li>
+          <li data-lstage="3"><span>03</span> Tests and sections <i>→</i></li>
+          <li data-lstage="4"><span>04</span> Pairing <i>→</i></li>
+          <li data-lstage="5"><span>05</span> Units <i>→</i></li>
+          <li data-lstage="6"><span>06</span> Flags and the lab's marks</li>
+        </ol>
+        <div class="x-toolbar lab-toolbar">
+          <div class="x-field x-doc"><label for="lab-document">Report</label><select id="lab-document"></select></div>
+          <div class="x-actions"><button class="primary-button" id="lab-run" type="button" disabled>Read this report <span aria-hidden="true">→</span></button></div>
+          <label class="upload x-upload" for="lab-upload"><input id="lab-upload" type="file" accept="image/jpeg,image/png,image/webp"><span>Upload a report photo</span></label>
+        </div>
+        <p id="lab-source" class="x-source"></p>
+        <div class="x-stats lab-stats">
+          <div class="x-stat hero"><span>Tests read</span><strong id="ls-tests">—</strong><em id="ls-tests-sub">values with units and ranges</em></div>
+          <div class="x-stat"><span>Out of range</span><strong id="ls-flags">—</strong><em id="ls-flags-sub">from the numbers</em></div>
+          <div class="x-stat"><span>Lab's own marks</span><strong id="ls-agree">—</strong><em id="ls-agree-sub">d1 vision checks each value</em></div>
+          <div class="x-stat"><span>Answer key</span><strong id="ls-key">—</strong><em id="ls-key-sub">sample reports only</em></div>
+          <div class="x-stat"><span>Time</span><strong id="ls-ms">—</strong><em id="ls-ms-sub">OCR plus d1</em></div>
+        </div>
+        <div class="x-grid lab-grid">
+          <div class="x-viewer-wrap lab-viewer-wrap">
+            <div class="x-viewer" id="lab-viewer">
+              <img id="lab-page" alt="The report page being read" hidden>
+              <div class="x-boxes" id="lab-bands"></div>
+              <svg id="lab-links" class="lab-links" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="x-boxes" id="lab-boxes"></div>
+              <div class="scan-line" id="lab-scan" hidden></div>
+              <div class="x-empty" id="lab-empty"><h3>Pick a report and read it</h3><p>Every OCR cell, the table's columns, and how each test pairs with its result and range appear here.</p></div>
+            </div>
+          </div>
+          <aside class="x-panel lab-panel">
+            <div class="lab-legend"><span style="--c:#7c3aed">Column title</span><span style="--c:#2563eb">Test</span><span style="--c:#16a34a">Result</span><span style="--c:#d97706">Unit and range</span><span style="--c:#64748b">Method note</span><span style="--c:#db2777">Section</span></div>
+            <div class="table-scroll lab-table-wrap"><table class="lab-table"><thead><tr><th>Test</th><th>Result</th><th>Unit</th><th>Range</th><th title="Did the lab mark this value?">Lab</th><th title="Answer key check">Key</th></tr></thead><tbody id="lab-rows"><tr><td colspan="6" class="lab-wait">Results appear here.</td></tr></tbody></table></div>
+            <details class="taxonomy"><summary>How it reads the report</summary><div class="lab-how" id="lab-how"></div></details>
+          </aside>
+        </div>
       </section>
       <details class="trace" id="trace"><summary>Under the hood <span>Model input, decisions, and execution events</span></summary><pre id="event-log">No events yet.</pre></details>
       <footer><span>SystemOne demos</span><span id="footer-note">Real model predictions. Simulated request delivery.</span><a href="https://www.gradio.app/guides/server-mode" target="_blank" rel="noreferrer">Built with Gradio Server ↗</a></footer>

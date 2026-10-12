@@ -1,0 +1,52 @@
+{
+ "model": "LiquidAI/d1-omni-600M",
+ "revision": "414f8d6438174f5b2133a9c21a478fc42625e308",
+ "attrs": {
+  "in_box.a": {
+   "n": 54,
+   "accuracy": "14/54",
+   "auroc": 0.976
+  },
+  "in_box.b": {
+   "n": 54,
+   "accuracy": "12/54",
+   "auroc": 1.0
+  },
+  "anywhere.a": {
+   "n": 54,
+   "accuracy": "6/54",
+   "auroc": 0.859
+  },
+  "shape.a": {
+   "n": 42,
+   "accuracy": "6/42",
+   "auroc": 0.282
+  },
+  "color.a": {
+   "n": 42,
+   "accuracy": "9/42",
+   "auroc": 0.727
+  },
+  "issuer.a": {
+   "n": 36,
+   "accuracy": "16/36",
+   "auroc": 0.528
+  },
+  "status.a": {
+   "n": 42,
+   "accuracy": "40/42",
+   "auroc": 1.0
+  },
+  "date.a": {
+   "n": 42,
+   "accuracy": "36/42",
+   "auroc": 0.972
+  },
+  "date.b": {
+   "n": 42,
+   "accuracy": "9/42",
+   "auroc": 0.796
+  }
+ },
+ "median_ms": 15.7
+}

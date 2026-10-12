@@ -2,12 +2,13 @@ import os
 
 import pytest
 
-from gliner_client import GlinerClient
+from decision_clients import make_client
 from run import RPA_DESCRIPTIONS
 
+MODEL = os.getenv("LIVE_DECISION_MODEL", "omni")
 pytestmark = pytest.mark.skipif(
-    os.getenv("RUN_LIVE_GLINER_TESTS") != "1",
-    reason="set RUN_LIVE_GLINER_TESTS=1 to call the local model",
+    os.getenv("RUN_LIVE_DECISION_TESTS") != "1",
+    reason="set RUN_LIVE_DECISION_TESTS=1 (and LIVE_DECISION_MODEL=omni|3b|multi) to call a local model",
 )
 
 
@@ -21,12 +22,12 @@ pytestmark = pytest.mark.skipif(
     ],
 )
 def test_rpa_field_decisions(label, expected):
-    decision = GlinerClient().classify_field(label, RPA_DESCRIPTIONS)
+    decision = make_client(MODEL).classify_field(label, RPA_DESCRIPTIONS)
     assert decision.label == expected
 
 
 def test_approved_claim_decision():
-    decision = GlinerClient().classify(
+    decision = make_client(MODEL).classify(
         "Claim is approved. Fraud review is clear. Documents are complete.",
         "claim_action",
         {

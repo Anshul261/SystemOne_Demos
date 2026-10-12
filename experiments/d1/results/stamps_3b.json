@@ -1,0 +1,2211 @@
+{
+ "summary": {
+  "model": "LiquidAI/d1-3B",
+  "revision": "da1fe36a861f24690f27f622dca1d8688503d113",
+  "n": 54,
+  "strategies": {
+   "direct": {
+    "exact": 22,
+    "binary": 28,
+    "fraud_passed": 26,
+    "valid_flagged": 0,
+    "median_ms": 316.8,
+    "per_class": {
+     "valid": {
+      "valid": 6
+     },
+     "missing": {
+      "wrong_shape": 6
+     },
+     "outside_box": {
+      "outside_box": 6
+     },
+     "wrong_shape": {
+      "valid": 3,
+      "wrong_shape": 3
+     },
+     "wrong_color": {
+      "wrong_color": 6
+     },
+     "wrong_issuer": {
+      "valid": 6
+     },
+     "misspelled": {
+      "valid": 6
+     },
+     "wrong_status": {
+      "wrong_status": 1,
+      "valid": 5
+     },
+     "date_mismatch": {
+      "valid": 6
+     }
+    }
+   },
+   "decomposed": {
+    "exact": 48,
+    "binary": 48,
+    "fraud_passed": 6,
+    "valid_flagged": 0,
+    "median_ms": 330.0,
+    "per_class": {
+     "valid": {
+      "valid": 6
+     },
+     "missing": {
+      "missing": 6
+     },
+     "outside_box": {
+      "outside_box": 6
+     },
+     "wrong_shape": {
+      "wrong_shape": 6
+     },
+     "wrong_color": {
+      "wrong_color": 6
+     },
+     "wrong_issuer": {
+      "wrong_issuer": 6
+     },
+     "misspelled": {
+      "valid": 6
+     },
+     "wrong_status": {
+      "wrong_status": 6
+     },
+     "date_mismatch": {
+      "date_mismatch": 6
+     }
+    }
+   },
+   "crop": {
+    "exact": 48,
+    "binary": 48,
+    "fraud_passed": 6,
+    "valid_flagged": 0,
+    "median_ms": 362.5,
+    "per_class": {
+     "valid": {
+      "valid": 6
+     },
+     "missing": {
+      "missing": 6
+     },
+     "outside_box": {
+      "outside_box": 6
+     },
+     "wrong_shape": {
+      "wrong_shape": 6
+     },
+     "wrong_color": {
+      "wrong_color": 6
+     },
+     "wrong_issuer": {
+      "wrong_issuer": 6
+     },
+     "misspelled": {
+      "valid": 6
+     },
+     "wrong_status": {
+      "wrong_status": 6
+     },
+     "date_mismatch": {
+      "date_mismatch": 6
+     }
+    }
+   },
+   "reference": {
+    "exact": null,
+    "binary": 27,
+    "fraud_passed": 27,
+    "valid_flagged": 0,
+    "median_ms": 65.2,
+    "per_class": {
+     "valid": {
+      "valid": 6
+     },
+     "missing": {
+      "flag": 6
+     },
+     "outside_box": {
+      "flag": 6
+     },
+     "wrong_shape": {
+      "valid": 5,
+      "flag": 1
+     },
+     "wrong_color": {
+      "valid": 6
+     },
+     "wrong_issuer": {
+      "valid": 6
+     },
+     "misspelled": {
+      "valid": 6
+     },
+     "wrong_status": {
+      "valid": 4,
+      "flag": 2
+     },
+     "date_mismatch": {
+      "flag": 6
+     }
+    }
+   }
+  }
+ },
+ "rows": [
+  {
+   "file": "docs/valid-0.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 343.730364999999,
+    "decomposed": 364.2075960000284,
+    "crop": 384.68892899993534,
+    "reference": 69.39661199999136
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.593,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.818,
+     "status": "approved",
+     "date": 0.98,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.867,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.984
+    },
+    "reference": 0.867
+   }
+  },
+  {
+   "file": "docs/valid-1.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 330.8529930000077,
+    "decomposed": 345.5743139999754,
+    "crop": 357.84887400001253,
+    "reference": 63.24039600002607
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.531,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.967,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.798
+   }
+  },
+  {
+   "file": "docs/valid-2.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 309.0069959999937,
+    "decomposed": 325.0607040000091,
+    "crop": 359.3752670000754,
+    "reference": 68.32935500000303
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.438,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.953,
+     "status": "approved",
+     "date": 0.974,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.755
+   }
+  },
+  {
+   "file": "docs/valid-3.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 316.98652800002947,
+    "decomposed": 327.35804100002497,
+    "crop": 359.08371800002215,
+    "reference": 63.13302399996701
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.531,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.963,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.905,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.977
+    },
+    "reference": 0.852
+   }
+  },
+  {
+   "file": "docs/valid-4.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 309.65872300004094,
+    "decomposed": 326.81652899998426,
+    "crop": 358.6897310000836,
+    "reference": 65.54565700002968
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.593,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.94,
+     "in_box": 0.706
+    },
+    "crop": {
+     "present": 0.915,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.835
+   }
+  },
+  {
+   "file": "docs/valid-5.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 315.99544499999865,
+    "decomposed": 325.11339300003783,
+    "crop": 356.8752300000142,
+    "reference": 63.10303899999781
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.5,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.953,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.867,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.94
+    },
+    "reference": 0.777
+   }
+  },
+  {
+   "file": "docs/missing-0.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 313.28946300004645,
+    "decomposed": 329.000547000021,
+    "crop": 357.41491400000314,
+    "reference": 66.32505799996125
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.133,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.755,
+     "status": "none",
+     "date": 0.294,
+     "in_box": 0.033
+    },
+    "crop": {
+     "present": 0.076,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.148
+   }
+  },
+  {
+   "file": "docs/missing-1.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 316.8175989999895,
+    "decomposed": 325.3074339999671,
+    "crop": 357.2787449999737,
+    "reference": 63.100910999992266
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.148,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.881,
+     "status": "none",
+     "date": 0.294,
+     "in_box": 0.037
+    },
+    "crop": {
+     "present": 0.068,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.679
+    },
+    "reference": 0.148
+   }
+  },
+  {
+   "file": "docs/missing-2.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 309.5782149999877,
+    "decomposed": 326.1322909999649,
+    "crop": 357.869772000015,
+    "reference": 64.87058499999421
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.148,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.881,
+     "status": "none",
+     "date": 0.321,
+     "in_box": 0.033
+    },
+    "crop": {
+     "present": 0.06,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.119
+   }
+  },
+  {
+   "file": "docs/missing-3.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 316.85052400001723,
+    "decomposed": 323.91810799998666,
+    "crop": 359.27652999998827,
+    "reference": 63.07095400001117
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.133,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.852,
+     "status": "none",
+     "date": 0.294,
+     "in_box": 0.029
+    },
+    "crop": {
+     "present": 0.068,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.818,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.133
+   }
+  },
+  {
+   "file": "docs/missing-4.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 309.55586300001414,
+    "decomposed": 323.1463650000137,
+    "crop": 357.82169099996963,
+    "reference": 66.98329300002115
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.182,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.835,
+     "status": "none",
+     "date": 0.321,
+     "in_box": 0.042
+    },
+    "crop": {
+     "present": 0.053,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.133
+   }
+  },
+  {
+   "file": "docs/missing-5.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 317.62951199999634,
+    "decomposed": 324.63659600000483,
+    "crop": 355.71839900001123,
+    "reference": 62.70521300001519
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.133,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.852,
+     "status": "none",
+     "date": 0.245,
+     "in_box": 0.033
+    },
+    "crop": {
+     "present": 0.076,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.148
+   }
+  },
+  {
+   "file": "docs/outside_box-0.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "outside_box",
+    "decomposed": "outside_box",
+    "crop": "outside_box",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 307.4956969999789,
+    "decomposed": 324.3424859999777,
+    "crop": 351.5102009999964,
+    "reference": 61.479227999996056
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.798,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.953,
+     "in_box": 0.053
+    },
+    "crop": {
+     "present": 0.068,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.818,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.148
+   }
+  },
+  {
+   "file": "docs/outside_box-1.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "outside_box",
+    "decomposed": "outside_box",
+    "crop": "outside_box",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 306.176301999983,
+    "decomposed": 314.50429300002725,
+    "crop": 345.3467819999787,
+    "reference": 61.415809999971316
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.818,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.94,
+     "in_box": 0.042
+    },
+    "crop": {
+     "present": 0.053,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.133
+   }
+  },
+  {
+   "file": "docs/outside_box-2.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "outside_box",
+    "decomposed": "outside_box",
+    "crop": "outside_box",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 298.02917300003173,
+    "decomposed": 314.65507400002934,
+    "crop": 344.03086399998983,
+    "reference": 61.93087700000888
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.798,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.881,
+     "status": "approved",
+     "date": 0.947,
+     "in_box": 0.047
+    },
+    "crop": {
+     "present": 0.068,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.818,
+     "status": "none",
+     "date": 0.679
+    },
+    "reference": 0.148
+   }
+  },
+  {
+   "file": "docs/outside_box-3.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "outside_box",
+    "decomposed": "outside_box",
+    "crop": "outside_box",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 303.6963160000141,
+    "decomposed": 315.94718400003785,
+    "crop": 344.32125999995833,
+    "reference": 60.47329500000842
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.755,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.893,
+     "status": "approved",
+     "date": 0.947,
+     "in_box": 0.047
+    },
+    "crop": {
+     "present": 0.068,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.651
+    },
+    "reference": 0.119
+   }
+  },
+  {
+   "file": "docs/outside_box-4.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "outside_box",
+    "decomposed": "outside_box",
+    "crop": "outside_box",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 297.2886079999739,
+    "decomposed": 313.3208090000039,
+    "crop": 344.60183100003405,
+    "reference": 61.262894000037704
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.731,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.881,
+     "status": "approved",
+     "date": 0.974,
+     "in_box": 0.053
+    },
+    "crop": {
+     "present": 0.076,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.798,
+     "status": "none",
+     "date": 0.679
+    },
+    "reference": 0.165
+   }
+  },
+  {
+   "file": "docs/outside_box-5.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "outside_box",
+    "decomposed": "outside_box",
+    "crop": "outside_box",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 304.96188899996923,
+    "decomposed": 314.58867999998574,
+    "crop": 350.13615499997286,
+    "reference": 61.847774999989724
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.755,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.755,
+     "status": "approved",
+     "date": 0.593,
+     "in_box": 0.053
+    },
+    "crop": {
+     "present": 0.053,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "none",
+     "spelling": 0.818,
+     "status": "none",
+     "date": 0.679
+    },
+    "reference": 0.119
+   }
+  },
+  {
+   "file": "docs/wrong_shape-0.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_shape",
+    "crop": "wrong_shape",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 312.821050000025,
+    "decomposed": 328.77694299997984,
+    "crop": 361.5035349999971,
+    "reference": 64.26711699998577
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.562,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.958,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.953,
+     "status": "approved",
+     "date": 0.94
+    },
+    "reference": 0.731
+   }
+  },
+  {
+   "file": "docs/wrong_shape-1.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "wrong_shape",
+    "crop": "wrong_shape",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 317.81286099999306,
+    "decomposed": 330.12749499999927,
+    "crop": 361.3880789999939,
+    "reference": 63.64768999998205
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.438,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.94,
+     "in_box": 0.593
+    },
+    "crop": {
+     "present": 0.915,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.915,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.731
+   }
+  },
+  {
+   "file": "docs/wrong_shape-2.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "wrong_shape",
+    "crop": "wrong_shape",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 313.6652229999868,
+    "decomposed": 330.68018900002016,
+    "crop": 365.95612700006086,
+    "reference": 67.30885499996475
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.469,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.947,
+     "in_box": 0.562
+    },
+    "crop": {
+     "present": 0.881,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.915,
+     "status": "approved",
+     "date": 0.915
+    },
+    "reference": 0.622
+   }
+  },
+  {
+   "file": "docs/wrong_shape-3.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_shape",
+    "crop": "wrong_shape",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 322.865371999967,
+    "decomposed": 332.3664389999976,
+    "crop": 365.0496879999423,
+    "reference": 64.79405600003929
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.562,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.835,
+     "in_box": 0.651
+    },
+    "crop": {
+     "present": 0.852,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.953,
+     "status": "approved",
+     "date": 0.953
+    },
+    "reference": 0.469
+   }
+  },
+  {
+   "file": "docs/wrong_shape-4.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "wrong_shape",
+    "decomposed": "wrong_shape",
+    "crop": "wrong_shape",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 316.8589450000354,
+    "decomposed": 331.7379680000272,
+    "crop": 366.9854780000037,
+    "reference": 67.5117899999691
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.651,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.881,
+     "in_box": 0.777
+    },
+    "crop": {
+     "present": 0.881,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.971
+    },
+    "reference": 0.562
+   }
+  },
+  {
+   "file": "docs/wrong_shape-5.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_shape",
+    "crop": "wrong_shape",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 324.2772030000083,
+    "decomposed": 331.81208800004924,
+    "crop": 365.7556350000277,
+    "reference": 65.10608299998921
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.593,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.963,
+     "in_box": 0.679
+    },
+    "crop": {
+     "present": 0.915,
+     "shape": "rect",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.947,
+     "status": "approved",
+     "date": 0.967
+    },
+    "reference": 0.818
+   }
+  },
+  {
+   "file": "docs/wrong_color-0.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "wrong_color",
+    "decomposed": "wrong_color",
+    "crop": "wrong_color",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 314.80599700000766,
+    "decomposed": 331.4270459999875,
+    "crop": 367.01476000001776,
+    "reference": 67.0357230000036
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.706,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.905,
+     "status": "approved",
+     "date": 0.958,
+     "in_box": 0.818
+    },
+    "crop": {
+     "present": 0.924,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.971
+    },
+    "reference": 0.777
+   }
+  },
+  {
+   "file": "docs/wrong_color-1.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "wrong_color",
+    "decomposed": "wrong_color",
+    "crop": "wrong_color",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 325.990580999985,
+    "decomposed": 331.556556999999,
+    "crop": 364.4836830000031,
+    "reference": 65.26560100002143
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.651,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.94,
+     "in_box": 0.852
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.971
+    },
+    "reference": 0.818
+   }
+  },
+  {
+   "file": "docs/wrong_color-2.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "wrong_color",
+    "decomposed": "wrong_color",
+    "crop": "wrong_color",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 314.25909500001126,
+    "decomposed": 331.62007399999993,
+    "crop": 369.4502010000633,
+    "reference": 67.0758150000097
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.706,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.915,
+     "status": "approved",
+     "date": 0.963,
+     "in_box": 0.852
+    },
+    "crop": {
+     "present": 0.953,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.835
+   }
+  },
+  {
+   "file": "docs/wrong_color-3.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "wrong_color",
+    "decomposed": "wrong_color",
+    "crop": "wrong_color",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 323.1034279999676,
+    "decomposed": 332.3483919999717,
+    "crop": 369.7287200000119,
+    "reference": 66.05769399999417
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.679,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.963,
+     "in_box": 0.835
+    },
+    "crop": {
+     "present": 0.924,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.947,
+     "status": "approved",
+     "date": 0.982
+    },
+    "reference": 0.755
+   }
+  },
+  {
+   "file": "docs/wrong_color-4.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "wrong_color",
+    "decomposed": "wrong_color",
+    "crop": "wrong_color",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 321.06908700001213,
+    "decomposed": 337.6716120000083,
+    "crop": 383.13434399998414,
+    "reference": 71.73660199998722
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.679,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.967,
+     "in_box": 0.818
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.818
+   }
+  },
+  {
+   "file": "docs/wrong_color-5.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "wrong_color",
+    "decomposed": "wrong_color",
+    "crop": "wrong_color",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 329.68458900000996,
+    "decomposed": 344.3706420000012,
+    "crop": 372.930781999969,
+    "reference": 66.09349699999711
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.679,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.947,
+     "status": "approved",
+     "date": 0.977,
+     "in_box": 0.835
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "round",
+     "color": "red",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.932
+    },
+    "reference": 0.622
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-0.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_issuer",
+    "crop": "wrong_issuer",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 321.8059069999981,
+    "decomposed": 337.8770109999891,
+    "crop": 371.35523699998885,
+    "reference": 69.46387399995047
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.5,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.706,
+     "status": "approved",
+     "date": 0.967,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.915,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.469,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.731
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-1.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_issuer",
+    "crop": "wrong_issuer",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 329.56173799999533,
+    "decomposed": 339.45055399999546,
+    "crop": 374.2523399999982,
+    "reference": 66.33136100003867
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.5,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.679,
+     "status": "approved",
+     "date": 0.953,
+     "in_box": 0.706
+    },
+    "crop": {
+     "present": 0.94,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.5,
+     "status": "approved",
+     "date": 0.974
+    },
+    "reference": 0.679
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-2.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_issuer",
+    "crop": "wrong_issuer",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 323.011661999999,
+    "decomposed": 338.3293750000007,
+    "crop": 365.5643120000036,
+    "reference": 67.30408300001045
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.469,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.755,
+     "status": "approved",
+     "date": 0.967,
+     "in_box": 0.679
+    },
+    "crop": {
+     "present": 0.905,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.438,
+     "status": "approved",
+     "date": 0.977
+    },
+    "reference": 0.706
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-3.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_issuer",
+    "crop": "wrong_issuer",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 321.1787899999763,
+    "decomposed": 331.0032029999661,
+    "crop": 362.7832969999645,
+    "reference": 64.35973100002457
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.531,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.679,
+     "status": "approved",
+     "date": 0.967,
+     "in_box": 0.651
+    },
+    "crop": {
+     "present": 0.893,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.407,
+     "status": "approved",
+     "date": 0.971
+    },
+    "reference": 0.818
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-4.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_issuer",
+    "crop": "wrong_issuer",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 313.084726999989,
+    "decomposed": 329.54103999998097,
+    "crop": 366.7247820000057,
+    "reference": 66.58060199998772
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.593,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.679,
+     "status": "approved",
+     "date": 0.974,
+     "in_box": 0.818
+    },
+    "crop": {
+     "present": 0.932,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.438,
+     "status": "approved",
+     "date": 0.982
+    },
+    "reference": 0.755
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-5.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_issuer",
+    "crop": "wrong_issuer",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 319.36566999996785,
+    "decomposed": 329.0634830000272,
+    "crop": 361.69315500001176,
+    "reference": 64.34873699998889
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.651,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.679,
+     "status": "approved",
+     "date": 0.974,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.893,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "shelbyville",
+     "spelling": 0.407,
+     "status": "approved",
+     "date": 0.958
+    },
+    "reference": 0.706
+   }
+  },
+  {
+   "file": "docs/misspelled-0.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 312.93071200002487,
+    "decomposed": 329.5010379999894,
+    "crop": 363.023620999968,
+    "reference": 66.5250029999811
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.593,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.953,
+     "status": "approved",
+     "date": 0.967,
+     "in_box": 0.777
+    },
+    "crop": {
+     "present": 0.835,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.958,
+     "status": "approved",
+     "date": 0.982
+    },
+    "reference": 0.777
+   }
+  },
+  {
+   "file": "docs/misspelled-1.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 321.96805899997116,
+    "decomposed": 329.6762909999984,
+    "crop": 364.5672330000025,
+    "reference": 64.81696200000897
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.531,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "approved",
+     "date": 0.974,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.94,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.963,
+     "status": "approved",
+     "date": 0.971
+    },
+    "reference": 0.835
+   }
+  },
+  {
+   "file": "docs/misspelled-2.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 312.602126999991,
+    "decomposed": 331.4485270000205,
+    "crop": 362.4489619999167,
+    "reference": 67.13231299994504
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.5,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.947,
+     "status": "approved",
+     "date": 0.953,
+     "in_box": 0.622
+    },
+    "crop": {
+     "present": 0.924,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.958,
+     "status": "approved",
+     "date": 0.982
+    },
+    "reference": 0.798
+   }
+  },
+  {
+   "file": "docs/misspelled-3.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 318.06695599999557,
+    "decomposed": 327.05027200000814,
+    "crop": 361.60747499997115,
+    "reference": 64.8905740000032
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.562,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.958,
+     "status": "approved",
+     "date": 0.958,
+     "in_box": 0.706
+    },
+    "crop": {
+     "present": 0.905,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.963,
+     "status": "approved",
+     "date": 0.971
+    },
+    "reference": 0.818
+   }
+  },
+  {
+   "file": "docs/misspelled-4.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 316.7576820000022,
+    "decomposed": 331.098892,
+    "crop": 363.1309210000495,
+    "reference": 68.18928199999164
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.593,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.947,
+     "status": "approved",
+     "date": 0.963,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.94,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.982
+    },
+    "reference": 0.755
+   }
+  },
+  {
+   "file": "docs/misspelled-5.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "valid",
+    "crop": "valid",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 321.8787700000121,
+    "decomposed": 329.1946429999939,
+    "crop": 362.3859429999925,
+    "reference": 64.37160400002995
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.622,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.953,
+     "status": "approved",
+     "date": 0.947,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.893,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.958,
+     "status": "approved",
+     "date": 0.98
+    },
+    "reference": 0.731
+   }
+  },
+  {
+   "file": "docs/wrong_status-0.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "wrong_status",
+    "crop": "wrong_status",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 312.86235899995063,
+    "decomposed": 331.0819949999768,
+    "crop": 364.7008709999682,
+    "reference": 67.58727700002964
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.562,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.852,
+     "status": "void",
+     "date": 0.953,
+     "in_box": 0.706
+    },
+    "crop": {
+     "present": 0.953,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.932,
+     "status": "void",
+     "date": 0.98
+    },
+    "reference": 0.622
+   }
+  },
+  {
+   "file": "docs/wrong_status-1.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_status",
+    "crop": "wrong_status",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 322.9708599999981,
+    "decomposed": 330.0226899999643,
+    "crop": 364.1108230000327,
+    "reference": 64.06151900000623
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.593,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "void",
+     "date": 0.94,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.905,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "void",
+     "date": 0.982
+    },
+    "reference": 0.5
+   }
+  },
+  {
+   "file": "docs/wrong_status-2.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_status",
+    "crop": "wrong_status",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 314.2794230000163,
+    "decomposed": 330.2396909999743,
+    "crop": 361.8041789999893,
+    "reference": 66.2865919999831
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.5,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "void",
+     "date": 0.932,
+     "in_box": 0.706
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "void",
+     "date": 0.974
+    },
+    "reference": 0.562
+   }
+  },
+  {
+   "file": "docs/wrong_status-3.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_status",
+    "crop": "wrong_status",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 320.0264590000188,
+    "decomposed": 330.98721300001444,
+    "crop": 362.76952000002893,
+    "reference": 64.03430199998184
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.562,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.905,
+     "status": "void",
+     "date": 0.947,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.867,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.915,
+     "status": "void",
+     "date": 0.977
+    },
+    "reference": 0.469
+   }
+  },
+  {
+   "file": "docs/wrong_status-4.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_status",
+    "crop": "wrong_status",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 314.24516599997787,
+    "decomposed": 330.07136300000184,
+    "crop": 367.440773999931,
+    "reference": 67.01493399998526
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.531,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "void",
+     "date": 0.94,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.932,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.915,
+     "status": "void",
+     "date": 0.982
+    },
+    "reference": 0.438
+   }
+  },
+  {
+   "file": "docs/wrong_status-5.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "wrong_status",
+    "crop": "wrong_status",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 321.00853499997584,
+    "decomposed": 330.0302389999956,
+    "crop": 363.7218799999573,
+    "reference": 66.34458500002438
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.651,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.893,
+     "status": "void",
+     "date": 0.982,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.905,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.915,
+     "status": "void",
+     "date": 0.98
+    },
+    "reference": 0.562
+   }
+  },
+  {
+   "file": "docs/date_mismatch-0.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "date_mismatch",
+    "crop": "date_mismatch",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 314.6907029999966,
+    "decomposed": 329.9097510000024,
+    "crop": 362.97589600007996,
+    "reference": 66.70864500000562
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.407,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.924,
+     "status": "approved",
+     "date": 0.053,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.932,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.033
+    },
+    "reference": 0.438
+   }
+  },
+  {
+   "file": "docs/date_mismatch-1.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "date_mismatch",
+    "crop": "date_mismatch",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 320.99927199999456,
+    "decomposed": 331.63678699997945,
+    "crop": 362.19802700003356,
+    "reference": 64.42694300000085
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.438,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.915,
+     "status": "approved",
+     "date": 0.053,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.94,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.033
+    },
+    "reference": 0.349
+   }
+  },
+  {
+   "file": "docs/date_mismatch-2.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "date_mismatch",
+    "crop": "date_mismatch",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 313.6615140000458,
+    "decomposed": 328.838635000011,
+    "crop": 362.1925790000091,
+    "reference": 67.12262100000999
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.531,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.94,
+     "status": "approved",
+     "date": 0.068,
+     "in_box": 0.755
+    },
+    "crop": {
+     "present": 0.947,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.953,
+     "status": "approved",
+     "date": 0.029
+    },
+    "reference": 0.438
+   }
+  },
+  {
+   "file": "docs/date_mismatch-3.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "date_mismatch",
+    "crop": "date_mismatch",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 322.34278499998936,
+    "decomposed": 331.0871650000422,
+    "crop": 362.13818999999603,
+    "reference": 64.105536999989
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.438,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.953,
+     "status": "approved",
+     "date": 0.047,
+     "in_box": 0.622
+    },
+    "crop": {
+     "present": 0.924,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.947,
+     "status": "approved",
+     "date": 0.042
+    },
+    "reference": 0.294
+   }
+  },
+  {
+   "file": "docs/date_mismatch-4.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "date_mismatch",
+    "crop": "date_mismatch",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 313.1881350000185,
+    "decomposed": 329.05870400003323,
+    "crop": 363.3945629999289,
+    "reference": 66.37050099999442
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.469,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.893,
+     "status": "approved",
+     "date": 0.053,
+     "in_box": 0.679
+    },
+    "crop": {
+     "present": 0.835,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.947,
+     "status": "approved",
+     "date": 0.033
+    },
+    "reference": 0.349
+   }
+  },
+  {
+   "file": "docs/date_mismatch-5.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "date_mismatch",
+    "crop": "date_mismatch",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 320.3369610000095,
+    "decomposed": 329.7147920000043,
+    "crop": 362.57960099993625,
+    "reference": 64.28753700004108
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.5,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.852,
+     "status": "approved",
+     "date": 0.047,
+     "in_box": 0.731
+    },
+    "crop": {
+     "present": 0.924,
+     "shape": "round",
+     "color": "blue",
+     "issuer": "springfield",
+     "spelling": 0.958,
+     "status": "approved",
+     "date": 0.033
+    },
+    "reference": 0.407
+   }
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "documents": [
+  {
+   "id": "evya",
+   "title": "Real haematology report",
+   "subtitle": "Hospital report, photographed · patient details redacted",
+   "file": "evya-haematology-report.webp",
+   "truth": "evya-haematology-report.truth.json",
+   "kind": "real"
+  },
+  {
+   "id": "ilbs",
+   "title": "Real liver function report",
+   "subtitle": "Hospital report, digital page · patient details redacted · held out: its answer key was written before the reader saw it",
+   "file": "lab/ilbs-liver-report.webp",
+   "truth": "lab/ilbs-liver-report.truth.json",
+   "kind": "real"
+  },
+  {
+   "id": "synthetic-0",
+   "title": "Riverbend Diagnostics (synthetic)",
+   "subtitle": "Generated report, scan capture · held-out from the reader's development",
+   "file": "lab/synthetic-0-scan.jpg",
+   "truth": "lab/synthetic-0-scan.truth.json",
+   "kind": "synthetic"
+  },
+  {
+   "id": "synthetic-1",
+   "title": "Northgate Pathology Lab (synthetic)",
+   "subtitle": "Generated report, clean capture · held-out from the reader's development",
+   "file": "lab/synthetic-1-clean.jpg",
+   "truth": "lab/synthetic-1-clean.truth.json",
+   "kind": "synthetic"
+  },
+  {
+   "id": "synthetic-2",
+   "title": "Lakeside Clinical Laboratory (synthetic)",
+   "subtitle": "Generated report, photo capture · held-out from the reader's development",
+   "file": "lab/synthetic-2-photo.jpg",
+   "truth": "lab/synthetic-2-photo.truth.json",
+   "kind": "synthetic"
+  }
+ ]
+}

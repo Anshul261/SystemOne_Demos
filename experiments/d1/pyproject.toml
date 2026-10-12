@@ -1,0 +1,20 @@
+[project]
+name = "systemone-d1-experiments"
+version = "0.1.0"
+description = "Exploratory probes of LiquidAI d1 decision models"
+requires-python = ">=3.12"
+dependencies = [
+    "torch==2.14.1",
+    "torchvision",
+    "transformers==5.19.0",
+    "pillow",
+    "soundfile",
+    "matplotlib",
+    "numpy",
+    "duckdb>=1.5.6",
+    "pypdf>=6.19.0",
+    "pypdfium2>=5.14.0",
+]
+
+[tool.uv]
+package = false

@@ -1,0 +1,157 @@
+{
+ "note": "Hand-transcribed answer key for ilbs-liver-report.webp, written before the reader was run on it. Units are printed once per group and carry down to the blank lines below; 'unit' here is that carried unit. Ranges written '< N' have no lower bound. Tests without a printed range have no flag. The lab marks abnormal values with *H / *L (and bold). Ratios (A/G, INR) are dimensionless: no unit.",
+ "facility": "Institute of Liver & Biliary Sciences, New Delhi",
+ "tests": [
+  {
+   "section": "",
+   "test": "eGFR",
+   "value": 125,
+   "unit": "ml/min/1.73 m^2",
+   "low": null,
+   "high": null,
+   "flag": null
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "Bilirubin Total{DPD}",
+   "value": 1.18,
+   "unit": "mg/dL",
+   "low": 0.1,
+   "high": 1.2,
+   "flag": "normal"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "Bilirubin Direct{DPD}",
+   "value": 0.3,
+   "unit": "mg/dL",
+   "low": 0,
+   "high": 0.2,
+   "flag": "high",
+   "marker": "*H"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "Bilirubin Indirect (Calculated)",
+   "value": 0.88,
+   "unit": "mg/dL",
+   "low": 0.2,
+   "high": 0.8,
+   "flag": "high",
+   "marker": "*H"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "AST/SGOT {IFCC-Without P-5P}",
+   "value": 33,
+   "unit": "U/L",
+   "low": 5,
+   "high": 40,
+   "flag": "normal"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "ALT /SGPT (IFCC-Without P-5P)",
+   "value": 23,
+   "unit": "U/L",
+   "low": null,
+   "high": 30,
+   "flag": "normal"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "Alkaline Phosphatase{IFCC Amp Buffer}",
+   "value": 79,
+   "unit": "U/L",
+   "low": 50,
+   "high": 116,
+   "flag": "normal"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "GGT {IFCC}",
+   "value": 12,
+   "unit": "U/L",
+   "low": null,
+   "high": 55,
+   "flag": "normal"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "Total Protein{Biuret}",
+   "value": 5.29,
+   "unit": "g/dL",
+   "low": 6.4,
+   "high": 8.3,
+   "flag": "low",
+   "marker": "*L"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "Albumin {BCP Bromocresol Green}",
+   "value": 2.38,
+   "unit": "g/dL",
+   "low": 3.5,
+   "high": 5.2,
+   "flag": "low",
+   "marker": "*L"
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "Globulin (Calculated)",
+   "value": 2.91,
+   "unit": "g/dL",
+   "low": null,
+   "high": null,
+   "flag": null
+  },
+  {
+   "section": "Liver Function Test / Profile",
+   "test": "A\\G Ratio (Calculated)",
+   "value": 0.82,
+   "unit": "",
+   "low": 1.5,
+   "high": 2.5,
+   "flag": "low",
+   "marker": "*L"
+  },
+  {
+   "section": "Magnesium-serum",
+   "test": "Magnesium (Xylldyl Blue-Colourimetric-Tris-B",
+   "value": 3.1,
+   "unit": "mg/dL",
+   "low": 1.7,
+   "high": 2.4,
+   "flag": "high",
+   "marker": "*H"
+  },
+  {
+   "section": "PT / PT-INR",
+   "test": "Test",
+   "value": 16.0,
+   "unit": "seconds",
+   "low": null,
+   "high": null,
+   "flag": null
+  },
+  {
+   "section": "PT / PT-INR",
+   "test": "Mean Normal Prothrombin Time(MNPT)",
+   "value": 12.0,
+   "unit": "seconds",
+   "low": null,
+   "high": null,
+   "flag": null
+  },
+  {
+   "section": "PT / PT-INR",
+   "test": "INR",
+   "value": 1.36,
+   "unit": "",
+   "low": null,
+   "high": null,
+   "flag": null
+  }
+ ],
+ "findings": []
+}

@@ -1,0 +1,127 @@
+{
+ "facility": "Riverbend Diagnostics",
+ "tests": [
+  {
+   "section": "Liver Function Test",
+   "test": "Total Bilirubin",
+   "value": 0.9,
+   "unit": "mg/dL",
+   "low": 0.2,
+   "high": 1.2,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Liver Function Test",
+   "test": "Direct Bilirubin",
+   "value": 0.26,
+   "unit": "mg/dL",
+   "low": 0.0,
+   "high": 0.3,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Liver Function Test",
+   "test": "SGOT (AST)",
+   "value": 9.0,
+   "unit": "U/L",
+   "low": 5,
+   "high": 40,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Liver Function Test",
+   "test": "SGPT (ALT)",
+   "value": 77.0,
+   "unit": "U/L",
+   "low": 7,
+   "high": 56,
+   "flag": "high",
+   "highlighted": false
+  },
+  {
+   "section": "Liver Function Test",
+   "test": "Alkaline Phosphatase",
+   "value": 193.0,
+   "unit": "U/L",
+   "low": 44,
+   "high": 147,
+   "flag": "high",
+   "highlighted": false
+  },
+  {
+   "section": "Liver Function Test",
+   "test": "Total Protein",
+   "value": 6.7,
+   "unit": "g/dL",
+   "low": 6.0,
+   "high": 8.3,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Liver Function Test",
+   "test": "Albumin",
+   "value": 4.0,
+   "unit": "g/dL",
+   "low": 3.5,
+   "high": 5.0,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Blood Urea",
+   "value": 48.0,
+   "unit": "mg/dL",
+   "low": 15,
+   "high": 40,
+   "flag": "high",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Serum Creatinine",
+   "value": 1.13,
+   "unit": "mg/dL",
+   "low": 0.6,
+   "high": 1.3,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Uric Acid",
+   "value": 6.3,
+   "unit": "mg/dL",
+   "low": 3.5,
+   "high": 7.2,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Sodium",
+   "value": 131.0,
+   "unit": "mmol/L",
+   "low": 135,
+   "high": 145,
+   "flag": "low",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Potassium",
+   "value": 5.7,
+   "unit": "mmol/L",
+   "low": 3.5,
+   "high": 5.1,
+   "flag": "high",
+   "highlighted": false
+  }
+ ],
+ "findings": [],
+ "capture": "scan"
+}

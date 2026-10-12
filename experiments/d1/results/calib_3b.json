@@ -1,0 +1,7439 @@
+{
+ "model": "LiquidAI/d1-3B",
+ "revision": "da1fe36a861f24690f27f622dca1d8688503d113",
+ "region": [
+  0.55,
+  0.68,
+  0.99,
+  0.99
+ ],
+ "chosen": {
+  "anywhere": {
+   "image": "page",
+   "positive": "stamp",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "Does this document page carry a stamp?",
+    "criteria": {
+     "stamp": "A document page with an ink stamp printed on it",
+     "none": "A document page with no stamp anywhere, only typed text"
+    }
+   },
+   "threshold": 0.2194,
+   "calib_auroc": 1.0
+  },
+  "in_box": {
+   "image": "region",
+   "positive": "stamp",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "What is inside the box?",
+    "criteria": {
+     "stamp": "An ink stamp impression inside a box",
+     "empty": "An empty box with only blank paper inside"
+    }
+   },
+   "threshold": 0.7446,
+   "calib_auroc": 1.0
+  },
+  "shape": {
+   "image": "region",
+   "positive": "round",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "What shape is the stamp?",
+    "criteria": {
+     "round": "A round circular stamp with text curving around its edge",
+     "rect": "A rectangular stamp with straight edges and straight lines of text"
+    }
+   },
+   "threshold": 0.5058,
+   "calib_auroc": 1.0
+  },
+  "color": {
+   "image": "region",
+   "positive": "blue",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "What colour is the stamp ink?",
+    "criteria": {
+     "blue": "A stamp in blue ink",
+     "red": "A stamp in red ink",
+     "grey": "A stamp in black or grey, like a photocopy"
+    }
+   },
+   "threshold": 0.289,
+   "calib_auroc": 1.0
+  },
+  "issuer": {
+   "image": "region",
+   "positive": "springfield",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "Which company name is on the stamp?",
+    "criteria": {
+     "springfield": "A stamp reading SPRINGFIELD MUTUAL INSURANCE",
+     "shelbyville": "A stamp reading SHELBYVILLE MUTUAL INSURANCE"
+    }
+   },
+   "threshold": 0.4951,
+   "calib_auroc": 1.0
+  },
+  "spelling": {
+   "image": "region",
+   "positive": "correct",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "Read the first word around the top of the stamp letter by letter. Which spelling is printed?",
+    "criteria": {
+     "correct": "SPRINGFIELD",
+     "fil": "SPRINGFILED",
+     "nf": "SPRINFGIELD",
+     "ri": "SPIRNGFIELD"
+    }
+   },
+   "threshold": 0.9342,
+   "calib_auroc": 0.744
+  },
+  "status": {
+   "image": "region",
+   "positive": "approved",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "Which word is in the centre of the stamp?",
+    "criteria": {
+     "approved": "A stamp with the word APPROVED in the centre",
+     "void": "A stamp with the word VOID in the centre",
+     "received": "A stamp with the word RECEIVED in the centre"
+    }
+   },
+   "threshold": 0.4892,
+   "calib_auroc": 1.0
+  },
+  "date": {
+   "image": "region",
+   "positive": "match",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "Which date is on the stamp?",
+    "criteria": {
+     "match": "A stamp dated 14 SEP 2026",
+     "other": "A stamp with some other date"
+    }
+   },
+   "threshold": 0.1708,
+   "calib_auroc": 1.0
+  },
+  "genuine": {
+   "image": "region",
+   "positive": "ink",
+   "variant": "c1",
+   "question": {
+    "type": "choice",
+    "instructions": "How was this stamp made?",
+    "criteria": {
+     "ink": "A real rubber-stamp impression with uneven, patchy ink",
+     "digital": "A clean digital stamp image with perfectly solid, uniform colour"
+    }
+   },
+   "threshold": 0.1674,
+   "calib_auroc": 1.0
+  }
+ },
+ "attrs": {
+  "anywhere": {
+   "accuracy": "110/110",
+   "auroc": 1.0
+  },
+  "in_box": {
+   "accuracy": "110/110",
+   "auroc": 1.0
+  },
+  "shape": {
+   "accuracy": "90/90",
+   "auroc": 1.0
+  },
+  "color": {
+   "accuracy": "90/90",
+   "auroc": 1.0
+  },
+  "issuer": {
+   "accuracy": "80/80",
+   "auroc": 1.0
+  },
+  "spelling": {
+   "accuracy": "26/80",
+   "auroc": 0.749
+  },
+  "status": {
+   "accuracy": "90/90",
+   "auroc": 1.0
+  },
+  "date": {
+   "accuracy": "90/90",
+   "auroc": 1.0
+  },
+  "genuine": {
+   "accuracy": "80/80",
+   "auroc": 1.0
+  }
+ },
+ "rows": [
+  {
+   "file": "docs/valid-0.jpg",
+   "label": "valid",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.81757,
+    "in_box": 0.98594,
+    "shape": 0.97967,
+    "color": 0.81837,
+    "issuer": 0.98757,
+    "spelling": 0.55207,
+    "status": 0.98388,
+    "date": 0.67918,
+    "genuine": 0.65135
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8175744761936437,
+     "none": 0.18242552380635632
+    },
+    "in_box": {
+     "stamp": 0.9859363729567544,
+     "empty": 0.014063627043245474
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.8183666449354904,
+     "red": 0.020487408079026364,
+     "grey": 0.1611459469854833
+    },
+    "issuer": {
+     "springfield": 0.9875683491468141,
+     "shelbyville": 0.012431650853185818
+    },
+    "spelling": {
+     "correct": 0.5520650975373034,
+     "fil": 0.4299487302684433,
+     "nf": 0.011457745562566197,
+     "ri": 0.0065284266316871665
+    },
+    "status": {
+     "approved": 0.9838818615391822,
+     "void": 0.00705689978012243,
+     "received": 0.009061238680695336
+    },
+    "date": {
+     "match": 0.679178699175393,
+     "other": 0.32082130082460697
+    },
+    "genuine": {
+     "ink": 0.6513548646660542,
+     "digital": 0.34864513533394575
+    }
+   }
+  },
+  {
+   "file": "docs/valid-1.jpg",
+   "label": "valid",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.87408,
+    "in_box": 0.97967,
+    "shape": 0.98309,
+    "color": 0.83803,
+    "issuer": 0.99029,
+    "spelling": 0.71375,
+    "status": 0.9835,
+    "date": 0.95532,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8740772351648677,
+     "none": 0.12592276483513232
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.8380327138217307,
+     "red": 0.01633903675698872,
+     "grey": 0.1456282494212805
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.7137547486559279,
+     "fil": 0.26257569806900605,
+     "nf": 0.017868500499809082,
+     "ri": 0.005801052775256923
+    },
+    "status": {
+     "approved": 0.9834976851257742,
+     "void": 0.007993392669542763,
+     "received": 0.008508922204682908
+    },
+    "date": {
+     "match": 0.9553191297273498,
+     "other": 0.0446808702726502
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/valid-2.jpg",
+   "label": "valid",
+   "capture": "clean",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.46879,
+    "in_box": 0.98088,
+    "shape": 0.98594,
+    "color": 0.95041,
+    "issuer": 0.98757,
+    "spelling": 0.16223,
+    "status": 0.98062,
+    "date": 0.98088,
+    "genuine": 0.18243
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.46879062662624377,
+     "none": 0.5312093733737563
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9859363729567544,
+     "rect": 0.014063627043245474
+    },
+    "color": {
+     "blue": 0.9504129499388798,
+     "red": 0.012735540814230097,
+     "grey": 0.03685150924689013
+    },
+    "issuer": {
+     "springfield": 0.9875683491468141,
+     "shelbyville": 0.012431650853185818
+    },
+    "spelling": {
+     "correct": 0.1622332676687954,
+     "fil": 0.8238885149931423,
+     "nf": 0.007587750900252972,
+     "ri": 0.00629046643780926
+    },
+    "status": {
+     "approved": 0.9806222264680362,
+     "void": 0.008484044612806985,
+     "received": 0.010893728919156877
+    },
+    "date": {
+     "match": 0.9808759632491112,
+     "other": 0.019124036750888904
+    },
+    "genuine": {
+     "ink": 0.18242552380635632,
+     "digital": 0.8175744761936437
+    }
+   }
+  },
+  {
+   "file": "docs/valid-3.jpg",
+   "label": "valid",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.81757,
+    "in_box": 0.97702,
+    "shape": 0.98088,
+    "color": 0.94057,
+    "issuer": 0.99029,
+    "spelling": 0.63916,
+    "status": 0.98343,
+    "date": 0.98504,
+    "genuine": 0.65135
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8175744761936437,
+     "none": 0.18242552380635632
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.9405682429203616,
+     "red": 0.012603621664720885,
+     "grey": 0.046828135414917704
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.6391565262343482,
+     "fil": 0.3421158352794327,
+     "nf": 0.012461568389123474,
+     "ri": 0.006266070097095754
+    },
+    "status": {
+     "approved": 0.9834342701822928,
+     "void": 0.007508613310897589,
+     "received": 0.009057116506809695
+    },
+    "date": {
+     "match": 0.98504291340685,
+     "other": 0.01495708659314999
+    },
+    "genuine": {
+     "ink": 0.6513548646660542,
+     "digital": 0.34864513533394575
+    }
+   }
+  },
+  {
+   "file": "docs/valid-4.jpg",
+   "label": "valid",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.80807,
+    "in_box": 0.98409,
+    "shape": 0.98504,
+    "color": 0.93318,
+    "issuer": 0.99087,
+    "spelling": 0.91873,
+    "status": 0.98296,
+    "date": 0.98409,
+    "genuine": 0.32082
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8080672135527632,
+     "none": 0.19193278644723683
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.98504291340685,
+     "rect": 0.01495708659314999
+    },
+    "color": {
+     "blue": 0.9331837300179584,
+     "red": 0.014169646486693097,
+     "grey": 0.05264662349534844
+    },
+    "issuer": {
+     "springfield": 0.9908743626108194,
+     "shelbyville": 0.00912563738918052
+    },
+    "spelling": {
+     "correct": 0.9187278229431447,
+     "fil": 0.0665524202746082,
+     "nf": 0.009587785186817802,
+     "ri": 0.005131971595429311
+    },
+    "status": {
+     "approved": 0.9829582589304744,
+     "void": 0.007989008474785134,
+     "received": 0.009052732594740542
+    },
+    "date": {
+     "match": 0.9840936082881853,
+     "other": 0.01590639171181471
+    },
+    "genuine": {
+     "ink": 0.32082130082460697,
+     "digital": 0.679178699175393
+    }
+   }
+  },
+  {
+   "file": "docs/valid-5.jpg",
+   "label": "valid",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.82671,
+    "in_box": 0.93991,
+    "shape": 0.98504,
+    "color": 0.92669,
+    "issuer": 0.85195,
+    "spelling": 0.12786,
+    "status": 0.9781,
+    "date": 0.97558,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8267117940706734,
+     "none": 0.17328820592932656
+    },
+    "in_box": {
+     "stamp": 0.9399133498259924,
+     "empty": 0.06008665017400762
+    },
+    "shape": {
+     "round": 0.98504291340685,
+     "rect": 0.01495708659314999
+    },
+    "color": {
+     "blue": 0.9266878184784,
+     "red": 0.014071011279966333,
+     "grey": 0.05924117024163377
+    },
+    "issuer": {
+     "springfield": 0.8519528019683106,
+     "shelbyville": 0.1480471980316895
+    },
+    "spelling": {
+     "correct": 0.12785989010223353,
+     "fil": 0.8337512161019512,
+     "nf": 0.028529397755072,
+     "ri": 0.00985949604074318
+    },
+    "status": {
+     "approved": 0.9780986599202608,
+     "void": 0.007949512008557874,
+     "received": 0.013951828071181316
+    },
+    "date": {
+     "match": 0.9755769099458929,
+     "other": 0.024423090054107213
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/valid-6.jpg",
+   "label": "valid",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.7773,
+    "in_box": 0.98088,
+    "shape": 0.97967,
+    "color": 0.88692,
+    "issuer": 0.90465,
+    "spelling": 0.69143,
+    "status": 0.97562,
+    "date": 0.9466,
+    "genuine": 0.7773
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7772998611746911,
+     "none": 0.22270013882530884
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.8869241727058529,
+     "red": 0.01959470724577712,
+     "grey": 0.09348112004836993
+    },
+    "issuer": {
+     "springfield": 0.9046505351008906,
+     "shelbyville": 0.0953494648991095
+    },
+    "spelling": {
+     "correct": 0.6914258639322541,
+     "fil": 0.28822918209675696,
+     "nf": 0.012663906442114221,
+     "ri": 0.007681047528874607
+    },
+    "status": {
+     "approved": 0.9756213179310343,
+     "void": 0.009564654846589714,
+     "received": 0.014814027222375957
+    },
+    "date": {
+     "match": 0.9465966702001757,
+     "other": 0.053403329799824234
+    },
+    "genuine": {
+     "ink": 0.7772998611746911,
+     "digital": 0.22270013882530884
+    }
+   }
+  },
+  {
+   "file": "docs/valid-7.jpg",
+   "label": "valid",
+   "capture": "clean",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.56218,
+    "in_box": 0.97558,
+    "shape": 0.98594,
+    "color": 0.76418,
+    "issuer": 0.94335,
+    "spelling": 0.12972,
+    "status": 0.97952,
+    "date": 0.90465,
+    "genuine": 0.56218
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5621765008857981,
+     "none": 0.4378234991142019
+    },
+    "in_box": {
+     "stamp": 0.9755769099458929,
+     "empty": 0.024423090054107213
+    },
+    "shape": {
+     "round": 0.9859363729567544,
+     "rect": 0.014063627043245474
+    },
+    "color": {
+     "blue": 0.7641768126806362,
+     "red": 0.016882864837030633,
+     "grey": 0.2189403224823332
+    },
+    "issuer": {
+     "springfield": 0.9433475746920261,
+     "shelbyville": 0.05665242530797383
+    },
+    "spelling": {
+     "correct": 0.1297159454211195,
+     "fil": 0.8458542171137334,
+     "nf": 0.017555144213872203,
+     "ri": 0.006874693251275005
+    },
+    "status": {
+     "approved": 0.9795157288512191,
+     "void": 0.009602834307818942,
+     "received": 0.01088143684096208
+    },
+    "date": {
+     "match": 0.9046505351008906,
+     "other": 0.0953494648991095
+    },
+    "genuine": {
+     "ink": 0.5621765008857981,
+     "digital": 0.4378234991142019
+    }
+   }
+  },
+  {
+   "file": "docs/valid-8.jpg",
+   "label": "valid",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.80807,
+    "in_box": 0.98409,
+    "shape": 0.98409,
+    "color": 0.88059,
+    "issuer": 0.98409,
+    "spelling": 0.89396,
+    "status": 0.98127,
+    "date": 0.96036,
+    "genuine": 0.37754
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8080672135527632,
+     "none": 0.19193278644723683
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.880594387980004,
+     "red": 0.026591646373374078,
+     "grey": 0.09281396564662192
+    },
+    "issuer": {
+     "springfield": 0.9840936082881853,
+     "shelbyville": 0.01590639171181471
+    },
+    "spelling": {
+     "correct": 0.8939584093917899,
+     "fil": 0.09422252314045232,
+     "nf": 0.006825456683448502,
+     "ri": 0.004993610784309236
+    },
+    "status": {
+     "approved": 0.9812698819289046,
+     "void": 0.008489647930451054,
+     "received": 0.010240470140644288
+    },
+    "date": {
+     "match": 0.96036116089903,
+     "other": 0.039638839100970026
+    },
+    "genuine": {
+     "ink": 0.37754066879814546,
+     "digital": 0.6224593312018546
+    }
+   }
+  },
+  {
+   "file": "docs/valid-9.jpg",
+   "label": "valid",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.62246,
+    "in_box": 0.97702,
+    "shape": 0.97838,
+    "color": 0.86292,
+    "issuer": 0.98678,
+    "spelling": 0.78476,
+    "status": 0.98496,
+    "date": 0.73106,
+    "genuine": 0.46879
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6224593312018546,
+     "none": 0.37754066879814546
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9783846672373524,
+     "rect": 0.021615332762647654
+    },
+    "color": {
+     "blue": 0.8629221953909003,
+     "red": 0.020293984884712627,
+     "grey": 0.11678381972438713
+    },
+    "issuer": {
+     "springfield": 0.9867771782476948,
+     "shelbyville": 0.013222821752305148
+    },
+    "spelling": {
+     "correct": 0.784759138183987,
+     "fil": 0.19841818330252045,
+     "nf": 0.011193987909281061,
+     "ri": 0.00562869060421143
+    },
+    "status": {
+     "approved": 0.9849594830897009,
+     "void": 0.007520258455149472,
+     "received": 0.007520258455149472
+    },
+    "date": {
+     "match": 0.7310585786300049,
+     "other": 0.2689414213699951
+    },
+    "genuine": {
+     "ink": 0.46879062662624377,
+     "digital": 0.5312093733737563
+    }
+   }
+  },
+  {
+   "file": "docs/missing-0.jpg",
+   "label": "missing",
+   "capture": "clean",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.07586,
+    "in_box": 0.5,
+    "shape": 0.01406,
+    "color": 0.04299,
+    "issuer": 0.46879,
+    "spelling": 0.84881,
+    "status": 0.2369,
+    "date": 0.26894,
+    "genuine": 0.16452
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.07585818002124356,
+     "none": 0.9241418199787566
+    },
+    "in_box": {
+     "stamp": 0.5,
+     "empty": 0.5
+    },
+    "shape": {
+     "round": 0.014063627043245474,
+     "rect": 0.9859363729567544
+    },
+    "color": {
+     "blue": 0.04298590468743188,
+     "red": 0.03793492774145528,
+     "grey": 0.9190791675711129
+    },
+    "issuer": {
+     "springfield": 0.46879062662624377,
+     "shelbyville": 0.5312093733737563
+    },
+    "spelling": {
+     "correct": 0.8488093856287382,
+     "fil": 0.11487385861796051,
+     "nf": 0.02563182247029361,
+     "ri": 0.01068493328300757
+    },
+    "status": {
+     "approved": 0.23690431971733064,
+     "void": 0.6439727073710717,
+     "received": 0.11912297291159765
+    },
+    "date": {
+     "match": 0.2689414213699951,
+     "other": 0.7310585786300049
+    },
+    "genuine": {
+     "ink": 0.1645164628965632,
+     "digital": 0.8354835371034369
+    }
+   }
+  },
+  {
+   "file": "docs/missing-1.jpg",
+   "label": "missing",
+   "capture": "photo",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.07586,
+    "in_box": 0.1192,
+    "shape": 0.01799,
+    "color": 0.03606,
+    "issuer": 0.53121,
+    "spelling": 0.80352,
+    "status": 0.1503,
+    "date": 0.26894,
+    "genuine": 0.2227
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.07585818002124356,
+     "none": 0.9241418199787566
+    },
+    "in_box": {
+     "stamp": 0.11920292202211755,
+     "empty": 0.8807970779778823
+    },
+    "shape": {
+     "round": 0.017986209962091555,
+     "rect": 0.9820137900379085
+    },
+    "color": {
+     "blue": 0.03606234793079517,
+     "red": 0.0338774407219135,
+     "grey": 0.9300602113472913
+    },
+    "issuer": {
+     "springfield": 0.5312093733737563,
+     "shelbyville": 0.46879062662624377
+    },
+    "spelling": {
+     "correct": 0.8035163151987574,
+     "fil": 0.15822174367968853,
+     "nf": 0.027494816338825015,
+     "ri": 0.010767124782729063
+    },
+    "status": {
+     "approved": 0.1503029336565182,
+     "void": 0.7170551929422265,
+     "received": 0.13264187340125524
+    },
+    "date": {
+     "match": 0.2689414213699951,
+     "other": 0.7310585786300049
+    },
+    "genuine": {
+     "ink": 0.22270013882530884,
+     "digital": 0.7772998611746911
+    }
+   }
+  },
+  {
+   "file": "docs/missing-2.jpg",
+   "label": "missing",
+   "capture": "scan",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.1192,
+    "in_box": 0.37754,
+    "shape": 0.01322,
+    "color": 0.03845,
+    "issuer": 0.5,
+    "spelling": 0.79723,
+    "status": 0.1632,
+    "date": 0.2227,
+    "genuine": 0.10669
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.11920292202211755,
+     "none": 0.8807970779778823
+    },
+    "in_box": {
+     "stamp": 0.37754066879814546,
+     "empty": 0.6224593312018546
+    },
+    "shape": {
+     "round": 0.013222821752305148,
+     "rect": 0.9867771782476948
+    },
+    "color": {
+     "blue": 0.03845180276724628,
+     "red": 0.029946294105638614,
+     "grey": 0.931601903127115
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.7972255916870369,
+     "fil": 0.15698302677474923,
+     "nf": 0.03290543000143312,
+     "ri": 0.012885951536780757
+    },
+    "status": {
+     "approved": 0.16320301994259392,
+     "void": 0.7314251907228884,
+     "received": 0.10537178933451764
+    },
+    "date": {
+     "match": 0.22270013882530884,
+     "other": 0.7772998611746911
+    },
+    "genuine": {
+     "ink": 0.10669059394565118,
+     "digital": 0.8933094060543487
+    }
+   }
+  },
+  {
+   "file": "docs/missing-3.jpg",
+   "label": "missing",
+   "capture": "clean",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.07586,
+    "in_box": 0.5,
+    "shape": 0.01406,
+    "color": 0.04299,
+    "issuer": 0.46879,
+    "spelling": 0.84881,
+    "status": 0.2369,
+    "date": 0.26894,
+    "genuine": 0.16452
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.07585818002124356,
+     "none": 0.9241418199787566
+    },
+    "in_box": {
+     "stamp": 0.5,
+     "empty": 0.5
+    },
+    "shape": {
+     "round": 0.014063627043245474,
+     "rect": 0.9859363729567544
+    },
+    "color": {
+     "blue": 0.04298590468743188,
+     "red": 0.03793492774145528,
+     "grey": 0.9190791675711129
+    },
+    "issuer": {
+     "springfield": 0.46879062662624377,
+     "shelbyville": 0.5312093733737563
+    },
+    "spelling": {
+     "correct": 0.8488093856287382,
+     "fil": 0.11487385861796051,
+     "nf": 0.02563182247029361,
+     "ri": 0.01068493328300757
+    },
+    "status": {
+     "approved": 0.23690431971733064,
+     "void": 0.6439727073710717,
+     "received": 0.11912297291159765
+    },
+    "date": {
+     "match": 0.2689414213699951,
+     "other": 0.7310585786300049
+    },
+    "genuine": {
+     "ink": 0.1645164628965632,
+     "digital": 0.8354835371034369
+    }
+   }
+  },
+  {
+   "file": "docs/missing-4.jpg",
+   "label": "missing",
+   "capture": "photo",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.0851,
+    "in_box": 0.1192,
+    "shape": 0.02298,
+    "color": 0.04028,
+    "issuer": 0.5,
+    "spelling": 0.82144,
+    "status": 0.1463,
+    "date": 0.29421,
+    "genuine": 0.2227
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.08509904500702024,
+     "none": 0.9149009549929797
+    },
+    "in_box": {
+     "stamp": 0.11920292202211755,
+     "empty": 0.8807970779778823
+    },
+    "shape": {
+     "round": 0.02297736991002561,
+     "rect": 0.9770226300899744
+    },
+    "color": {
+     "blue": 0.040282964376117954,
+     "red": 0.042880992367163084,
+     "grey": 0.9168360432567189
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.8214420461769659,
+     "fil": 0.14274522368017403,
+     "nf": 0.024805400427619702,
+     "ri": 0.01100732971524031
+    },
+    "status": {
+     "approved": 0.14630090650067304,
+     "void": 0.6979625891947008,
+     "received": 0.1557365043046263
+    },
+    "date": {
+     "match": 0.29421497216298875,
+     "other": 0.7057850278370112
+    },
+    "genuine": {
+     "ink": 0.22270013882530884,
+     "digital": 0.7772998611746911
+    }
+   }
+  },
+  {
+   "file": "docs/missing-5.jpg",
+   "label": "missing",
+   "capture": "photo",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.07586,
+    "in_box": 0.13296,
+    "shape": 0.01691,
+    "color": 0.03813,
+    "issuer": 0.53121,
+    "spelling": 0.77928,
+    "status": 0.18978,
+    "date": 0.29421,
+    "genuine": 0.13296
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.07585818002124356,
+     "none": 0.9241418199787566
+    },
+    "in_box": {
+     "stamp": 0.13296424019782924,
+     "empty": 0.8670357598021706
+    },
+    "shape": {
+     "round": 0.01691491326672651,
+     "rect": 0.9830850867332734
+    },
+    "color": {
+     "blue": 0.03812750890996704,
+     "red": 0.03812750890996704,
+     "grey": 0.9237449821800658
+    },
+    "issuer": {
+     "springfield": 0.5312093733737563,
+     "shelbyville": 0.46879062662624377
+    },
+    "spelling": {
+     "correct": 0.7792831694247735,
+     "fil": 0.17388157839472568,
+     "nf": 0.03423931288885483,
+     "ri": 0.012595939291646076
+    },
+    "status": {
+     "approved": 0.1897841564479314,
+     "void": 0.6624117938958737,
+     "received": 0.14780404965619498
+    },
+    "date": {
+     "match": 0.29421497216298875,
+     "other": 0.7057850278370112
+    },
+    "genuine": {
+     "ink": 0.13296424019782924,
+     "digital": 0.8670357598021706
+    }
+   }
+  },
+  {
+   "file": "docs/missing-6.jpg",
+   "label": "missing",
+   "capture": "photo",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.08036,
+    "in_box": 0.10669,
+    "shape": 0.01912,
+    "color": 0.04028,
+    "issuer": 0.53121,
+    "spelling": 0.82013,
+    "status": 0.15428,
+    "date": 0.26894,
+    "genuine": 0.20181
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.08035746882220708,
+     "none": 0.9196425311777929
+    },
+    "in_box": {
+     "stamp": 0.10669059394565118,
+     "empty": 0.8933094060543487
+    },
+    "shape": {
+     "round": 0.019124036750888904,
+     "rect": 0.9808759632491112
+    },
+    "color": {
+     "blue": 0.040282964376117954,
+     "red": 0.042880992367163084,
+     "grey": 0.9168360432567189
+    },
+    "issuer": {
+     "springfield": 0.5312093733737563,
+     "shelbyville": 0.46879062662624377
+    },
+    "spelling": {
+     "correct": 0.8201299932916513,
+     "fil": 0.14251722307627734,
+     "nf": 0.026363035435551352,
+     "ri": 0.010989748196520023
+    },
+    "status": {
+     "approved": 0.1542807729818862,
+     "void": 0.6914384540362276,
+     "received": 0.1542807729818862
+    },
+    "date": {
+     "match": 0.2689414213699951,
+     "other": 0.7310585786300049
+    },
+    "genuine": {
+     "ink": 0.20181322226037882,
+     "digital": 0.7981867777396212
+    }
+   }
+  },
+  {
+   "file": "docs/missing-7.jpg",
+   "label": "missing",
+   "capture": "photo",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.06009,
+    "in_box": 0.13296,
+    "shape": 0.01591,
+    "color": 0.04039,
+    "issuer": 0.5,
+    "spelling": 0.78027,
+    "status": 0.16413,
+    "date": 0.26894,
+    "genuine": 0.14805
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.06008665017400762,
+     "none": 0.9399133498259924
+    },
+    "in_box": {
+     "stamp": 0.13296424019782924,
+     "empty": 0.8670357598021706
+    },
+    "shape": {
+     "round": 0.01590639171181471,
+     "rect": 0.9840936082881853
+    },
+    "color": {
+     "blue": 0.04038789325328934,
+     "red": 0.04038789325328934,
+     "grey": 0.9192242134934213
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.7802679352942755,
+     "fil": 0.17410130936089638,
+     "nf": 0.03220550393127328,
+     "ri": 0.01342525141355472
+    },
+    "status": {
+     "approved": 0.16413208003401342,
+     "void": 0.6910218677212029,
+     "received": 0.14484605224478375
+    },
+    "date": {
+     "match": 0.2689414213699951,
+     "other": 0.7310585786300049
+    },
+    "genuine": {
+     "ink": 0.1480471980316895,
+     "digital": 0.8519528019683106
+    }
+   }
+  },
+  {
+   "file": "docs/missing-8.jpg",
+   "label": "missing",
+   "capture": "scan",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.06755,
+    "in_box": 0.40733,
+    "shape": 0.01912,
+    "color": 0.03838,
+    "issuer": 0.5,
+    "spelling": 0.73331,
+    "status": 0.1744,
+    "date": 0.18243,
+    "genuine": 0.2227
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.0675466911396291,
+     "none": 0.9324533088603709
+    },
+    "in_box": {
+     "stamp": 0.4073334000459302,
+     "empty": 0.5926665999540697
+    },
+    "shape": {
+     "round": 0.019124036750888904,
+     "rect": 0.9808759632491112
+    },
+    "color": {
+     "blue": 0.03837768126364327,
+     "red": 0.031816215255806655,
+     "grey": 0.92980610348055
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.7333124086737057,
+     "fil": 0.21009752268211676,
+     "nf": 0.041370655147586775,
+     "ri": 0.015219413496590674
+    },
+    "status": {
+     "approved": 0.1744020514834832,
+     "void": 0.6897734942519206,
+     "received": 0.1358244542645962
+    },
+    "date": {
+     "match": 0.18242552380635632,
+     "other": 0.8175744761936437
+    },
+    "genuine": {
+     "ink": 0.22270013882530884,
+     "digital": 0.7772998611746911
+    }
+   }
+  },
+  {
+   "file": "docs/missing-9.jpg",
+   "label": "missing",
+   "capture": "scan",
+   "pred": "missing",
+   "trace": [
+    "anywhere:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.10669,
+    "in_box": 0.34865,
+    "shape": 0.01322,
+    "color": 0.03415,
+    "issuer": 0.46879,
+    "spelling": 0.78027,
+    "status": 0.19762,
+    "date": 0.24509,
+    "genuine": 0.13296
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.10669059394565118,
+     "none": 0.8933094060543487
+    },
+    "in_box": {
+     "stamp": 0.34864513533394575,
+     "empty": 0.6513548646660542
+    },
+    "shape": {
+     "round": 0.013222821752305148,
+     "rect": 0.9867771782476948
+    },
+    "color": {
+     "blue": 0.03414985283865991,
+     "red": 0.028311222384824662,
+     "grey": 0.9375389247765156
+    },
+    "issuer": {
+     "springfield": 0.46879062662624377,
+     "shelbyville": 0.5312093733737563
+    },
+    "spelling": {
+     "correct": 0.7802679352942755,
+     "fil": 0.17410130936089638,
+     "nf": 0.03220550393127328,
+     "ri": 0.01342525141355472
+    },
+    "status": {
+     "approved": 0.19762354594408088,
+     "void": 0.6897739518145595,
+     "received": 0.11260250224135977
+    },
+    "date": {
+     "match": 0.24508501313237172,
+     "other": 0.7549149868676283
+    },
+    "genuine": {
+     "ink": 0.13296424019782924,
+     "digital": 0.8670357598021706
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-0.jpg",
+   "label": "outside_box",
+   "capture": "photo",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.9149,
+    "in_box": 0.10669,
+    "shape": 0.02033,
+    "color": 0.03598,
+    "issuer": 0.53121,
+    "spelling": 0.77928,
+    "status": 0.13386,
+    "date": 0.24509,
+    "genuine": 0.20181
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.9149009549929797,
+     "none": 0.08509904500702024
+    },
+    "in_box": {
+     "stamp": 0.10669059394565118,
+     "empty": 0.8933094060543487
+    },
+    "shape": {
+     "round": 0.020332353342658753,
+     "rect": 0.9796676466573412
+    },
+    "color": {
+     "blue": 0.035983726826649194,
+     "red": 0.035983726826649194,
+     "grey": 0.9280325463467016
+    },
+    "issuer": {
+     "springfield": 0.5312093733737563,
+     "shelbyville": 0.46879062662624377
+    },
+    "spelling": {
+     "correct": 0.7792831694247735,
+     "fil": 0.17388157839472568,
+     "nf": 0.03423931288885483,
+     "ri": 0.012595939291646076
+    },
+    "status": {
+     "approved": 0.13386086321648222,
+     "void": 0.7236449896236109,
+     "received": 0.14249414715990685
+    },
+    "date": {
+     "match": 0.24508501313237172,
+     "other": 0.7549149868676283
+    },
+    "genuine": {
+     "ink": 0.20181322226037882,
+     "digital": 0.7981867777396212
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-1.jpg",
+   "label": "outside_box",
+   "capture": "scan",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.92841,
+    "in_box": 0.46879,
+    "shape": 0.01243,
+    "color": 0.03614,
+    "issuer": 0.46879,
+    "spelling": 0.79488,
+    "status": 0.17723,
+    "date": 0.2227,
+    "genuine": 0.16452
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.9284088005554476,
+     "none": 0.07159119944455247
+    },
+    "in_box": {
+     "stamp": 0.46879062662624377,
+     "empty": 0.5312093733737563
+    },
+    "shape": {
+     "round": 0.012431650853185818,
+     "rect": 0.9875683491468141
+    },
+    "color": {
+     "blue": 0.03613651923409978,
+     "red": 0.03189036629428171,
+     "grey": 0.9319731144716186
+    },
+    "issuer": {
+     "springfield": 0.46879062662624377,
+     "shelbyville": 0.5312093733737563
+    },
+    "spelling": {
+     "correct": 0.7948780858863657,
+     "fil": 0.1565207754749875,
+     "nf": 0.03492450569829039,
+     "ri": 0.013676632940356445
+    },
+    "status": {
+     "approved": 0.17723061561349637,
+     "void": 0.7009606824018237,
+     "received": 0.12180870198467995
+    },
+    "date": {
+     "match": 0.22270013882530884,
+     "other": 0.7772998611746911
+    },
+    "genuine": {
+     "ink": 0.1645164628965632,
+     "digital": 0.8354835371034369
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-2.jpg",
+   "label": "outside_box",
+   "capture": "scan",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.93245,
+    "in_box": 0.40733,
+    "shape": 0.01243,
+    "color": 0.03215,
+    "issuer": 0.46879,
+    "spelling": 0.79586,
+    "status": 0.2116,
+    "date": 0.20181,
+    "genuine": 0.13296
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.9324533088603709,
+     "none": 0.0675466911396291
+    },
+    "in_box": {
+     "stamp": 0.4073334000459302,
+     "empty": 0.5926665999540697
+    },
+    "shape": {
+     "round": 0.012431650853185818,
+     "rect": 0.9875683491468141
+    },
+    "color": {
+     "blue": 0.03214733180409629,
+     "red": 0.028369920743474233,
+     "grey": 0.9394827474524295
+    },
+    "issuer": {
+     "springfield": 0.46879062662624377,
+     "shelbyville": 0.5312093733737563
+    },
+    "spelling": {
+     "correct": 0.7958600990885786,
+     "fil": 0.15671414533970787,
+     "nf": 0.03284906939085492,
+     "ri": 0.014576686180858606
+    },
+    "status": {
+     "approved": 0.21160145720968662,
+     "void": 0.6517783737528845,
+     "received": 0.13662016903742882
+    },
+    "date": {
+     "match": 0.20181322226037882,
+     "other": 0.7981867777396212
+    },
+    "genuine": {
+     "ink": 0.13296424019782924,
+     "digital": 0.8670357598021706
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-3.jpg",
+   "label": "outside_box",
+   "capture": "scan",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.90991,
+    "in_box": 0.40733,
+    "shape": 0.01496,
+    "color": 0.03838,
+    "issuer": 0.5,
+    "spelling": 0.75809,
+    "status": 0.21337,
+    "date": 0.20181,
+    "genuine": 0.14805
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.9099070060380482,
+     "none": 0.09009299396195182
+    },
+    "in_box": {
+     "stamp": 0.4073334000459302,
+     "empty": 0.5926665999540697
+    },
+    "shape": {
+     "round": 0.01495708659314999,
+     "rect": 0.98504291340685
+    },
+    "color": {
+     "blue": 0.03837768126364327,
+     "red": 0.031816215255806655,
+     "grey": 0.92980610348055
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.758088550324214,
+     "fil": 0.19167480264818046,
+     "nf": 0.035456273320816696,
+     "ri": 0.014780373706788863
+    },
+    "status": {
+     "approved": 0.21336758555021282,
+     "void": 0.657218432024725,
+     "received": 0.12941398242506233
+    },
+    "date": {
+     "match": 0.20181322226037882,
+     "other": 0.7981867777396212
+    },
+    "genuine": {
+     "ink": 0.1480471980316895,
+     "digital": 0.8519528019683106
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-4.jpg",
+   "label": "outside_box",
+   "capture": "scan",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.89331,
+    "in_box": 0.32082,
+    "shape": 0.01322,
+    "color": 0.03415,
+    "issuer": 0.5,
+    "spelling": 0.77959,
+    "status": 0.1962,
+    "date": 0.2227,
+    "genuine": 0.16452
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8933094060543487,
+     "none": 0.10669059394565118
+    },
+    "in_box": {
+     "stamp": 0.32082130082460697,
+     "empty": 0.679178699175393
+    },
+    "shape": {
+     "round": 0.013222821752305148,
+     "rect": 0.9867771782476948
+    },
+    "color": {
+     "blue": 0.03414985283865991,
+     "red": 0.028311222384824662,
+     "grey": 0.9375389247765156
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.7795929213909625,
+     "fil": 0.17395069340054772,
+     "nf": 0.0321776427800796,
+     "ri": 0.0142787424284102
+    },
+    "status": {
+     "approved": 0.19619870436465017,
+     "void": 0.6848007660422947,
+     "received": 0.11900052959305522
+    },
+    "date": {
+     "match": 0.22270013882530884,
+     "other": 0.7772998611746911
+    },
+    "genuine": {
+     "ink": 0.1645164628965632,
+     "digital": 0.8354835371034369
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-5.jpg",
+   "label": "outside_box",
+   "capture": "photo",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.85195,
+    "in_box": 0.2227,
+    "shape": 0.01591,
+    "color": 0.0322,
+    "issuer": 0.5,
+    "spelling": 0.78027,
+    "status": 0.16413,
+    "date": 0.18243,
+    "genuine": 0.16452
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8519528019683106,
+     "none": 0.1480471980316895
+    },
+    "in_box": {
+     "stamp": 0.22270013882530884,
+     "empty": 0.7772998611746911
+    },
+    "shape": {
+     "round": 0.01590639171181471,
+     "rect": 0.9840936082881853
+    },
+    "color": {
+     "blue": 0.03220268327695328,
+     "red": 0.026696962120135306,
+     "grey": 0.9411003546029114
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.7802679352942755,
+     "fil": 0.17410130936089638,
+     "nf": 0.03220550393127328,
+     "ri": 0.01342525141355472
+    },
+    "status": {
+     "approved": 0.16413208003401342,
+     "void": 0.6910218677212029,
+     "received": 0.14484605224478375
+    },
+    "date": {
+     "match": 0.18242552380635632,
+     "other": 0.8175744761936437
+    },
+    "genuine": {
+     "ink": 0.1645164628965632,
+     "digital": 0.8354835371034369
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-6.jpg",
+   "label": "outside_box",
+   "capture": "scan",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.90991,
+    "in_box": 0.26894,
+    "shape": 0.01591,
+    "color": 0.0322,
+    "issuer": 0.5,
+    "spelling": 0.77798,
+    "status": 0.21337,
+    "date": 0.20181,
+    "genuine": 0.16452
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.9099070060380482,
+     "none": 0.09009299396195182
+    },
+    "in_box": {
+     "stamp": 0.2689414213699951,
+     "empty": 0.7310585786300049
+    },
+    "shape": {
+     "round": 0.01590639171181471,
+     "rect": 0.9840936082881853
+    },
+    "color": {
+     "blue": 0.03220268327695328,
+     "red": 0.026696962120135306,
+     "grey": 0.9411003546029114
+    },
+    "issuer": {
+     "springfield": 0.5,
+     "shelbyville": 0.5
+    },
+    "spelling": {
+     "correct": 0.7779783986440622,
+     "fil": 0.1735904446814686,
+     "nf": 0.034181985261668955,
+     "ri": 0.014249171412800327
+    },
+    "status": {
+     "approved": 0.21336758555021282,
+     "void": 0.657218432024725,
+     "received": 0.12941398242506233
+    },
+    "date": {
+     "match": 0.20181322226037882,
+     "other": 0.7981867777396212
+    },
+    "genuine": {
+     "ink": 0.1645164628965632,
+     "digital": 0.8354835371034369
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-7.jpg",
+   "label": "outside_box",
+   "capture": "photo",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.89912,
+    "in_box": 0.1192,
+    "shape": 0.01691,
+    "color": 0.04515,
+    "issuer": 0.53121,
+    "spelling": 0.80352,
+    "status": 0.12307,
+    "date": 0.29421,
+    "genuine": 0.20181
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8991213772699436,
+     "none": 0.10087862273005653
+    },
+    "in_box": {
+     "stamp": 0.11920292202211755,
+     "empty": 0.8807970779778823
+    },
+    "shape": {
+     "round": 0.01691491326672651,
+     "rect": 0.9830850867332734
+    },
+    "color": {
+     "blue": 0.04514666289853999,
+     "red": 0.048058372494128324,
+     "grey": 0.9067949646073318
+    },
+    "issuer": {
+     "springfield": 0.5312093733737563,
+     "shelbyville": 0.46879062662624377
+    },
+    "spelling": {
+     "correct": 0.8035163151987574,
+     "fil": 0.15822174367968853,
+     "nf": 0.027494816338825015,
+     "ri": 0.010767124782729063
+    },
+    "status": {
+     "approved": 0.12306567431565597,
+     "void": 0.753868651368688,
+     "received": 0.12306567431565597
+    },
+    "date": {
+     "match": 0.29421497216298875,
+     "other": 0.7057850278370112
+    },
+    "genuine": {
+     "ink": 0.20181322226037882,
+     "digital": 0.7981867777396212
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-8.jpg",
+   "label": "outside_box",
+   "capture": "clean",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.5,
+    "in_box": 0.5,
+    "shape": 0.01406,
+    "color": 0.04299,
+    "issuer": 0.46879,
+    "spelling": 0.84881,
+    "status": 0.2369,
+    "date": 0.26894,
+    "genuine": 0.16452
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5,
+     "none": 0.5
+    },
+    "in_box": {
+     "stamp": 0.5,
+     "empty": 0.5
+    },
+    "shape": {
+     "round": 0.014063627043245474,
+     "rect": 0.9859363729567544
+    },
+    "color": {
+     "blue": 0.04298590468743188,
+     "red": 0.03793492774145528,
+     "grey": 0.9190791675711129
+    },
+    "issuer": {
+     "springfield": 0.46879062662624377,
+     "shelbyville": 0.5312093733737563
+    },
+    "spelling": {
+     "correct": 0.8488093856287382,
+     "fil": 0.11487385861796051,
+     "nf": 0.02563182247029361,
+     "ri": 0.01068493328300757
+    },
+    "status": {
+     "approved": 0.23690431971733064,
+     "void": 0.6439727073710717,
+     "received": 0.11912297291159765
+    },
+    "date": {
+     "match": 0.2689414213699951,
+     "other": 0.7310585786300049
+    },
+    "genuine": {
+     "ink": 0.1645164628965632,
+     "digital": 0.8354835371034369
+    }
+   }
+  },
+  {
+   "file": "docs/outside_box-9.jpg",
+   "label": "outside_box",
+   "capture": "photo",
+   "pred": "outside_box",
+   "trace": [
+    "anywhere:pass",
+    "in_box:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.79819,
+    "in_box": 0.1192,
+    "shape": 0.02442,
+    "color": 0.05362,
+    "issuer": 0.53121,
+    "spelling": 0.82144,
+    "status": 0.13822,
+    "date": 0.29421,
+    "genuine": 0.24509
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7981867777396212,
+     "none": 0.20181322226037882
+    },
+    "in_box": {
+     "stamp": 0.11920292202211755,
+     "empty": 0.8807970779778823
+    },
+    "shape": {
+     "round": 0.024423090054107213,
+     "rect": 0.9755769099458929
+    },
+    "color": {
+     "blue": 0.05361500522885926,
+     "red": 0.05361500522885926,
+     "grey": 0.8927699895422814
+    },
+    "issuer": {
+     "springfield": 0.5312093733737563,
+     "shelbyville": 0.46879062662624377
+    },
+    "spelling": {
+     "correct": 0.8214420461769659,
+     "fil": 0.14274522368017403,
+     "nf": 0.024805400427619702,
+     "ri": 0.01100732971524031
+    },
+    "status": {
+     "approved": 0.13821742015140953,
+     "void": 0.7471963139032975,
+     "received": 0.11458626594529295
+    },
+    "date": {
+     "match": 0.29421497216298875,
+     "other": 0.7057850278370112
+    },
+    "genuine": {
+     "ink": 0.24508501313237172,
+     "digital": 0.7549149868676283
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-0.jpg",
+   "label": "wrong_shape",
+   "capture": "clean",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.97241,
+    "shape": 0.02442,
+    "color": 0.83715,
+    "issuer": 0.98967,
+    "spelling": 0.97411,
+    "status": 0.98493,
+    "date": 0.98594,
+    "genuine": 0.62246
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9724147177732099,
+     "empty": 0.027585282226789985
+    },
+    "shape": {
+     "round": 0.024423090054107213,
+     "rect": 0.9755769099458929
+    },
+    "color": {
+     "blue": 0.8371505435530512,
+     "red": 0.017374505232051418,
+     "grey": 0.14547495121489734
+    },
+    "issuer": {
+     "springfield": 0.9896718474806949,
+     "shelbyville": 0.010328152519305191
+    },
+    "spelling": {
+     "correct": 0.9741082215372386,
+     "fil": 0.01574499296710504,
+     "nf": 0.006165827837904963,
+     "ri": 0.003980957657751414
+    },
+    "status": {
+     "approved": 0.9849305403410742,
+     "void": 0.008005038222499027,
+     "received": 0.007064421436426688
+    },
+    "date": {
+     "match": 0.9859363729567544,
+     "other": 0.014063627043245474
+    },
+    "genuine": {
+     "ink": 0.6224593312018546,
+     "digital": 0.37754066879814546
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-1.jpg",
+   "label": "wrong_shape",
+   "capture": "photo",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.81757,
+    "in_box": 0.98201,
+    "shape": 0.01243,
+    "color": 0.945,
+    "issuer": 0.98678,
+    "spelling": 0.49057,
+    "status": 0.98496,
+    "date": 0.24509,
+    "genuine": 0.85195
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8175744761936437,
+     "none": 0.18242552380635632
+    },
+    "in_box": {
+     "stamp": 0.9820137900379085,
+     "empty": 0.017986209962091555
+    },
+    "shape": {
+     "round": 0.012431650853185818,
+     "rect": 0.9875683491468141
+    },
+    "color": {
+     "blue": 0.9449999023643825,
+     "red": 0.013479699651307011,
+     "grey": 0.04152039798431037
+    },
+    "issuer": {
+     "springfield": 0.9867771782476948,
+     "shelbyville": 0.013222821752305148
+    },
+    "spelling": {
+     "correct": 0.490572540476724,
+     "fil": 0.490572540476724,
+     "nf": 0.012281243243856281,
+     "ri": 0.00657367580269571
+    },
+    "status": {
+     "approved": 0.9849594830897009,
+     "void": 0.007520258455149472,
+     "received": 0.007520258455149472
+    },
+    "date": {
+     "match": 0.24508501313237172,
+     "other": 0.7549149868676283
+    },
+    "genuine": {
+     "ink": 0.8519528019683106,
+     "digital": 0.1480471980316895
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-2.jpg",
+   "label": "wrong_shape",
+   "capture": "photo",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.89331,
+    "in_box": 0.97069,
+    "shape": 0.03964,
+    "color": 0.93399,
+    "issuer": 0.98309,
+    "spelling": 0.80349,
+    "status": 0.98448,
+    "date": 0.86704,
+    "genuine": 0.40733
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8933094060543487,
+     "none": 0.10669059394565118
+    },
+    "in_box": {
+     "stamp": 0.9706877692486436,
+     "empty": 0.029312230751356316
+    },
+    "shape": {
+     "round": 0.039638839100970026,
+     "rect": 0.96036116089903
+    },
+    "color": {
+     "blue": 0.9339855523946106,
+     "red": 0.013322588386982604,
+     "grey": 0.0526918592184069
+    },
+    "issuer": {
+     "springfield": 0.9830850867332734,
+     "shelbyville": 0.01691491326672651
+    },
+    "spelling": {
+     "correct": 0.8034923626471997,
+     "fil": 0.1792833795555099,
+     "nf": 0.011461203004894113,
+     "ri": 0.0057630547923961965
+    },
+    "status": {
+     "approved": 0.9844819945551243,
+     "void": 0.007516612785199554,
+     "received": 0.008001392659676063
+    },
+    "date": {
+     "match": 0.8670357598021706,
+     "other": 0.13296424019782924
+    },
+    "genuine": {
+     "ink": 0.4073334000459302,
+     "digital": 0.5926665999540697
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-3.jpg",
+   "label": "wrong_shape",
+   "capture": "clean",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.97241,
+    "shape": 0.01799,
+    "color": 0.90072,
+    "issuer": 0.99087,
+    "spelling": 0.91955,
+    "status": 0.984,
+    "date": 0.97702,
+    "genuine": 0.73106
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9724147177732099,
+     "empty": 0.027585282226789985
+    },
+    "shape": {
+     "round": 0.017986209962091555,
+     "rect": 0.9820137900379085
+    },
+    "color": {
+     "blue": 0.9007220226709202,
+     "red": 0.015497778469548439,
+     "grey": 0.08378019885953131
+    },
+    "issuer": {
+     "springfield": 0.9908743626108194,
+     "shelbyville": 0.00912563738918052
+    },
+    "spelling": {
+     "correct": 0.9195478987291397,
+     "fil": 0.06661182636529533,
+     "nf": 0.009014930388055311,
+     "ri": 0.004825344517509741
+    },
+    "status": {
+     "approved": 0.9840049687498895,
+     "void": 0.007997515625055225,
+     "received": 0.007997515625055225
+    },
+    "date": {
+     "match": 0.9770226300899744,
+     "other": 0.02297736991002561
+    },
+    "genuine": {
+     "ink": 0.7310585786300049,
+     "digital": 0.2689414213699951
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-4.jpg",
+   "label": "wrong_shape",
+   "capture": "scan",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.97967,
+    "shape": 0.05665,
+    "color": 0.9398,
+    "issuer": 0.9466,
+    "spelling": 0.78447,
+    "status": 0.98009,
+    "date": 0.73106,
+    "genuine": 0.81757
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.05665242530797383,
+     "rect": 0.9433475746920261
+    },
+    "color": {
+     "blue": 0.9398043100555341,
+     "red": 0.0134055885073178,
+     "grey": 0.04679010143714808
+    },
+    "issuer": {
+     "springfield": 0.9465966702001757,
+     "shelbyville": 0.053403329799824234
+    },
+    "spelling": {
+     "correct": 0.7844743588082896,
+     "fil": 0.1983461798002756,
+     "nf": 0.011189925749653655,
+     "ri": 0.005989535641781047
+    },
+    "status": {
+     "approved": 0.9800859490495591,
+     "void": 0.00902627953526938,
+     "received": 0.010887771415171478
+    },
+    "date": {
+     "match": 0.7310585786300049,
+     "other": 0.2689414213699951
+    },
+    "genuine": {
+     "ink": 0.8175744761936437,
+     "digital": 0.18242552380635632
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-5.jpg",
+   "label": "wrong_shape",
+   "capture": "scan",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.62246,
+    "in_box": 0.97069,
+    "shape": 0.02033,
+    "color": 0.83715,
+    "issuer": 0.98967,
+    "spelling": 0.87905,
+    "status": 0.98188,
+    "date": 0.93629,
+    "genuine": 0.46879
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6224593312018546,
+     "none": 0.37754066879814546
+    },
+    "in_box": {
+     "stamp": 0.9706877692486436,
+     "empty": 0.029312230751356316
+    },
+    "shape": {
+     "round": 0.020332353342658753,
+     "rect": 0.9796676466573412
+    },
+    "color": {
+     "blue": 0.8371505435530512,
+     "red": 0.017374505232051418,
+     "grey": 0.14547495121489734
+    },
+    "issuer": {
+     "springfield": 0.9896718474806949,
+     "shelbyville": 0.010328152519305191
+    },
+    "spelling": {
+     "correct": 0.8790527581709626,
+     "fil": 0.10498788017140494,
+     "nf": 0.01039520785266378,
+     "ri": 0.00556415380496864
+    },
+    "status": {
+     "approved": 0.9818790777282357,
+     "void": 0.00849491850682589,
+     "received": 0.00962600376493851
+    },
+    "date": {
+     "match": 0.9362850057480346,
+     "other": 0.06371499425196533
+    },
+    "genuine": {
+     "ink": 0.46879062662624377,
+     "digital": 0.5312093733737563
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-6.jpg",
+   "label": "wrong_shape",
+   "capture": "scan",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.81757,
+    "in_box": 0.97702,
+    "shape": 0.02298,
+    "color": 0.95598,
+    "issuer": 0.98678,
+    "spelling": 0.93745,
+    "status": 0.98541,
+    "date": 0.97404,
+    "genuine": 0.65135
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8175744761936437,
+     "none": 0.18242552380635632
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.02297736991002561,
+     "rect": 0.9770226300899744
+    },
+    "color": {
+     "blue": 0.9559831117040183,
+     "red": 0.01130494507573895,
+     "grey": 0.03271194322024274
+    },
+    "issuer": {
+     "springfield": 0.9867771782476948,
+     "shelbyville": 0.013222821752305148
+    },
+    "spelling": {
+     "correct": 0.9374453601403677,
+     "fil": 0.0411884745640586,
+     "nf": 0.016129638393519562,
+     "ri": 0.005236526902054095
+    },
+    "status": {
+     "approved": 0.9854084641832515,
+     "void": 0.0075236864681012166,
+     "received": 0.007067849348647266
+    },
+    "date": {
+     "match": 0.9740426428022031,
+     "other": 0.02595735719779685
+    },
+    "genuine": {
+     "ink": 0.6513548646660542,
+     "digital": 0.34864513533394575
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-7.jpg",
+   "label": "wrong_shape",
+   "capture": "clean",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.97241,
+    "shape": 0.01799,
+    "color": 0.95664,
+    "issuer": 0.99029,
+    "spelling": 0.96571,
+    "status": 0.98496,
+    "date": 0.56218,
+    "genuine": 0.43782
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9724147177732099,
+     "empty": 0.027585282226789985
+    },
+    "shape": {
+     "round": 0.017986209962091555,
+     "rect": 0.9820137900379085
+    },
+    "color": {
+     "blue": 0.9566383439155153,
+     "red": 0.010627292050907311,
+     "grey": 0.03273436403357736
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.9657140739702162,
+     "fil": 0.022711418161202725,
+     "nf": 0.007373317943241699,
+     "ri": 0.0042011899253394545
+    },
+    "status": {
+     "approved": 0.9849594830897009,
+     "void": 0.007520258455149472,
+     "received": 0.007520258455149472
+    },
+    "date": {
+     "match": 0.5621765008857981,
+     "other": 0.4378234991142019
+    },
+    "genuine": {
+     "ink": 0.4378234991142019,
+     "digital": 0.5621765008857981
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-8.jpg",
+   "label": "wrong_shape",
+   "capture": "scan",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.80807,
+    "in_box": 0.98088,
+    "shape": 0.01099,
+    "color": 0.96775,
+    "issuer": 0.98831,
+    "spelling": 0.95544,
+    "status": 0.98496,
+    "date": 0.98504,
+    "genuine": 0.59267
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8080672135527632,
+     "none": 0.19193278644723683
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.01098694263059318,
+     "rect": 0.9890130573694068
+    },
+    "color": {
+     "blue": 0.9677531106361755,
+     "red": 0.00948751765652058,
+     "grey": 0.02275937170730384
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.9554400494333377,
+     "fil": 0.03269336065121399,
+     "nf": 0.006852900676732085,
+     "ri": 0.005013689238716212
+    },
+    "status": {
+     "approved": 0.9849594830897009,
+     "void": 0.007520258455149472,
+     "received": 0.007520258455149472
+    },
+    "date": {
+     "match": 0.98504291340685,
+     "other": 0.01495708659314999
+    },
+    "genuine": {
+     "ink": 0.5926665999540697,
+     "digital": 0.4073334000459302
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_shape-9.jpg",
+   "label": "wrong_shape",
+   "capture": "photo",
+   "pred": "wrong_shape",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.85195,
+    "in_box": 0.98088,
+    "shape": 0.01912,
+    "color": 0.77822,
+    "issuer": 0.98757,
+    "spelling": 0.95727,
+    "status": 0.98062,
+    "date": 0.97558,
+    "genuine": 0.73106
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8519528019683106,
+     "none": 0.1480471980316895
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.019124036750888904,
+     "rect": 0.9808759632491112
+    },
+    "color": {
+     "blue": 0.7782194776934128,
+     "red": 0.02501582411920376,
+     "grey": 0.19676469818738343
+    },
+    "issuer": {
+     "springfield": 0.9875683491468141,
+     "shelbyville": 0.012431650853185818
+    },
+    "spelling": {
+     "correct": 0.9572749456070064,
+     "fil": 0.02890719857307386,
+     "nf": 0.009384793341166195,
+     "ri": 0.004433062478753505
+    },
+    "status": {
+     "approved": 0.9806222264680362,
+     "void": 0.008484044612806985,
+     "received": 0.010893728919156877
+    },
+    "date": {
+     "match": 0.9755769099458929,
+     "other": 0.024423090054107213
+    },
+    "genuine": {
+     "ink": 0.7310585786300049,
+     "digital": 0.2689414213699951
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-0.jpg",
+   "label": "wrong_color",
+   "capture": "clean",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.5,
+    "in_box": 0.98088,
+    "shape": 0.98678,
+    "color": 0.01453,
+    "issuer": 0.98831,
+    "spelling": 0.83815,
+    "status": 0.98238,
+    "date": 0.95257,
+    "genuine": 0.5
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5,
+     "none": 0.5
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9867771782476948,
+     "rect": 0.013222821752305148
+    },
+    "color": {
+     "blue": 0.014525029163806059,
+     "red": 0.9565885010913573,
+     "grey": 0.028886469744836656
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.838152688457918,
+     "fil": 0.14564909788692482,
+     "nf": 0.010550785263186742,
+     "ri": 0.005647428391970445
+    },
+    "status": {
+     "approved": 0.9823846925565076,
+     "void": 0.007984346805196583,
+     "received": 0.009630960638295884
+    },
+    "date": {
+     "match": 0.9525741268224334,
+     "other": 0.04742587317756679
+    },
+    "genuine": {
+     "ink": 0.5,
+     "digital": 0.5
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-1.jpg",
+   "label": "wrong_color",
+   "capture": "clean",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.62246,
+    "in_box": 0.97967,
+    "shape": 0.98678,
+    "color": 0.01651,
+    "issuer": 0.99087,
+    "spelling": 0.97445,
+    "status": 0.9776,
+    "date": 0.98504,
+    "genuine": 0.59267
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6224593312018546,
+     "none": 0.37754066879814546
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9867771782476948,
+     "rect": 0.013222821752305148
+    },
+    "color": {
+     "blue": 0.01650861876571701,
+     "red": 0.9594714826629598,
+     "grey": 0.024019898571323178
+    },
+    "issuer": {
+     "springfield": 0.9908743626108194,
+     "shelbyville": 0.00912563738918052
+    },
+    "spelling": {
+     "correct": 0.9744477303203357,
+     "fil": 0.016766299340475094,
+     "nf": 0.004803625186639956,
+     "ri": 0.003982345152549283
+    },
+    "status": {
+     "approved": 0.977597446222183,
+     "void": 0.008457875136063442,
+     "received": 0.01394467864175354
+    },
+    "date": {
+     "match": 0.98504291340685,
+     "other": 0.01495708659314999
+    },
+    "genuine": {
+     "ink": 0.5926665999540697,
+     "digital": 0.4073334000459302
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-2.jpg",
+   "label": "wrong_color",
+   "capture": "scan",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.97702,
+    "shape": 0.98594,
+    "color": 0.01733,
+    "issuer": 0.99087,
+    "spelling": 0.91242,
+    "status": 0.98448,
+    "date": 0.98504,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9859363729567544,
+     "rect": 0.014063627043245474
+    },
+    "color": {
+     "blue": 0.017326473190104993,
+     "red": 0.9459933827786037,
+     "grey": 0.036680144031291335
+    },
+    "issuer": {
+     "springfield": 0.9908743626108194,
+     "shelbyville": 0.00912563738918052
+    },
+    "spelling": {
+     "correct": 0.9124219024731803,
+     "fil": 0.07489615060892613,
+     "nf": 0.007893996196849417,
+     "ri": 0.004787950721044097
+    },
+    "status": {
+     "approved": 0.9844819945551243,
+     "void": 0.007516612785199554,
+     "received": 0.008001392659676063
+    },
+    "date": {
+     "match": 0.98504291340685,
+     "other": 0.01495708659314999
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-3.jpg",
+   "label": "wrong_color",
+   "capture": "photo",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.81757,
+    "in_box": 0.96886,
+    "shape": 0.97967,
+    "color": 0.03104,
+    "issuer": 0.97967,
+    "spelling": 0.49057,
+    "status": 0.9781,
+    "date": 0.85195,
+    "genuine": 0.62246
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8175744761936437,
+     "none": 0.18242552380635632
+    },
+    "in_box": {
+     "stamp": 0.9688561694652216,
+     "empty": 0.031143830534778462
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.031043347105314756,
+     "red": 0.9072195853250967,
+     "grey": 0.06173706756958844
+    },
+    "issuer": {
+     "springfield": 0.9796676466573412,
+     "shelbyville": 0.020332353342658753
+    },
+    "spelling": {
+     "correct": 0.490572540476724,
+     "fil": 0.490572540476724,
+     "nf": 0.012281243243856281,
+     "ri": 0.00657367580269571
+    },
+    "status": {
+     "approved": 0.9780986141146027,
+     "void": 0.009588941403794977,
+     "received": 0.012312444481602182
+    },
+    "date": {
+     "match": 0.8519528019683106,
+     "other": 0.1480471980316895
+    },
+    "genuine": {
+     "ink": 0.6224593312018546,
+     "digital": 0.37754066879814546
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-4.jpg",
+   "label": "wrong_color",
+   "capture": "photo",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.7773,
+    "in_box": 0.98504,
+    "shape": 0.98309,
+    "color": 0.02623,
+    "issuer": 0.98901,
+    "spelling": 0.66696,
+    "status": 0.98245,
+    "date": 0.98309,
+    "genuine": 0.29421
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7772998611746911,
+     "none": 0.22270013882530884
+    },
+    "in_box": {
+     "stamp": 0.98504291340685,
+     "empty": 0.01495708659314999
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.02623331946143352,
+     "red": 0.9247563875047151,
+     "grey": 0.049010293033851224
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.6669628484902441,
+     "fil": 0.3150509415476643,
+     "nf": 0.012215850685148837,
+     "ri": 0.005770359276942719
+    },
+    "status": {
+     "approved": 0.9824520536744229,
+     "void": 0.00849987572007102,
+     "received": 0.009048070605506053
+    },
+    "date": {
+     "match": 0.9830850867332734,
+     "other": 0.01691491326672651
+    },
+    "genuine": {
+     "ink": 0.29421497216298875,
+     "digital": 0.7057850278370112
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-5.jpg",
+   "label": "wrong_color",
+   "capture": "photo",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.83548,
+    "in_box": 0.97558,
+    "shape": 0.98201,
+    "color": 0.02452,
+    "issuer": 0.98678,
+    "spelling": 0.26385,
+    "status": 0.98286,
+    "date": 0.97558,
+    "genuine": 0.85195
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8354835371034369,
+     "none": 0.1645164628965632
+    },
+    "in_box": {
+     "stamp": 0.9755769099458929,
+     "empty": 0.024423090054107213
+    },
+    "shape": {
+     "round": 0.9820137900379085,
+     "rect": 0.017986209962091555
+    },
+    "color": {
+     "blue": 0.024522871999688375,
+     "red": 0.9202139828666372,
+     "grey": 0.055263145133674495
+    },
+    "issuer": {
+     "springfield": 0.9867771782476948,
+     "shelbyville": 0.013222821752305148
+    },
+    "spelling": {
+     "correct": 0.2638461888320394,
+     "fil": 0.7172083006103066,
+     "nf": 0.012340250465310051,
+     "ri": 0.006605260092343993
+    },
+    "status": {
+     "approved": 0.9828601483210107,
+     "void": 0.007504229836393593,
+     "received": 0.009635621842595865
+    },
+    "date": {
+     "match": 0.9755769099458929,
+     "other": 0.024423090054107213
+    },
+    "genuine": {
+     "ink": 0.8519528019683106,
+     "digital": 0.1480471980316895
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-6.jpg",
+   "label": "wrong_color",
+   "capture": "scan",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.67918,
+    "in_box": 0.97702,
+    "shape": 0.98594,
+    "color": 0.01552,
+    "issuer": 0.98901,
+    "spelling": 0.34019,
+    "status": 0.97529,
+    "date": 0.85195,
+    "genuine": 0.83548
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.679178699175393,
+     "none": 0.32082130082460697
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9859363729567544,
+     "rect": 0.014063627043245474
+    },
+    "color": {
+     "blue": 0.015523939264781045,
+     "red": 0.96043211324777,
+     "grey": 0.024043947487448973
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.3401870067147133,
+     "fil": 0.6355530000657313,
+     "nf": 0.018029250849929165,
+     "ri": 0.006230742369626078
+    },
+    "status": {
+     "approved": 0.9752924616651104,
+     "void": 0.007926704588773115,
+     "received": 0.01678083374611645
+    },
+    "date": {
+     "match": 0.8519528019683106,
+     "other": 0.1480471980316895
+    },
+    "genuine": {
+     "ink": 0.8354835371034369,
+     "digital": 0.1645164628965632
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-7.jpg",
+   "label": "wrong_color",
+   "capture": "photo",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.9149,
+    "in_box": 0.96267,
+    "shape": 0.98409,
+    "color": 0.02214,
+    "issuer": 0.99029,
+    "spelling": 0.85116,
+    "status": 0.97515,
+    "date": 0.97558,
+    "genuine": 0.67918
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.9149009549929797,
+     "none": 0.08509904500702024
+    },
+    "in_box": {
+     "stamp": 0.9626731126558706,
+     "empty": 0.037326887344129464
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.022138683978888848,
+     "red": 0.941360796839809,
+     "grey": 0.03650051918130219
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.851158811700647,
+     "fil": 0.13052943134812142,
+     "nf": 0.012924163889569577,
+     "ri": 0.005387593061662021
+    },
+    "status": {
+     "approved": 0.9751453527475308,
+     "void": 0.006994237107518227,
+     "received": 0.017860410144951083
+    },
+    "date": {
+     "match": 0.9755769099458929,
+     "other": 0.024423090054107213
+    },
+    "genuine": {
+     "ink": 0.679178699175393,
+     "digital": 0.32082130082460697
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-8.jpg",
+   "label": "wrong_color",
+   "capture": "photo",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.89912,
+    "in_box": 0.98409,
+    "shape": 0.98504,
+    "color": 0.01854,
+    "issuer": 0.98901,
+    "spelling": 0.89194,
+    "status": 0.98245,
+    "date": 0.97702,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8991213772699436,
+     "none": 0.10087862273005653
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.98504291340685,
+     "rect": 0.01495708659314999
+    },
+    "color": {
+     "blue": 0.01853948302865744,
+     "red": 0.9508940769542111,
+     "grey": 0.030566440017131553
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.8919420286888821,
+     "fil": 0.09400999817794432,
+     "nf": 0.008744291961216896,
+     "ri": 0.0053036811719567615
+    },
+    "status": {
+     "approved": 0.9824520536744229,
+     "void": 0.00849987572007102,
+     "received": 0.009048070605506053
+    },
+    "date": {
+     "match": 0.9770226300899744,
+     "other": 0.02297736991002561
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_color-9.jpg",
+   "label": "wrong_color",
+   "capture": "scan",
+   "pred": "wrong_color",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.97838,
+    "shape": 0.98409,
+    "color": 0.01374,
+    "issuer": 0.98594,
+    "spelling": 0.67042,
+    "status": 0.98238,
+    "date": 0.95791,
+    "genuine": 0.59267
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.013744923487907545,
+     "red": 0.9635935287934335,
+     "grey": 0.022661547718658963
+    },
+    "issuer": {
+     "springfield": 0.9859363729567544,
+     "shelbyville": 0.014063627043245474
+    },
+    "spelling": {
+     "correct": 0.6704196469019519,
+     "fil": 0.3166838174969233,
+     "nf": 0.007447689536603412,
+     "ri": 0.005448846064521428
+    },
+    "status": {
+     "approved": 0.9823846925565076,
+     "void": 0.007984346805196583,
+     "received": 0.009630960638295884
+    },
+    "date": {
+     "match": 0.9579122720843811,
+     "other": 0.04208772791561884
+    },
+    "genuine": {
+     "ink": 0.5926665999540697,
+     "digital": 0.4073334000459302
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-0.jpg",
+   "label": "wrong_issuer",
+   "capture": "photo",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.75491,
+    "in_box": 0.97967,
+    "shape": 0.98409,
+    "color": 0.86292,
+    "issuer": 0.02162,
+    "spelling": 0.56943,
+    "status": 0.97867,
+    "date": 0.73106,
+    "genuine": 0.62246
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7549149868676283,
+     "none": 0.24508501313237172
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.8629221953909003,
+     "red": 0.020293984884712627,
+     "grey": 0.11678381972438713
+    },
+    "issuer": {
+     "springfield": 0.021615332762647654,
+     "shelbyville": 0.9783846672373524
+    },
+    "spelling": {
+     "correct": 0.5694265396775663,
+     "fil": 0.39136075577943347,
+     "nf": 0.02663243366266389,
+     "ri": 0.012580270880336298
+    },
+    "status": {
+     "approved": 0.978667185095044,
+     "void": 0.00901321317097711,
+     "received": 0.012319601733978896
+    },
+    "date": {
+     "match": 0.7310585786300049,
+     "other": 0.2689414213699951
+    },
+    "genuine": {
+     "ink": 0.6224593312018546,
+     "digital": 0.37754066879814546
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-1.jpg",
+   "label": "wrong_issuer",
+   "capture": "clean",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.43782,
+    "in_box": 0.97838,
+    "shape": 0.98594,
+    "color": 0.91861,
+    "issuer": 0.03309,
+    "spelling": 0.52338,
+    "status": 0.9792,
+    "date": 0.97838,
+    "genuine": 0.2227
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.4378234991142019,
+     "none": 0.5621765008857981
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9859363729567544,
+     "rect": 0.014063627043245474
+    },
+    "color": {
+     "blue": 0.9186083162158794,
+     "red": 0.014847920547799532,
+     "grey": 0.06654376323632114
+    },
+    "issuer": {
+     "springfield": 0.033085978388704126,
+     "shelbyville": 0.9669140216112958
+    },
+    "spelling": {
+     "correct": 0.5233758358826001,
+     "fil": 0.40760551082602,
+     "nf": 0.04296130476820511,
+     "ri": 0.026057348523174945
+    },
+    "status": {
+     "approved": 0.9792019105926358,
+     "void": 0.008471756472760867,
+     "received": 0.01232633293460324
+    },
+    "date": {
+     "match": 0.9783846672373524,
+     "other": 0.021615332762647654
+    },
+    "genuine": {
+     "ink": 0.22270013882530884,
+     "digital": 0.7772998611746911
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-2.jpg",
+   "label": "wrong_issuer",
+   "capture": "photo",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.70579,
+    "in_box": 0.98504,
+    "shape": 0.98201,
+    "color": 0.87602,
+    "issuer": 0.04209,
+    "spelling": 0.87602,
+    "status": 0.98448,
+    "date": 0.97069,
+    "genuine": 0.56218
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7057850278370112,
+     "none": 0.29421497216298875
+    },
+    "in_box": {
+     "stamp": 0.98504291340685,
+     "empty": 0.01495708659314999
+    },
+    "shape": {
+     "round": 0.9820137900379085,
+     "rect": 0.017986209962091555
+    },
+    "color": {
+     "blue": 0.8760204629302456,
+     "red": 0.019353812919609286,
+     "grey": 0.10462572415014505
+    },
+    "issuer": {
+     "springfield": 0.04208772791561884,
+     "shelbyville": 0.9579122720843811
+    },
+    "spelling": {
+     "correct": 0.8760191847386555,
+     "fil": 0.0814824770072079,
+     "nf": 0.02645348720686004,
+     "ri": 0.01604485104727653
+    },
+    "status": {
+     "approved": 0.9844819945551243,
+     "void": 0.008001392659676063,
+     "received": 0.007516612785199554
+    },
+    "date": {
+     "match": 0.9706877692486436,
+     "other": 0.029312230751356316
+    },
+    "genuine": {
+     "ink": 0.5621765008857981,
+     "digital": 0.4378234991142019
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-3.jpg",
+   "label": "wrong_issuer",
+   "capture": "photo",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.89912,
+    "in_box": 0.97404,
+    "shape": 0.98504,
+    "color": 0.88692,
+    "issuer": 0.01912,
+    "spelling": 0.75229,
+    "status": 0.98296,
+    "date": 0.97558,
+    "genuine": 0.73106
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8991213772699436,
+     "none": 0.10087862273005653
+    },
+    "in_box": {
+     "stamp": 0.9740426428022031,
+     "empty": 0.02595735719779685
+    },
+    "shape": {
+     "round": 0.98504291340685,
+     "rect": 0.01495708659314999
+    },
+    "color": {
+     "blue": 0.8869241727058529,
+     "red": 0.01959470724577712,
+     "grey": 0.09348112004836993
+    },
+    "issuer": {
+     "springfield": 0.019124036750888904,
+     "shelbyville": 0.9808759632491112
+    },
+    "spelling": {
+     "correct": 0.7522893510559623,
+     "fil": 0.19020853544920452,
+     "nf": 0.037454281353439194,
+     "ri": 0.02004783214139404
+    },
+    "status": {
+     "approved": 0.9829582589304744,
+     "void": 0.007989008474785134,
+     "received": 0.009052732594740542
+    },
+    "date": {
+     "match": 0.9755769099458929,
+     "other": 0.024423090054107213
+    },
+    "genuine": {
+     "ink": 0.7310585786300049,
+     "digital": 0.2689414213699951
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-4.jpg",
+   "label": "wrong_issuer",
+   "capture": "photo",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.85195,
+    "in_box": 0.98309,
+    "shape": 0.98088,
+    "color": 0.82631,
+    "issuer": 0.01691,
+    "spelling": 0.85963,
+    "status": 0.98245,
+    "date": 0.98594,
+    "genuine": 0.5
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8519528019683106,
+     "none": 0.1480471980316895
+    },
+    "in_box": {
+     "stamp": 0.9830850867332734,
+     "empty": 0.01691491326672651
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.8263104240935998,
+     "red": 0.030098354997445686,
+     "grey": 0.14359122090895454
+    },
+    "issuer": {
+     "springfield": 0.01691491326672651,
+     "shelbyville": 0.9830850867332734
+    },
+    "spelling": {
+     "correct": 0.8596323405906503,
+     "fil": 0.10266844205480904,
+     "nf": 0.02290842591787933,
+     "ri": 0.014790791436661321
+    },
+    "status": {
+     "approved": 0.9824520536744229,
+     "void": 0.00849987572007102,
+     "received": 0.009048070605506053
+    },
+    "date": {
+     "match": 0.9859363729567544,
+     "other": 0.014063627043245474
+    },
+    "genuine": {
+     "ink": 0.5,
+     "digital": 0.5
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-5.jpg",
+   "label": "wrong_issuer",
+   "capture": "photo",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.85966,
+    "in_box": 0.98309,
+    "shape": 0.98201,
+    "color": 0.54489,
+    "issuer": 0.16452,
+    "spelling": 0.87166,
+    "status": 0.9835,
+    "date": 0.97404,
+    "genuine": 0.65135
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8596637505099167,
+     "none": 0.14033624949008322
+    },
+    "in_box": {
+     "stamp": 0.9830850867332734,
+     "empty": 0.01691491326672651
+    },
+    "shape": {
+     "round": 0.9820137900379085,
+     "rect": 0.017986209962091555
+    },
+    "color": {
+     "blue": 0.5448947139157788,
+     "red": 0.03074085619514343,
+     "grey": 0.42436442988907774
+    },
+    "issuer": {
+     "springfield": 0.1645164628965632,
+     "shelbyville": 0.8354835371034369
+    },
+    "spelling": {
+     "correct": 0.8716628780069282,
+     "fil": 0.09187259142129318,
+     "nf": 0.023229028880494388,
+     "ri": 0.013235501691284283
+    },
+    "status": {
+     "approved": 0.9834976851257742,
+     "void": 0.008508922204682908,
+     "received": 0.007993392669542763
+    },
+    "date": {
+     "match": 0.9740426428022031,
+     "other": 0.02595735719779685
+    },
+    "genuine": {
+     "ink": 0.6513548646660542,
+     "digital": 0.34864513533394575
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-6.jpg",
+   "label": "wrong_issuer",
+   "capture": "photo",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.87408,
+    "in_box": 0.98201,
+    "shape": 0.97702,
+    "color": 0.93474,
+    "issuer": 0.02162,
+    "spelling": 0.68097,
+    "status": 0.98373,
+    "date": 0.56218,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8740772351648677,
+     "none": 0.12592276483513232
+    },
+    "in_box": {
+     "stamp": 0.9820137900379085,
+     "empty": 0.017986209962091555
+    },
+    "shape": {
+     "round": 0.9770226300899744,
+     "rect": 0.02297736991002561
+    },
+    "color": {
+     "blue": 0.9347400510324372,
+     "red": 0.012525523848748787,
+     "grey": 0.05273442511881394
+    },
+    "issuer": {
+     "springfield": 0.021615332762647654,
+     "shelbyville": 0.9783846672373524
+    },
+    "spelling": {
+     "correct": 0.6809651817186824,
+     "fil": 0.2838685209819924,
+     "nf": 0.021889589897783633,
+     "ri": 0.013276707401541703
+    },
+    "status": {
+     "approved": 0.9837275700258656,
+     "void": 0.00662830422837342,
+     "received": 0.009644125745760847
+    },
+    "date": {
+     "match": 0.5621765008857981,
+     "other": 0.4378234991142019
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-7.jpg",
+   "label": "wrong_issuer",
+   "capture": "clean",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.46879,
+    "in_box": 0.98088,
+    "shape": 0.98201,
+    "color": 0.95184,
+    "issuer": 0.03114,
+    "spelling": 0.88135,
+    "status": 0.98448,
+    "date": 0.98757,
+    "genuine": 0.32082
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.46879062662624377,
+     "none": 0.5312093733737563
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9820137900379085,
+     "rect": 0.017986209962091555
+    },
+    "color": {
+     "blue": 0.9518373416755816,
+     "red": 0.011255919416295468,
+     "grey": 0.036906738908122794
+    },
+    "issuer": {
+     "springfield": 0.031143830534778462,
+     "shelbyville": 0.9688561694652216
+    },
+    "spelling": {
+     "correct": 0.8813533134955991,
+     "fil": 0.0723458855254549,
+     "nf": 0.030158251955571293,
+     "ri": 0.01614254902337472
+    },
+    "status": {
+     "approved": 0.9844819945551243,
+     "void": 0.007516612785199554,
+     "received": 0.008001392659676063
+    },
+    "date": {
+     "match": 0.9875683491468141,
+     "other": 0.012431650853185818
+    },
+    "genuine": {
+     "ink": 0.32082130082460697,
+     "digital": 0.679178699175393
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-8.jpg",
+   "label": "wrong_issuer",
+   "capture": "clean",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.46879,
+    "in_box": 0.98088,
+    "shape": 0.98678,
+    "color": 0.95184,
+    "issuer": 0.1192,
+    "spelling": 0.69533,
+    "status": 0.97424,
+    "date": 0.97404,
+    "genuine": 0.70579
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.46879062662624377,
+     "none": 0.5312093733737563
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9867771782476948,
+     "rect": 0.013222821752305148
+    },
+    "color": {
+     "blue": 0.9518373416755816,
+     "red": 0.011255919416295468,
+     "grey": 0.036906738908122794
+    },
+    "issuer": {
+     "springfield": 0.11920292202211755,
+     "shelbyville": 0.8807970779778823
+    },
+    "spelling": {
+     "correct": 0.6953291496694419,
+     "fil": 0.2557972990106085,
+     "nf": 0.03252097709174877,
+     "ri": 0.016352574228200856
+    },
+    "status": {
+     "approved": 0.9742380722544254,
+     "void": 0.007918135022506026,
+     "received": 0.017843792723068574
+    },
+    "date": {
+     "match": 0.9740426428022031,
+     "other": 0.02595735719779685
+    },
+    "genuine": {
+     "ink": 0.7057850278370112,
+     "digital": 0.29421497216298875
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-9.jpg",
+   "label": "wrong_issuer",
+   "capture": "scan",
+   "pred": "wrong_issuer",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.73106,
+    "in_box": 0.97838,
+    "shape": 0.98409,
+    "color": 0.89887,
+    "issuer": 0.02162,
+    "spelling": 0.58592,
+    "status": 0.9847,
+    "date": 0.98201,
+    "genuine": 0.56218
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7310585786300049,
+     "none": 0.2689414213699951
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.8988672054920376,
+     "red": 0.01752512052090406,
+     "grey": 0.08360767398705837
+    },
+    "issuer": {
+     "springfield": 0.021615332762647654,
+     "shelbyville": 0.9783846672373524
+    },
+    "spelling": {
+     "correct": 0.5859169719418775,
+     "fil": 0.35537660752873546,
+     "nf": 0.0398721503283927,
+     "ri": 0.018834270200994374
+    },
+    "status": {
+     "approved": 0.9846983809029197,
+     "void": 0.006232860533021447,
+     "received": 0.009068758564058832
+    },
+    "date": {
+     "match": 0.9820137900379085,
+     "other": 0.017986209962091555
+    },
+    "genuine": {
+     "ink": 0.5621765008857981,
+     "digital": 0.4378234991142019
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-0.jpg",
+   "label": "misspelled",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.80807,
+    "in_box": 0.98201,
+    "shape": 0.97967,
+    "color": 0.90565,
+    "issuer": 0.98831,
+    "spelling": 0.64117,
+    "status": 0.98188,
+    "date": 0.98088,
+    "genuine": 0.43782
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8080672135527632,
+     "none": 0.19193278644723683
+    },
+    "in_box": {
+     "stamp": 0.9820137900379085,
+     "empty": 0.017986209962091555
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.9056511830873725,
+     "red": 0.02000844079516839,
+     "grey": 0.07434037611745929
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.6411673110202611,
+     "fil": 0.3431921308163847,
+     "nf": 0.00973561137398513,
+     "ri": 0.005904946789369018
+    },
+    "status": {
+     "approved": 0.9818790777282357,
+     "void": 0.00849491850682589,
+     "received": 0.00962600376493851
+    },
+    "date": {
+     "match": 0.9808759632491112,
+     "other": 0.019124036750888904
+    },
+    "genuine": {
+     "ink": 0.4378234991142019,
+     "digital": 0.5621765008857981
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-1.jpg",
+   "label": "misspelled",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.70579,
+    "in_box": 0.97967,
+    "shape": 0.98309,
+    "color": 0.54863,
+    "issuer": 0.98201,
+    "spelling": 0.54952,
+    "status": 0.98493,
+    "date": 0.56218,
+    "genuine": 0.75491
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7057850278370112,
+     "none": 0.29421497216298875
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.5486252853829731,
+     "red": 0.02410491274799464,
+     "grey": 0.42726980186903235
+    },
+    "issuer": {
+     "springfield": 0.9820137900379085,
+     "shelbyville": 0.017986209962091555
+    },
+    "spelling": {
+     "correct": 0.5495239979333094,
+     "fil": 0.4279697199069904,
+     "nf": 0.015588795908084641,
+     "ri": 0.006917486251615505
+    },
+    "status": {
+     "approved": 0.9849305403410742,
+     "void": 0.007064421436426688,
+     "received": 0.008005038222499027
+    },
+    "date": {
+     "match": 0.5621765008857981,
+     "other": 0.4378234991142019
+    },
+    "genuine": {
+     "ink": 0.7549149868676283,
+     "digital": 0.24508501313237172
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-2.jpg",
+   "label": "misspelled",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.75491,
+    "in_box": 0.98201,
+    "shape": 0.97967,
+    "color": 0.82034,
+    "issuer": 0.98831,
+    "spelling": 0.694,
+    "status": 0.98044,
+    "date": 0.95257,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7549149868676283,
+     "none": 0.24508501313237172
+    },
+    "in_box": {
+     "stamp": 0.9820137900379085,
+     "empty": 0.017986209962091555
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.8203414807977787,
+     "red": 0.018123703978841495,
+     "grey": 0.16153481522337979
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.693996282550207,
+     "fil": 0.28930069199325603,
+     "nf": 0.00989932530627209,
+     "ri": 0.006803700150264965
+    },
+    "status": {
+     "approved": 0.9804373523829025,
+     "void": 0.007968519767772686,
+     "received": 0.011594127849324683
+    },
+    "date": {
+     "match": 0.9525741268224334,
+     "other": 0.04742587317756679
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-3.jpg",
+   "label": "misspelled",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.92841,
+    "in_box": 0.97404,
+    "shape": 0.98309,
+    "color": 0.81614,
+    "issuer": 0.97838,
+    "spelling": 0.42856,
+    "status": 0.98493,
+    "date": 0.93245,
+    "genuine": 0.86704
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.9284088005554476,
+     "none": 0.07159119944455247
+    },
+    "in_box": {
+     "stamp": 0.9740426428022031,
+     "empty": 0.02595735719779685
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.8161403229316927,
+     "red": 0.023152118878135834,
+     "grey": 0.16070755819017152
+    },
+    "issuer": {
+     "springfield": 0.9783846672373524,
+     "shelbyville": 0.021615332762647654
+    },
+    "spelling": {
+     "correct": 0.42856353422778043,
+     "fil": 0.5502864706139969,
+     "nf": 0.013776152233971852,
+     "ri": 0.0073738429242508514
+    },
+    "status": {
+     "approved": 0.9849305403410742,
+     "void": 0.007064421436426688,
+     "received": 0.008005038222499027
+    },
+    "date": {
+     "match": 0.9324533088603709,
+     "other": 0.0675466911396291
+    },
+    "genuine": {
+     "ink": 0.8670357598021706,
+     "digital": 0.13296424019782924
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-4.jpg",
+   "label": "misspelled",
+   "capture": "clean",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.40733,
+    "in_box": 0.97838,
+    "shape": 0.98594,
+    "color": 0.87893,
+    "issuer": 0.98901,
+    "spelling": 0.91214,
+    "status": 0.98188,
+    "date": 0.98409,
+    "genuine": 0.20181
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.4073334000459302,
+     "none": 0.5926665999540697
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9859363729567544,
+     "rect": 0.014063627043245474
+    },
+    "color": {
+     "blue": 0.8789287841891131,
+     "red": 0.016098142220121972,
+     "grey": 0.10497307359076481
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.9121402369510658,
+     "fil": 0.07487303009493096,
+     "nf": 0.007891559312602854,
+     "ri": 0.005095173641400342
+    },
+    "status": {
+     "approved": 0.9818790777282357,
+     "void": 0.00849491850682589,
+     "received": 0.00962600376493851
+    },
+    "date": {
+     "match": 0.9840936082881853,
+     "other": 0.01590639171181471
+    },
+    "genuine": {
+     "ink": 0.20181322226037882,
+     "digital": 0.7981867777396212
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-5.jpg",
+   "label": "misspelled",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.8439,
+    "in_box": 0.98088,
+    "shape": 0.98309,
+    "color": 0.945,
+    "issuer": 0.98201,
+    "spelling": 0.24055,
+    "status": 0.9776,
+    "date": 0.97558,
+    "genuine": 0.56218
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8438951025545426,
+     "none": 0.1561048974454574
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.9449999023643825,
+     "red": 0.013479699651307011,
+     "grey": 0.04152039798431037
+    },
+    "issuer": {
+     "springfield": 0.9820137900379085,
+     "shelbyville": 0.017986209962091555
+    },
+    "spelling": {
+     "correct": 0.2405473980459589,
+     "fil": 0.7409381484245549,
+     "nf": 0.011250551519451417,
+     "ri": 0.007263902010034888
+    },
+    "status": {
+     "approved": 0.977597446222183,
+     "void": 0.008457875136063442,
+     "received": 0.01394467864175354
+    },
+    "date": {
+     "match": 0.9755769099458929,
+     "other": 0.024423090054107213
+    },
+    "genuine": {
+     "ink": 0.5621765008857981,
+     "digital": 0.4378234991142019
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-6.jpg",
+   "label": "misspelled",
+   "capture": "clean",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.29421,
+    "in_box": 0.97404,
+    "shape": 0.98409,
+    "color": 0.94196,
+    "issuer": 0.98504,
+    "spelling": 0.6085,
+    "status": 0.98493,
+    "date": 0.9466,
+    "genuine": 0.2227
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.29421497216298875,
+     "none": 0.7057850278370112
+    },
+    "in_box": {
+     "stamp": 0.9740426428022031,
+     "empty": 0.02595735719779685
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.9419632571438624,
+     "red": 0.01113915377270024,
+     "grey": 0.04689758908343728
+    },
+    "issuer": {
+     "springfield": 0.98504291340685,
+     "shelbyville": 0.01495708659314999
+    },
+    "spelling": {
+     "correct": 0.6084980519107995,
+     "fil": 0.3690727248593095,
+     "nf": 0.015233450656791887,
+     "ri": 0.007195772573099129
+    },
+    "status": {
+     "approved": 0.9849305403410742,
+     "void": 0.007064421436426688,
+     "received": 0.008005038222499027
+    },
+    "date": {
+     "match": 0.9465966702001757,
+     "other": 0.053403329799824234
+    },
+    "genuine": {
+     "ink": 0.22270013882530884,
+     "digital": 0.7772998611746911
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-7.jpg",
+   "label": "misspelled",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.75491,
+    "in_box": 0.98088,
+    "shape": 0.98309,
+    "color": 0.96033,
+    "issuer": 0.95791,
+    "spelling": 0.28703,
+    "status": 0.98177,
+    "date": 0.32082,
+    "genuine": 0.43782
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7549149868676283,
+     "none": 0.24508501313237172
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.9603321551125756,
+     "red": 0.010668326586708377,
+     "grey": 0.02899951830071589
+    },
+    "issuer": {
+     "springfield": 0.9579122720843811,
+     "shelbyville": 0.04208772791561884
+    },
+    "spelling": {
+     "correct": 0.2870293334025854,
+     "fil": 0.6885475765433073,
+     "nf": 0.01723745129370389,
+     "ri": 0.00718563876040332
+    },
+    "status": {
+     "approved": 0.9817748693844354,
+     "void": 0.007979390457919837,
+     "received": 0.010245740157644706
+    },
+    "date": {
+     "match": 0.32082130082460697,
+     "other": 0.679178699175393
+    },
+    "genuine": {
+     "ink": 0.4378234991142019,
+     "digital": 0.5621765008857981
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-8.jpg",
+   "label": "misspelled",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.8439,
+    "in_box": 0.97241,
+    "shape": 0.97967,
+    "color": 0.93233,
+    "issuer": 0.99142,
+    "spelling": 0.8489,
+    "status": 0.98541,
+    "date": 0.98201,
+    "genuine": 0.79819
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8438951025545426,
+     "none": 0.1561048974454574
+    },
+    "in_box": {
+     "stamp": 0.9724147177732099,
+     "empty": 0.027585282226789985
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.9323317059311966,
+     "red": 0.015069738483194354,
+     "grey": 0.05259855558560911
+    },
+    "issuer": {
+     "springfield": 0.991422514586288,
+     "shelbyville": 0.008577485413711986
+    },
+    "spelling": {
+     "correct": 0.8488962031982347,
+     "fil": 0.13018244909625093,
+     "nf": 0.015548076311796378,
+     "ri": 0.005373271393717942
+    },
+    "status": {
+     "approved": 0.9854084641832515,
+     "void": 0.007067849348647266,
+     "received": 0.0075236864681012166
+    },
+    "date": {
+     "match": 0.9820137900379085,
+     "other": 0.017986209962091555
+    },
+    "genuine": {
+     "ink": 0.7981867777396212,
+     "digital": 0.20181322226037882
+    }
+   }
+  },
+  {
+   "file": "docs/misspelled-9.jpg",
+   "label": "misspelled",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.70579,
+    "in_box": 0.98088,
+    "shape": 0.98409,
+    "color": 0.87705,
+    "issuer": 0.97967,
+    "spelling": 0.24125,
+    "status": 0.9776,
+    "date": 0.97558,
+    "genuine": 0.37754
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7057850278370112,
+     "none": 0.29421497216298875
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.8770488801397386,
+     "red": 0.018202568790170123,
+     "grey": 0.10474855107009137
+    },
+    "issuer": {
+     "springfield": 0.9796676466573412,
+     "shelbyville": 0.020332353342658753
+    },
+    "spelling": {
+     "correct": 0.2412539611180018,
+     "fil": 0.7431145159038848,
+     "nf": 0.00878767489135179,
+     "ri": 0.006843848086761697
+    },
+    "status": {
+     "approved": 0.977597446222183,
+     "void": 0.008457875136063442,
+     "received": 0.01394467864175354
+    },
+    "date": {
+     "match": 0.9755769099458929,
+     "other": 0.024423090054107213
+    },
+    "genuine": {
+     "ink": 0.37754066879814546,
+     "digital": 0.6224593312018546
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-0.jpg",
+   "label": "wrong_status",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.79819,
+    "in_box": 0.98309,
+    "shape": 0.97967,
+    "color": 0.86179,
+    "issuer": 0.99029,
+    "spelling": 0.9172,
+    "status": 0.00801,
+    "date": 0.98088,
+    "genuine": 0.40733
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7981867777396212,
+     "none": 0.20181322226037882
+    },
+    "in_box": {
+     "stamp": 0.9830850867332734,
+     "empty": 0.01691491326672651
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.8617942363713821,
+     "red": 0.02157459655761652,
+     "grey": 0.11663116707100135
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.9171994376720826,
+     "fil": 0.06644170441691771,
+     "nf": 0.01154583698609665,
+     "ri": 0.004813020924903073
+    },
+    "status": {
+     "approved": 0.008011688656353972,
+     "void": 0.9857488019443533,
+     "received": 0.006239509399292765
+    },
+    "date": {
+     "match": 0.9808759632491112,
+     "other": 0.019124036750888904
+    },
+    "genuine": {
+     "ink": 0.4073334000459302,
+     "digital": 0.5926665999540697
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-1.jpg",
+   "label": "wrong_status",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.73106,
+    "in_box": 0.98201,
+    "shape": 0.98309,
+    "color": 0.95967,
+    "issuer": 0.98831,
+    "spelling": 0.66277,
+    "status": 0.00801,
+    "date": 0.98201,
+    "genuine": 0.32082
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7310585786300049,
+     "none": 0.2689414213699951
+    },
+    "in_box": {
+     "stamp": 0.9820137900379085,
+     "empty": 0.017986209962091555
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.9596718548594292,
+     "red": 0.011348566179772993,
+     "grey": 0.028979578960797774
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.6627698867658508,
+     "fil": 0.31307032667213763,
+     "nf": 0.017662219224028462,
+     "ri": 0.0064975673379830965
+    },
+    "status": {
+     "approved": 0.008011688656353972,
+     "void": 0.9857488019443533,
+     "received": 0.006239509399292765
+    },
+    "date": {
+     "match": 0.9820137900379085,
+     "other": 0.017986209962091555
+    },
+    "genuine": {
+     "ink": 0.32082130082460697,
+     "digital": 0.679178699175393
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-2.jpg",
+   "label": "wrong_status",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.5,
+    "in_box": 0.97558,
+    "shape": 0.97967,
+    "color": 0.88897,
+    "issuer": 0.98504,
+    "spelling": 0.77907,
+    "status": 0.00801,
+    "date": 0.98504,
+    "genuine": 0.59267
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5,
+     "none": 0.5
+    },
+    "in_box": {
+     "stamp": 0.9755769099458929,
+     "empty": 0.024423090054107213
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.8889709739633366,
+     "red": 0.017332174722922346,
+     "grey": 0.09369685131374096
+    },
+    "issuer": {
+     "springfield": 0.98504291340685,
+     "shelbyville": 0.01495708659314999
+    },
+    "spelling": {
+     "correct": 0.7790685055222197,
+     "fil": 0.19697936604044594,
+     "nf": 0.017211865185205424,
+     "ri": 0.0067402632521289495
+    },
+    "status": {
+     "approved": 0.008011688656353972,
+     "void": 0.9857488019443533,
+     "received": 0.006239509399292765
+    },
+    "date": {
+     "match": 0.98504291340685,
+     "other": 0.01495708659314999
+    },
+    "genuine": {
+     "ink": 0.5926665999540697,
+     "digital": 0.4073334000459302
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-3.jpg",
+   "label": "wrong_status",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.75491,
+    "in_box": 0.97838,
+    "shape": 0.97967,
+    "color": 0.42848,
+    "issuer": 0.98757,
+    "spelling": 0.91004,
+    "status": 0.00801,
+    "date": 0.98088,
+    "genuine": 0.5
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7549149868676283,
+     "none": 0.24508501313237172
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.428483439180922,
+     "red": 0.021332934280998035,
+     "grey": 0.55018362653808
+    },
+    "issuer": {
+     "springfield": 0.9875683491468141,
+     "shelbyville": 0.012431650853185818
+    },
+    "spelling": {
+     "correct": 0.910041778227181,
+     "fil": 0.07470077811346858,
+     "nf": 0.009497138176049188,
+     "ri": 0.00576030548330115
+    },
+    "status": {
+     "approved": 0.008014718482535004,
+     "void": 0.9861215882140348,
+     "received": 0.005863693303430122
+    },
+    "date": {
+     "match": 0.9808759632491112,
+     "other": 0.019124036750888904
+    },
+    "genuine": {
+     "ink": 0.5,
+     "digital": 0.5
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-4.jpg",
+   "label": "wrong_status",
+   "capture": "clean",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.40733,
+    "in_box": 0.98309,
+    "shape": 0.98088,
+    "color": 0.92021,
+    "issuer": 0.99142,
+    "spelling": 0.85015,
+    "status": 0.00754,
+    "date": 0.98594,
+    "genuine": 0.29421
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.4073334000459302,
+     "none": 0.5926665999540697
+    },
+    "in_box": {
+     "stamp": 0.9830850867332734,
+     "empty": 0.01691491326672651
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.9202137917355099,
+     "red": 0.01312614477160244,
+     "grey": 0.06666006349288761
+    },
+    "issuer": {
+     "springfield": 0.991422514586288,
+     "shelbyville": 0.008577485413711986
+    },
+    "spelling": {
+     "correct": 0.8501547730846285,
+     "fil": 0.1303754570394509,
+     "nf": 0.013741472073856781,
+     "ri": 0.005728297802063759
+    },
+    "status": {
+     "approved": 0.007535467438551551,
+     "void": 0.9869514668119855,
+     "received": 0.005513065749462832
+    },
+    "date": {
+     "match": 0.9859363729567544,
+     "other": 0.014063627043245474
+    },
+    "genuine": {
+     "ink": 0.29421497216298875,
+     "digital": 0.7057850278370112
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-5.jpg",
+   "label": "wrong_status",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.83548,
+    "in_box": 0.97558,
+    "shape": 0.98088,
+    "color": 0.94129,
+    "issuer": 0.98678,
+    "spelling": 0.39947,
+    "status": 0.00801,
+    "date": 0.56218,
+    "genuine": 0.70579
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8354835371034369,
+     "none": 0.1645164628965632
+    },
+    "in_box": {
+     "stamp": 0.9755769099458929,
+     "empty": 0.024423090054107213
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.9412870236547919,
+     "red": 0.011849054944723856,
+     "grey": 0.04686392140048429
+    },
+    "issuer": {
+     "springfield": 0.9867771782476948,
+     "shelbyville": 0.013222821752305148
+    },
+    "spelling": {
+     "correct": 0.3994727189354274,
+     "fil": 0.5812293764252366,
+     "nf": 0.012841029508703281,
+     "ri": 0.006456875130632688
+    },
+    "status": {
+     "approved": 0.008008465939282358,
+     "void": 0.9853522826050966,
+     "received": 0.006639251455621026
+    },
+    "date": {
+     "match": 0.5621765008857981,
+     "other": 0.4378234991142019
+    },
+    "genuine": {
+     "ink": 0.7057850278370112,
+     "digital": 0.29421497216298875
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-6.jpg",
+   "label": "wrong_status",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.5,
+    "in_box": 0.98088,
+    "shape": 0.98504,
+    "color": 0.88692,
+    "issuer": 0.96267,
+    "spelling": 0.80567,
+    "status": 0.00801,
+    "date": 0.98088,
+    "genuine": 0.43782
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5,
+     "none": 0.5
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.98504291340685,
+     "rect": 0.01495708659314999
+    },
+    "color": {
+     "blue": 0.8869241727058529,
+     "red": 0.01959470724577712,
+     "grey": 0.09348112004836993
+    },
+    "issuer": {
+     "springfield": 0.9626731126558706,
+     "shelbyville": 0.037326887344129464
+    },
+    "spelling": {
+     "correct": 0.8056711574142474,
+     "fil": 0.17976953438081184,
+     "nf": 0.008407933008665082,
+     "ri": 0.006151375196275735
+    },
+    "status": {
+     "approved": 0.008014718482535004,
+     "void": 0.9861215882140348,
+     "received": 0.005863693303430122
+    },
+    "date": {
+     "match": 0.9808759632491112,
+     "other": 0.019124036750888904
+    },
+    "genuine": {
+     "ink": 0.4378234991142019,
+     "digital": 0.5621765008857981
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-7.jpg",
+   "label": "wrong_status",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.73106,
+    "in_box": 0.98201,
+    "shape": 0.98504,
+    "color": 0.93233,
+    "issuer": 0.98901,
+    "spelling": 0.85507,
+    "status": 0.00852,
+    "date": 0.97404,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7310585786300049,
+     "none": 0.2689414213699951
+    },
+    "in_box": {
+     "stamp": 0.9820137900379085,
+     "empty": 0.017986209962091555
+    },
+    "shape": {
+     "round": 0.98504291340685,
+     "rect": 0.01495708659314999
+    },
+    "color": {
+     "blue": 0.9323317059311966,
+     "red": 0.015069738483194354,
+     "grey": 0.05259855558560911
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.8550747947616643,
+     "fil": 0.13112996680060904,
+     "nf": 0.008382858317669505,
+     "ri": 0.005412380120057115
+    },
+    "status": {
+     "approved": 0.008523993752501683,
+     "void": 0.9852397191971246,
+     "received": 0.006236287050373765
+    },
+    "date": {
+     "match": 0.9740426428022031,
+     "other": 0.02595735719779685
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-8.jpg",
+   "label": "wrong_status",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.75491,
+    "in_box": 0.98594,
+    "shape": 0.97967,
+    "color": 0.87254,
+    "issuer": 0.98831,
+    "spelling": 0.90247,
+    "status": 0.00708,
+    "date": 0.97404,
+    "genuine": 0.34865
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7549149868676283,
+     "none": 0.24508501313237172
+    },
+    "in_box": {
+     "stamp": 0.9859363729567544,
+     "empty": 0.014063627043245474
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.872537866190057,
+     "red": 0.023252346525754745,
+     "grey": 0.10420978728418832
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.902473593137392,
+     "fil": 0.08394312029178666,
+     "nf": 0.008847539786057613,
+     "ri": 0.0047357467847638
+    },
+    "status": {
+     "approved": 0.007082149908041348,
+     "void": 0.987402266197747,
+     "received": 0.00551558389421168
+    },
+    "date": {
+     "match": 0.9740426428022031,
+     "other": 0.02595735719779685
+    },
+    "genuine": {
+     "ink": 0.34864513533394575,
+     "digital": 0.6513548646660542
+    }
+   }
+  },
+  {
+   "file": "docs/wrong_status-9.jpg",
+   "label": "wrong_status",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.59267,
+    "in_box": 0.97967,
+    "shape": 0.98309,
+    "color": 0.96424,
+    "issuer": 0.98504,
+    "spelling": 0.92539,
+    "status": 0.00754,
+    "date": 0.92414,
+    "genuine": 0.43782
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5926665999540697,
+     "none": 0.4073334000459302
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.964241086708891,
+     "red": 0.010062758715690628,
+     "grey": 0.025696154575418424
+    },
+    "issuer": {
+     "springfield": 0.98504291340685,
+     "shelbyville": 0.01495708659314999
+    },
+    "spelling": {
+     "correct": 0.9253922727631133,
+     "fil": 0.059158348774959985,
+     "nf": 0.010280179554641606,
+     "ri": 0.005169198907285044
+    },
+    "status": {
+     "approved": 0.007535467438551551,
+     "void": 0.9869514668119855,
+     "received": 0.005513065749462832
+    },
+    "date": {
+     "match": 0.9241418199787566,
+     "other": 0.07585818002124356
+    },
+    "genuine": {
+     "ink": 0.4378234991142019,
+     "digital": 0.5621765008857981
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-0.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.67918,
+    "in_box": 0.98201,
+    "shape": 0.98409,
+    "color": 0.93046,
+    "issuer": 0.99029,
+    "spelling": 0.83898,
+    "status": 0.98493,
+    "date": 0.04209,
+    "genuine": 0.24509
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.679178699175393,
+     "none": 0.32082130082460697
+    },
+    "in_box": {
+     "stamp": 0.9820137900379085,
+     "empty": 0.017986209962091555
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.9304647169693925,
+     "red": 0.017042055754719645,
+     "grey": 0.052493227275887955
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.8389760596914797,
+     "fil": 0.14579217835310448,
+     "nf": 0.009921282247095363,
+     "ri": 0.005310479708320362
+    },
+    "status": {
+     "approved": 0.9849305403410742,
+     "void": 0.008005038222499027,
+     "received": 0.007064421436426688
+    },
+    "date": {
+     "match": 0.04208772791561884,
+     "other": 0.9579122720843811
+    },
+    "genuine": {
+     "ink": 0.24508501313237172,
+     "digital": 0.7549149868676283
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-1.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.56218,
+    "in_box": 0.98309,
+    "shape": 0.98201,
+    "color": 0.90779,
+    "issuer": 0.98901,
+    "spelling": 0.91786,
+    "status": 0.98286,
+    "date": 0.02759,
+    "genuine": 0.40733
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5621765008857981,
+     "none": 0.4378234991142019
+    },
+    "in_box": {
+     "stamp": 0.9830850867332734,
+     "empty": 0.01691491326672651
+    },
+    "shape": {
+     "round": 0.9820137900379085,
+     "rect": 0.017986209962091555
+    },
+    "color": {
+     "blue": 0.9077854354558318,
+     "red": 0.017698998323980746,
+     "grey": 0.07451556622018733
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.9178564625657176,
+     "fil": 0.0664892991405781,
+     "nf": 0.010196464265245887,
+     "ri": 0.00545777402845835
+    },
+    "status": {
+     "approved": 0.9828601483210107,
+     "void": 0.007504229836393593,
+     "received": 0.009635621842595865
+    },
+    "date": {
+     "match": 0.027585282226789985,
+     "other": 0.9724147177732099
+    },
+    "genuine": {
+     "ink": 0.4073334000459302,
+     "digital": 0.5926665999540697
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-2.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.73106,
+    "in_box": 0.98088,
+    "shape": 0.98409,
+    "color": 0.93233,
+    "issuer": 0.99029,
+    "spelling": 0.78182,
+    "status": 0.98493,
+    "date": 0.03114,
+    "genuine": 0.37754
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7310585786300049,
+     "none": 0.2689414213699951
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.9323317059311966,
+     "red": 0.015069738483194354,
+     "grey": 0.05259855558560911
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.7818153264404837,
+     "fil": 0.1976738711311678,
+     "nf": 0.015242972195719738,
+     "ri": 0.005267830232628682
+    },
+    "status": {
+     "approved": 0.9849305403410742,
+     "void": 0.007064421436426688,
+     "received": 0.008005038222499027
+    },
+    "date": {
+     "match": 0.031143830534778462,
+     "other": 0.9688561694652216
+    },
+    "genuine": {
+     "ink": 0.37754066879814546,
+     "digital": 0.6224593312018546
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-3.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.82671,
+    "in_box": 0.97702,
+    "shape": 0.98088,
+    "color": 0.9426,
+    "issuer": 0.99142,
+    "spelling": 0.34028,
+    "status": 0.984,
+    "date": 0.03309,
+    "genuine": 0.62246
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8267117940706734,
+     "none": 0.17328820592932656
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.9425994054266796,
+     "red": 0.010471333531834241,
+     "grey": 0.04692926104148601
+    },
+    "issuer": {
+     "springfield": 0.991422514586288,
+     "shelbyville": 0.008577485413711986
+    },
+    "spelling": {
+     "correct": 0.3402764052823125,
+     "fil": 0.6357200185782489,
+     "nf": 0.016941364653761472,
+     "ri": 0.0070622114856771015
+    },
+    "status": {
+     "approved": 0.9840049687498895,
+     "void": 0.007997515625055225,
+     "received": 0.007997515625055225
+    },
+    "date": {
+     "match": 0.033085978388704126,
+     "other": 0.9669140216112958
+    },
+    "genuine": {
+     "ink": 0.6224593312018546,
+     "digital": 0.37754066879814546
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-4.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.96886,
+    "shape": 0.98678,
+    "color": 0.95184,
+    "issuer": 0.98757,
+    "spelling": 0.42832,
+    "status": 0.98245,
+    "date": 0.03114,
+    "genuine": 0.67918
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9688561694652216,
+     "empty": 0.031143830534778462
+    },
+    "shape": {
+     "round": 0.9867771782476948,
+     "rect": 0.013222821752305148
+    },
+    "color": {
+     "blue": 0.9518373416755816,
+     "red": 0.011255919416295468,
+     "grey": 0.036906738908122794
+    },
+    "issuer": {
+     "springfield": 0.9875683491468141,
+     "shelbyville": 0.012431650853185818
+    },
+    "spelling": {
+     "correct": 0.4283178678323108,
+     "fil": 0.5499710287181878,
+     "nf": 0.015601477195337447,
+     "ri": 0.006109626254163909
+    },
+    "status": {
+     "approved": 0.9824520536744229,
+     "void": 0.00849987572007102,
+     "received": 0.009048070605506053
+    },
+    "date": {
+     "match": 0.031143830534778462,
+     "other": 0.9688561694652216
+    },
+    "genuine": {
+     "ink": 0.679178699175393,
+     "digital": 0.32082130082460697
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-5.jpg",
+   "label": "date_mismatch",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.96691,
+    "shape": 0.98088,
+    "color": 0.8606,
+    "issuer": 0.98409,
+    "spelling": 0.91184,
+    "status": 0.9835,
+    "date": 0.04468,
+    "genuine": 0.53121
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9669140216112958,
+     "empty": 0.033085978388704126
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.8605967659452578,
+     "red": 0.022934126983027915,
+     "grey": 0.11646910707171435
+    },
+    "issuer": {
+     "springfield": 0.9840936082881853,
+     "shelbyville": 0.01590639171181471
+    },
+    "spelling": {
+     "correct": 0.9118405965867057,
+     "fil": 0.0748484341160348,
+     "nf": 0.007888966915499859,
+     "ri": 0.005422002381759738
+    },
+    "status": {
+     "approved": 0.9834976851257742,
+     "void": 0.007993392669542763,
+     "received": 0.008508922204682908
+    },
+    "date": {
+     "match": 0.0446808702726502,
+     "other": 0.9553191297273498
+    },
+    "genuine": {
+     "ink": 0.5312093733737563,
+     "digital": 0.46879062662624377
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-6.jpg",
+   "label": "date_mismatch",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.80807,
+    "in_box": 0.98088,
+    "shape": 0.98504,
+    "color": 0.93318,
+    "issuer": 0.98831,
+    "spelling": 0.87646,
+    "status": 0.98496,
+    "date": 0.04468,
+    "genuine": 0.34865
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8080672135527632,
+     "none": 0.19193278644723683
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.98504291340685,
+     "rect": 0.01495708659314999
+    },
+    "color": {
+     "blue": 0.9331837300179584,
+     "red": 0.014169646486693097,
+     "grey": 0.05264662349534844
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.8764649924393662,
+     "fil": 0.10467881562890147,
+     "nf": 0.013308417947437808,
+     "ri": 0.005547773984294634
+    },
+    "status": {
+     "approved": 0.9849594830897009,
+     "void": 0.007520258455149472,
+     "received": 0.007520258455149472
+    },
+    "date": {
+     "match": 0.0446808702726502,
+     "other": 0.9553191297273498
+    },
+    "genuine": {
+     "ink": 0.34864513533394575,
+     "digital": 0.6513548646660542
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-7.jpg",
+   "label": "date_mismatch",
+   "capture": "clean",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.32082,
+    "in_box": 0.97404,
+    "shape": 0.98757,
+    "color": 0.83715,
+    "issuer": 0.98901,
+    "spelling": 0.87904,
+    "status": 0.97867,
+    "date": 0.02931,
+    "genuine": 0.46879
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.32082130082460697,
+     "none": 0.679178699175393
+    },
+    "in_box": {
+     "stamp": 0.9740426428022031,
+     "empty": 0.02595735719779685
+    },
+    "shape": {
+     "round": 0.9875683491468141,
+     "rect": 0.012431650853185818
+    },
+    "color": {
+     "blue": 0.8371505435530512,
+     "red": 0.017374505232051418,
+     "grey": 0.14547495121489734
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.8790381415254339,
+     "fil": 0.10498613446204333,
+     "nf": 0.01106545716204699,
+     "ri": 0.004910266850475771
+    },
+    "status": {
+     "approved": 0.978667185095044,
+     "void": 0.00901321317097711,
+     "received": 0.012319601733978896
+    },
+    "date": {
+     "match": 0.029312230751356316,
+     "other": 0.9706877692486436
+    },
+    "genuine": {
+     "ink": 0.46879062662624377,
+     "digital": 0.5312093733737563
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-8.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.7773,
+    "in_box": 0.98409,
+    "shape": 0.98594,
+    "color": 0.92021,
+    "issuer": 0.99029,
+    "spelling": 0.54975,
+    "status": 0.97239,
+    "date": 0.03514,
+    "genuine": 0.46879
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7772998611746911,
+     "none": 0.22270013882530884
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.9859363729567544,
+     "rect": 0.014063627043245474
+    },
+    "color": {
+     "blue": 0.9202137917355099,
+     "red": 0.01312614477160244,
+     "grey": 0.06666006349288761
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.5497544051199683,
+     "fil": 0.4281491612043857,
+     "nf": 0.015595332056864478,
+     "ri": 0.0065011016187815135
+    },
+    "status": {
+     "approved": 0.9723942786588218,
+     "void": 0.007424321935440473,
+     "received": 0.020181399405737727
+    },
+    "date": {
+     "match": 0.03514484640079327,
+     "other": 0.9648551535992067
+    },
+    "genuine": {
+     "ink": 0.46879062662624377,
+     "digital": 0.5312093733737563
+    }
+   }
+  },
+  {
+   "file": "docs/date_mismatch-9.jpg",
+   "label": "date_mismatch",
+   "capture": "scan",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.59267,
+    "in_box": 0.97558,
+    "shape": 0.98201,
+    "color": 0.9398,
+    "issuer": 0.99087,
+    "spelling": 0.45818,
+    "status": 0.98343,
+    "date": 0.02596,
+    "genuine": 0.29421
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5926665999540697,
+     "none": 0.4073334000459302
+    },
+    "in_box": {
+     "stamp": 0.9755769099458929,
+     "empty": 0.024423090054107213
+    },
+    "shape": {
+     "round": 0.9820137900379085,
+     "rect": 0.017986209962091555
+    },
+    "color": {
+     "blue": 0.9398043100555341,
+     "red": 0.0134055885073178,
+     "grey": 0.04679010143714808
+    },
+    "issuer": {
+     "springfield": 0.9908743626108194,
+     "shelbyville": 0.00912563738918052
+    },
+    "spelling": {
+     "correct": 0.4581794907362169,
+     "fil": 0.5191853811546904,
+     "nf": 0.01567804002199076,
+     "ri": 0.0069570880871019135
+    },
+    "status": {
+     "approved": 0.9834342701822928,
+     "void": 0.007508613310897589,
+     "received": 0.009057116506809695
+    },
+    "date": {
+     "match": 0.02595735719779685,
+     "other": 0.9740426428022031
+    },
+    "genuine": {
+     "ink": 0.29421497216298875,
+     "digital": 0.7057850278370112
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-0.jpg",
+   "label": "photocopy",
+   "capture": "scan",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.70579,
+    "in_box": 0.98088,
+    "shape": 0.98309,
+    "color": 0.03049,
+    "issuer": 0.96691,
+    "spelling": 0.60906,
+    "status": 0.98286,
+    "date": 0.98309,
+    "genuine": 0.83548
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7057850278370112,
+     "none": 0.29421497216298875
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.030491172451644746,
+     "red": 0.02095625592378208,
+     "grey": 0.9485525716245733
+    },
+    "issuer": {
+     "springfield": 0.9669140216112958,
+     "shelbyville": 0.033085978388704126
+    },
+    "spelling": {
+     "correct": 0.6090601828603661,
+     "fil": 0.369413674514995,
+     "nf": 0.014323722591524524,
+     "ri": 0.007202420033114293
+    },
+    "status": {
+     "approved": 0.9828601483210107,
+     "void": 0.007504229836393593,
+     "received": 0.009635621842595865
+    },
+    "date": {
+     "match": 0.9830850867332734,
+     "other": 0.01691491326672651
+    },
+    "genuine": {
+     "ink": 0.8354835371034369,
+     "digital": 0.1645164628965632
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-1.jpg",
+   "label": "photocopy",
+   "capture": "scan",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.67918,
+    "in_box": 0.98088,
+    "shape": 0.98088,
+    "color": 0.03049,
+    "issuer": 0.98201,
+    "spelling": 0.78567,
+    "status": 0.98442,
+    "date": 0.9149,
+    "genuine": 0.81757
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.679178699175393,
+     "none": 0.32082130082460697
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.030491172451644746,
+     "red": 0.02095625592378208,
+     "grey": 0.9485525716245733
+    },
+    "issuer": {
+     "springfield": 0.9820137900379085,
+     "shelbyville": 0.017986209962091555
+    },
+    "spelling": {
+     "correct": 0.7856739726657676,
+     "fil": 0.1986494896831221,
+     "nf": 0.00929096026873546,
+     "ri": 0.0063855773823747715
+    },
+    "status": {
+     "approved": 0.9844223021956031,
+     "void": 0.0070607760946461064,
+     "received": 0.008516921709750672
+    },
+    "date": {
+     "match": 0.9149009549929797,
+     "other": 0.08509904500702024
+    },
+    "genuine": {
+     "ink": 0.8175744761936437,
+     "digital": 0.18242552380635632
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-2.jpg",
+   "label": "photocopy",
+   "capture": "scan",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.62246,
+    "in_box": 0.98409,
+    "shape": 0.98309,
+    "color": 0.03045,
+    "issuer": 0.98678,
+    "spelling": 0.92097,
+    "status": 0.98238,
+    "date": 0.97838,
+    "genuine": 0.89331
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6224593312018546,
+     "none": 0.37754066879814546
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.9830850867332734,
+     "rect": 0.01691491326672651
+    },
+    "color": {
+     "blue": 0.030450017353513895,
+     "red": 0.022277708597527226,
+     "grey": 0.9472722740489589
+    },
+    "issuer": {
+     "springfield": 0.9867771782476948,
+     "shelbyville": 0.013222821752305148
+    },
+    "spelling": {
+     "correct": 0.9209673770884999,
+     "fil": 0.06671465303276276,
+     "nf": 0.0074851766224196025,
+     "ri": 0.004832793256317723
+    },
+    "status": {
+     "approved": 0.9823846925565076,
+     "void": 0.007984346805196583,
+     "received": 0.009630960638295884
+    },
+    "date": {
+     "match": 0.9783846672373524,
+     "other": 0.021615332762647654
+    },
+    "genuine": {
+     "ink": 0.8933094060543487,
+     "digital": 0.10669059394565118
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-3.jpg",
+   "label": "photocopy",
+   "capture": "clean",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.43782,
+    "in_box": 0.98409,
+    "shape": 0.98831,
+    "color": 0.03621,
+    "issuer": 0.98831,
+    "spelling": 0.89002,
+    "status": 0.98188,
+    "date": 0.93991,
+    "genuine": 0.73106
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.4378234991142019,
+     "none": 0.5621765008857981
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.9883127420043056,
+     "rect": 0.011687257995694434
+    },
+    "color": {
+     "blue": 0.036206475199315795,
+     "red": 0.030016222206909308,
+     "grey": 0.9337773025937748
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.8900175727327235,
+     "fil": 0.09380716201246174,
+     "nf": 0.01120366780382537,
+     "ri": 0.004971597450989507
+    },
+    "status": {
+     "approved": 0.9818790777282357,
+     "void": 0.00849491850682589,
+     "received": 0.00962600376493851
+    },
+    "date": {
+     "match": 0.9399133498259924,
+     "other": 0.06008665017400762
+    },
+    "genuine": {
+     "ink": 0.7310585786300049,
+     "digital": 0.2689414213699951
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-4.jpg",
+   "label": "photocopy",
+   "capture": "clean",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.2227,
+    "in_box": 0.98409,
+    "shape": 0.98901,
+    "color": 0.0409,
+    "issuer": 0.98594,
+    "spelling": 0.97982,
+    "status": 0.98127,
+    "date": 0.98309,
+    "genuine": 0.65135
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.22270013882530884,
+     "none": 0.7772998611746911
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.9890130573694068,
+     "rect": 0.01098694263059318
+    },
+    "color": {
+     "blue": 0.04090450600652118,
+     "red": 0.02811322843252293,
+     "grey": 0.930982265560956
+    },
+    "issuer": {
+     "springfield": 0.9859363729567544,
+     "shelbyville": 0.014063627043245474
+    },
+    "spelling": {
+     "correct": 0.9798213445853715,
+     "fil": 0.011586843270515648,
+     "nf": 0.004830114887445487,
+     "ri": 0.0037616972566673957
+    },
+    "status": {
+     "approved": 0.9812698819289046,
+     "void": 0.008489647930451054,
+     "received": 0.010240470140644288
+    },
+    "date": {
+     "match": 0.9830850867332734,
+     "other": 0.01691491326672651
+    },
+    "genuine": {
+     "ink": 0.6513548646660542,
+     "digital": 0.34864513533394575
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-5.jpg",
+   "label": "photocopy",
+   "capture": "scan",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.70579,
+    "in_box": 0.97967,
+    "shape": 0.98678,
+    "color": 0.02697,
+    "issuer": 0.98901,
+    "spelling": 0.95927,
+    "status": 0.98493,
+    "date": 0.98409,
+    "genuine": 0.81757
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7057850278370112,
+     "none": 0.29421497216298875
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9867771782476948,
+     "rect": 0.013222821752305148
+    },
+    "color": {
+     "blue": 0.02696853865693445,
+     "red": 0.022357703821372407,
+     "grey": 0.9506737575216931
+    },
+    "issuer": {
+     "springfield": 0.9890130573694068,
+     "shelbyville": 0.01098694263059318
+    },
+    "spelling": {
+     "correct": 0.9592662950829899,
+     "fil": 0.028967332116727966,
+     "nf": 0.00732408854393535,
+     "ri": 0.004442284256346849
+    },
+    "status": {
+     "approved": 0.9849305403410742,
+     "void": 0.007064421436426688,
+     "received": 0.008005038222499027
+    },
+    "date": {
+     "match": 0.9840936082881853,
+     "other": 0.01590639171181471
+    },
+    "genuine": {
+     "ink": 0.8175744761936437,
+     "digital": 0.18242552380635632
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-6.jpg",
+   "label": "photocopy",
+   "capture": "scan",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.73106,
+    "in_box": 0.97838,
+    "shape": 0.98088,
+    "color": 0.03852,
+    "issuer": 0.97967,
+    "spelling": 0.24138,
+    "status": 0.9776,
+    "date": 0.98594,
+    "genuine": 0.7773
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7310585786300049,
+     "none": 0.2689414213699951
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.03852169476747762,
+     "red": 0.0281830739453987,
+     "grey": 0.9332952312871237
+    },
+    "issuer": {
+     "springfield": 0.9796676466573412,
+     "shelbyville": 0.020332353342658753
+    },
+    "spelling": {
+     "correct": 0.24138247756796544,
+     "fil": 0.7435103744384258,
+     "nf": 0.008259654175783714,
+     "ri": 0.006847493817825034
+    },
+    "status": {
+     "approved": 0.977597446222183,
+     "void": 0.008457875136063442,
+     "received": 0.01394467864175354
+    },
+    "date": {
+     "match": 0.9859363729567544,
+     "other": 0.014063627043245474
+    },
+    "genuine": {
+     "ink": 0.7772998611746911,
+     "digital": 0.22270013882530884
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-7.jpg",
+   "label": "photocopy",
+   "capture": "clean",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.26894,
+    "in_box": 0.98504,
+    "shape": 0.98757,
+    "color": 0.02689,
+    "issuer": 0.98678,
+    "spelling": 0.88166,
+    "status": 0.98127,
+    "date": 0.97967,
+    "genuine": 0.81757
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.2689414213699951,
+     "none": 0.7310585786300049
+    },
+    "in_box": {
+     "stamp": 0.98504291340685,
+     "empty": 0.01495708659314999
+    },
+    "shape": {
+     "round": 0.9875683491468141,
+     "rect": 0.012431650853185818
+    },
+    "color": {
+     "blue": 0.026888494467744044,
+     "red": 0.025259402942386634,
+     "grey": 0.9478521025898694
+    },
+    "issuer": {
+     "springfield": 0.9867771782476948,
+     "shelbyville": 0.013222821752305148
+    },
+    "spelling": {
+     "correct": 0.8816564812058484,
+     "fil": 0.10529885054200577,
+     "nf": 0.008119775475980784,
+     "ri": 0.004924892776165086
+    },
+    "status": {
+     "approved": 0.9812698819289046,
+     "void": 0.008489647930451054,
+     "received": 0.010240470140644288
+    },
+    "date": {
+     "match": 0.9796676466573412,
+     "other": 0.020332353342658753
+    },
+    "genuine": {
+     "ink": 0.8175744761936437,
+     "digital": 0.18242552380635632
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-8.jpg",
+   "label": "photocopy",
+   "capture": "photo",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.62246,
+    "in_box": 0.97967,
+    "shape": 0.98409,
+    "color": 0.04067,
+    "issuer": 0.7773,
+    "spelling": 0.1981,
+    "status": 0.9776,
+    "date": 0.79819,
+    "genuine": 0.73106
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6224593312018546,
+     "none": 0.37754066879814546
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9840936082881853,
+     "rect": 0.01590639171181471
+    },
+    "color": {
+     "blue": 0.04066871699591827,
+     "red": 0.033715550588654386,
+     "grey": 0.9256157324154273
+    },
+    "issuer": {
+     "springfield": 0.7772998611746911,
+     "shelbyville": 0.22270013882530884
+    },
+    "spelling": {
+     "correct": 0.19810148021053653,
+     "fil": 0.7835065531568044,
+     "nf": 0.011176120743462418,
+     "ri": 0.007215845889196708
+    },
+    "status": {
+     "approved": 0.977597446222183,
+     "void": 0.008457875136063442,
+     "received": 0.01394467864175354
+    },
+    "date": {
+     "match": 0.7981867777396212,
+     "other": 0.20181322226037882
+    },
+    "genuine": {
+     "ink": 0.7310585786300049,
+     "digital": 0.2689414213699951
+    }
+   }
+  },
+  {
+   "file": "docs/photocopy-9.jpg",
+   "label": "photocopy",
+   "capture": "clean",
+   "pred": "photocopy",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.24509,
+    "in_box": 0.98409,
+    "shape": 0.98831,
+    "color": 0.02544,
+    "issuer": 0.97069,
+    "spelling": 0.17832,
+    "status": 0.97143,
+    "date": 0.81757,
+    "genuine": 0.81757
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.24508501313237172,
+     "none": 0.7549149868676283
+    },
+    "in_box": {
+     "stamp": 0.9840936082881853,
+     "empty": 0.01590639171181471
+    },
+    "shape": {
+     "round": 0.9883127420043056,
+     "rect": 0.011687257995694434
+    },
+    "color": {
+     "blue": 0.02544301120323426,
+     "red": 0.01981503704877337,
+     "grey": 0.9547419517479924
+    },
+    "issuer": {
+     "springfield": 0.9706877692486436,
+     "shelbyville": 0.029312230751356316
+    },
+    "spelling": {
+     "correct": 0.17832170480642595,
+     "fil": 0.79918243543501,
+     "nf": 0.015581576915492714,
+     "ri": 0.006914282843071342
+    },
+    "status": {
+     "approved": 0.9714339802449691,
+     "void": 0.008404550707033784,
+     "received": 0.02016146904799705
+    },
+    "date": {
+     "match": 0.8175744761936437,
+     "other": 0.18242552380635632
+    },
+    "genuine": {
+     "ink": 0.8175744761936437,
+     "digital": 0.18242552380635632
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-0.jpg",
+   "label": "pasted_digital",
+   "capture": "photo",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.5,
+    "in_box": 0.97702,
+    "shape": 0.97967,
+    "color": 0.93521,
+    "issuer": 0.99029,
+    "spelling": 0.86827,
+    "status": 0.98448,
+    "date": 0.98678,
+    "genuine": 0.06755
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5,
+     "none": 0.5
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.935205271211203,
+     "red": 0.018233600013018037,
+     "grey": 0.04656112877577891
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.8682685247488348,
+     "fil": 0.11750736672231941,
+     "nf": 0.009061195156905791,
+     "ri": 0.005162913371939941
+    },
+    "status": {
+     "approved": 0.9844819945551243,
+     "void": 0.007516612785199554,
+     "received": 0.008001392659676063
+    },
+    "date": {
+     "match": 0.9867771782476948,
+     "other": 0.013222821752305148
+    },
+    "genuine": {
+     "ink": 0.0675466911396291,
+     "digital": 0.9324533088603709
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-1.jpg",
+   "label": "pasted_digital",
+   "capture": "clean",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.65135,
+    "in_box": 0.97967,
+    "shape": 0.97967,
+    "color": 0.94331,
+    "issuer": 0.99142,
+    "spelling": 0.96588,
+    "status": 0.98296,
+    "date": 0.98831,
+    "genuine": 0.01912
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.6513548646660542,
+     "none": 0.34864513533394575
+    },
+    "in_box": {
+     "stamp": 0.9796676466573412,
+     "empty": 0.020332353342658753
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.9433068541317685,
+     "red": 0.015247135231738616,
+     "grey": 0.04144601063649278
+    },
+    "issuer": {
+     "springfield": 0.991422514586288,
+     "shelbyville": 0.008577485413711986
+    },
+    "spelling": {
+     "correct": 0.9658838505427614,
+     "fil": 0.022715410923488145,
+     "nf": 0.006927808915854855,
+     "ri": 0.0044729296178956995
+    },
+    "status": {
+     "approved": 0.9829582589304744,
+     "void": 0.007989008474785134,
+     "received": 0.009052732594740542
+    },
+    "date": {
+     "match": 0.9883127420043056,
+     "other": 0.011687257995694434
+    },
+    "genuine": {
+     "ink": 0.019124036750888904,
+     "digital": 0.9808759632491112
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-2.jpg",
+   "label": "pasted_digital",
+   "capture": "scan",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.73106,
+    "in_box": 0.97838,
+    "shape": 0.97404,
+    "color": 0.96095,
+    "issuer": 0.99142,
+    "spelling": 0.97868,
+    "status": 0.9867,
+    "date": 0.97838,
+    "genuine": 0.02033
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.7310585786300049,
+     "none": 0.2689414213699951
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9740426428022031,
+     "rect": 0.02595735719779685
+    },
+    "color": {
+     "blue": 0.960953278058039,
+     "red": 0.010028447353508576,
+     "grey": 0.029018274588452447
+    },
+    "issuer": {
+     "springfield": 0.991422514586288,
+     "shelbyville": 0.008577485413711986
+    },
+    "spelling": {
+     "correct": 0.9786755814651324,
+     "fil": 0.010872103646558433,
+     "nf": 0.006194737926503433,
+     "ri": 0.004257576961805626
+    },
+    "status": {
+     "approved": 0.986703291042268,
+     "void": 0.006648354478866004,
+     "received": 0.006648354478866004
+    },
+    "date": {
+     "match": 0.9783846672373524,
+     "other": 0.021615332762647654
+    },
+    "genuine": {
+     "ink": 0.020332353342658753,
+     "digital": 0.9796676466573412
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-3.jpg",
+   "label": "pasted_digital",
+   "capture": "clean",
+   "pred": "misspelled",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.56218,
+    "in_box": 0.97558,
+    "shape": 0.97967,
+    "color": 0.9398,
+    "issuer": 0.98831,
+    "spelling": 0.93358,
+    "status": 0.98191,
+    "date": 0.98678,
+    "genuine": 0.02033
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5621765008857981,
+     "none": 0.4378234991142019
+    },
+    "in_box": {
+     "stamp": 0.9755769099458929,
+     "empty": 0.024423090054107213
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.9398043100555341,
+     "red": 0.0134055885073178,
+     "grey": 0.04679010143714808
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.9335766018490751,
+     "fil": 0.052668787807379824,
+     "nf": 0.009152462954043114,
+     "ri": 0.004602147389502079
+    },
+    "status": {
+     "approved": 0.9819137735658159,
+     "void": 0.009043113217092032,
+     "received": 0.009043113217092032
+    },
+    "date": {
+     "match": 0.9867771782476948,
+     "other": 0.013222821752305148
+    },
+    "genuine": {
+     "ink": 0.020332353342658753,
+     "digital": 0.9796676466573412
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-4.jpg",
+   "label": "pasted_digital",
+   "capture": "clean",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.5,
+    "in_box": 0.97838,
+    "shape": 0.97967,
+    "color": 0.95115,
+    "issuer": 0.99087,
+    "spelling": 0.97422,
+    "status": 0.98238,
+    "date": 0.98831,
+    "genuine": 0.02442
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5,
+     "none": 0.5
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.9511468619068076,
+     "red": 0.011973171991127622,
+     "grey": 0.03687996610206475
+    },
+    "issuer": {
+     "springfield": 0.9908743626108194,
+     "shelbyville": 0.00912563738918052
+    },
+    "spelling": {
+     "correct": 0.9742220290964839,
+     "fil": 0.015746832494972995,
+     "nf": 0.0057929359384709745,
+     "ri": 0.004238202470072047
+    },
+    "status": {
+     "approved": 0.9823846925565076,
+     "void": 0.007984346805196583,
+     "received": 0.009630960638295884
+    },
+    "date": {
+     "match": 0.9883127420043056,
+     "other": 0.011687257995694434
+    },
+    "genuine": {
+     "ink": 0.024423090054107213,
+     "digital": 0.9755769099458929
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-5.jpg",
+   "label": "pasted_digital",
+   "capture": "clean",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.53121,
+    "in_box": 0.97702,
+    "shape": 0.97967,
+    "color": 0.92495,
+    "issuer": 0.98967,
+    "spelling": 0.96108,
+    "status": 0.98245,
+    "date": 0.98504,
+    "genuine": 0.02162
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5312093733737563,
+     "none": 0.46879062662624377
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9796676466573412,
+     "rect": 0.020332353342658753
+    },
+    "color": {
+     "blue": 0.9249548846224285,
+     "red": 0.015914727890962592,
+     "grey": 0.05913038748660882
+    },
+    "issuer": {
+     "springfield": 0.9896718474806949,
+     "shelbyville": 0.010328152519305191
+    },
+    "spelling": {
+     "correct": 0.9610819971872663,
+     "fil": 0.02902216156935151,
+     "nf": 0.0057148024526677875,
+     "ri": 0.004181038790714354
+    },
+    "status": {
+     "approved": 0.9824520536744229,
+     "void": 0.00849987572007102,
+     "received": 0.009048070605506053
+    },
+    "date": {
+     "match": 0.98504291340685,
+     "other": 0.01495708659314999
+    },
+    "genuine": {
+     "ink": 0.021615332762647654,
+     "digital": 0.9783846672373524
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-6.jpg",
+   "label": "pasted_digital",
+   "capture": "clean",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.56218,
+    "in_box": 0.97702,
+    "shape": 0.98088,
+    "color": 0.94057,
+    "issuer": 0.99029,
+    "spelling": 0.96784,
+    "status": 0.98541,
+    "date": 0.98831,
+    "genuine": 0.01799
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.5621765008857981,
+     "none": 0.4378234991142019
+    },
+    "in_box": {
+     "stamp": 0.9770226300899744,
+     "empty": 0.02297736991002561
+    },
+    "shape": {
+     "round": 0.9808759632491112,
+     "rect": 0.019124036750888904
+    },
+    "color": {
+     "blue": 0.9405682429203616,
+     "red": 0.012603621664720885,
+     "grey": 0.046828135414917704
+    },
+    "issuer": {
+     "springfield": 0.9902915235185259,
+     "shelbyville": 0.009708476481474066
+    },
+    "spelling": {
+     "correct": 0.9678366596114341,
+     "fil": 0.02008680904012863,
+     "nf": 0.007866107442096764,
+     "ri": 0.004210423906340574
+    },
+    "status": {
+     "approved": 0.9854084641832515,
+     "void": 0.0075236864681012166,
+     "received": 0.007067849348647266
+    },
+    "date": {
+     "match": 0.9883127420043056,
+     "other": 0.011687257995694434
+    },
+    "genuine": {
+     "ink": 0.017986209962091555,
+     "digital": 0.9820137900379085
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-7.jpg",
+   "label": "pasted_digital",
+   "capture": "photo",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.83548,
+    "in_box": 0.98088,
+    "shape": 0.97838,
+    "color": 0.95203,
+    "issuer": 0.98831,
+    "spelling": 0.97359,
+    "status": 0.98496,
+    "date": 0.97967,
+    "genuine": 0.06009
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8354835371034369,
+     "none": 0.1645164628965632
+    },
+    "in_box": {
+     "stamp": 0.9808759632491112,
+     "empty": 0.019124036750888904
+    },
+    "shape": {
+     "round": 0.9783846672373524,
+     "rect": 0.021615332762647654
+    },
+    "color": {
+     "blue": 0.9520349439850329,
+     "red": 0.01538821166484688,
+     "grey": 0.0325768443501202
+    },
+    "issuer": {
+     "springfield": 0.9883127420043056,
+     "shelbyville": 0.011687257995694434
+    },
+    "spelling": {
+     "correct": 0.9735921608791178,
+     "fil": 0.01573665162345034,
+     "nf": 0.006162561320795737,
+     "ri": 0.00450862617663622
+    },
+    "status": {
+     "approved": 0.9849594830897009,
+     "void": 0.007520258455149472,
+     "received": 0.007520258455149472
+    },
+    "date": {
+     "match": 0.9796676466573412,
+     "other": 0.020332353342658753
+    },
+    "genuine": {
+     "ink": 0.06008665017400762,
+     "digital": 0.9399133498259924
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-8.jpg",
+   "label": "pasted_digital",
+   "capture": "photo",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.81757,
+    "in_box": 0.97558,
+    "shape": 0.97558,
+    "color": 0.88539,
+    "issuer": 0.99087,
+    "spelling": 0.97109,
+    "status": 0.98296,
+    "date": 0.98409,
+    "genuine": 0.09535
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.8175744761936437,
+     "none": 0.18242552380635632
+    },
+    "in_box": {
+     "stamp": 0.9755769099458929,
+     "empty": 0.024423090054107213
+    },
+    "shape": {
+     "round": 0.9755769099458929,
+     "rect": 0.024423090054107213
+    },
+    "color": {
+     "blue": 0.8853949343106099,
+     "red": 0.032250508124779746,
+     "grey": 0.08235455756461034
+    },
+    "issuer": {
+     "springfield": 0.9908743626108194,
+     "shelbyville": 0.00912563738918052
+    },
+    "spelling": {
+     "correct": 0.9710899749422476,
+     "fil": 0.020154329445714023,
+     "nf": 0.004787072838265706,
+     "ri": 0.0039686227737727635
+    },
+    "status": {
+     "approved": 0.9829582589304744,
+     "void": 0.007989008474785134,
+     "received": 0.009052732594740542
+    },
+    "date": {
+     "match": 0.9840936082881853,
+     "other": 0.01590639171181471
+    },
+    "genuine": {
+     "ink": 0.0953494648991095,
+     "digital": 0.9046505351008906
+    }
+   }
+  },
+  {
+   "file": "docs/pasted_digital-9.jpg",
+   "label": "pasted_digital",
+   "capture": "scan",
+   "pred": "pasted_digital",
+   "trace": [
+    "anywhere:pass",
+    "in_box:pass",
+    "shape:pass",
+    "color:pass",
+    "issuer:pass",
+    "spelling:pass",
+    "status:pass",
+    "date:pass",
+    "genuine:FAIL"
+   ],
+   "scores": {
+    "anywhere": 0.67918,
+    "in_box": 0.97838,
+    "shape": 0.97241,
+    "color": 0.94331,
+    "issuer": 0.98967,
+    "spelling": 0.96615,
+    "status": 0.98177,
+    "date": 0.98504,
+    "genuine": 0.04209
+   },
+   "probabilities": {
+    "anywhere": {
+     "stamp": 0.679178699175393,
+     "none": 0.32082130082460697
+    },
+    "in_box": {
+     "stamp": 0.9783846672373524,
+     "empty": 0.021615332762647654
+    },
+    "shape": {
+     "round": 0.9724147177732099,
+     "rect": 0.027585282226789985
+    },
+    "color": {
+     "blue": 0.9433068541317685,
+     "red": 0.015247135231738616,
+     "grey": 0.04144601063649278
+    },
+    "issuer": {
+     "springfield": 0.9896718474806949,
+     "shelbyville": 0.010328152519305191
+    },
+    "spelling": {
+     "correct": 0.9661456770896157,
+     "fil": 0.022721568493675424,
+     "nf": 0.006929686868659104,
+     "ri": 0.00420306754804978
+    },
+    "status": {
+     "approved": 0.9817748693844354,
+     "void": 0.007979390457919837,
+     "received": 0.010245740157644706
+    },
+    "date": {
+     "match": 0.98504291340685,
+     "other": 0.01495708659314999
+    },
+    "genuine": {
+     "ink": 0.04208772791561884,
+     "digital": 0.9579122720843811
+    }
+   }
+  }
+ ],
+ "summary": {
+  "exact": "78/110",
+  "fraud_passed": "0/100",
+  "valid_flagged": "10/10",
+  "median_ms_per_pass": 189.5,
+  "per_class": {
+   "date_mismatch": "0/10",
+   "missing": "10/10",
+   "misspelled": "10/10",
+   "outside_box": "10/10",
+   "pasted_digital": "8/10",
+   "photocopy": "10/10",
+   "valid": "0/10",
+   "wrong_color": "10/10",
+   "wrong_issuer": "10/10",
+   "wrong_shape": "10/10",
+   "wrong_status": "0/10"
+  },
+  "per_capture": {
+   "clean": "21/26",
+   "photo": "30/45",
+   "scan": "27/39"
+  }
+ }
+}

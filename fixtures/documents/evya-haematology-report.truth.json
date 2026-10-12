@@ -1,0 +1,623 @@
+{
+ "note": "Hand-transcribed answer key for evya-haematology-report.webp. Units and ranges are printed one row below their test on this report; each test is paired with its own range here. 'highlighted' marks the values the lab printed inside a shaded box.",
+ "facility": "EVYA Multi Speciality Hospitals",
+ "pathologist": "DR.P.PRATHIMA, MD Pathologist",
+ "department": "Haematology",
+ "tests": [
+  {
+   "section": "Haemogram parameters",
+   "test": "Haemoglobin",
+   "value": 12.5,
+   "unit": "gms%",
+   "low": 11.5,
+   "high": 16.0,
+   "qualifier": "Female",
+   "method": "photometry",
+   "flag": "normal"
+  },
+  {
+   "section": "Haemogram parameters",
+   "test": "RBC Count",
+   "value": 4.62,
+   "unit": "mil/cu mm",
+   "low": 4.5,
+   "high": 5.1,
+   "qualifier": "Female",
+   "method": "Electronic Impedance",
+   "flag": "normal"
+  },
+  {
+   "section": "Haemogram parameters",
+   "test": "PCV (Haematocrit)",
+   "value": 37.3,
+   "unit": "%",
+   "low": 41.5,
+   "high": 50.4,
+   "method": "CALCULATED",
+   "flag": "low",
+   "highlighted": true
+  },
+  {
+   "section": "Haemogram parameters",
+   "test": "WBC Count",
+   "value": 10300,
+   "unit": "cells/cu mm",
+   "low": 4000,
+   "high": 11000,
+   "method": "Fluorescence Flow cytometry",
+   "flag": "normal"
+  },
+  {
+   "section": "Haemogram parameters",
+   "test": "Platelet Count",
+   "value": 3.05,
+   "unit": "lakhs/cumm",
+   "low": 1.5,
+   "high": 4.5,
+   "method": "Electronic Impedance",
+   "flag": "normal"
+  },
+  {
+   "section": "Red cell indices",
+   "test": "MCV",
+   "value": 80.7,
+   "unit": "fL",
+   "low": 80,
+   "high": 96,
+   "flag": "normal"
+  },
+  {
+   "section": "Red cell indices",
+   "test": "MCH",
+   "value": 27.0,
+   "unit": "pg",
+   "low": 27,
+   "high": 32,
+   "flag": "normal"
+  },
+  {
+   "section": "Red cell indices",
+   "test": "MCHC",
+   "value": 33.4,
+   "unit": "gms %",
+   "low": 33.4,
+   "high": 35.5,
+   "flag": "normal"
+  },
+  {
+   "section": "Total count and differential count",
+   "test": "Neutrophils",
+   "value": 60,
+   "unit": "%",
+   "low": 40,
+   "high": 75,
+   "qualifier": "> 14 Y",
+   "flag": "normal"
+  },
+  {
+   "section": "Total count and differential count",
+   "test": "Lymphocytes",
+   "value": 34,
+   "unit": "%",
+   "low": 20,
+   "high": 45,
+   "qualifier": "> 14 Y",
+   "flag": "normal"
+  },
+  {
+   "section": "Total count and differential count",
+   "test": "Monocytes",
+   "value": 2,
+   "unit": "%",
+   "low": 2,
+   "high": 10,
+   "flag": "normal"
+  },
+  {
+   "section": "Total count and differential count",
+   "test": "Eosinophils",
+   "value": 4,
+   "unit": "%",
+   "low": 0,
+   "high": 5,
+   "flag": "normal"
+  },
+  {
+   "section": "Total count and differential count",
+   "test": "Basophils",
+   "value": 0,
+   "unit": "%",
+   "low": 0,
+   "high": 2,
+   "flag": "normal"
+  },
+  {
+   "section": "ESR",
+   "test": "ESR I Hr",
+   "value": 32,
+   "unit": "mm",
+   "low": 0,
+   "high": 15,
+   "method": "westergen",
+   "flag": "high",
+   "highlighted": true
+  },
+  {
+   "section": "ESR",
+   "test": "ESR II Hr",
+   "value": 60,
+   "unit": "mm",
+   "low": 5,
+   "high": 20,
+   "method": "Westergren",
+   "flag": "high",
+   "highlighted": true
+  }
+ ],
+ "findings": [
+  {
+   "section": "Microscopic blood picture",
+   "test": "RBC",
+   "finding": "NORMOCYTIC NORMOCHROMIC"
+  },
+  {
+   "section": "Microscopic blood picture",
+   "test": "WBC",
+   "finding": "WITH IN NORMAL LIMITS"
+  },
+  {
+   "section": "Microscopic blood picture",
+   "test": "Platelets",
+   "finding": "ADEQUATE"
+  }
+ ],
+ "cell_roles": {
+  "note": "Role of each docTR line on this page, by OCR text, for scoring cell classification.",
+  "cells": [
+   {
+    "text": "EVYA",
+    "role": "other"
+   },
+   {
+    "text": "à",
+    "role": "other"
+   },
+   {
+    "text": "RUTCEERNTOURRETONE NECCEmE",
+    "role": "other"
+   },
+   {
+    "text": "MULTI SPECIALITY HOSPITALS",
+    "role": "other"
+   },
+   {
+    "text": "a",
+    "role": "other"
+   },
+   {
+    "text": "U",
+    "role": "other"
+   },
+   {
+    "text": "EET",
+    "role": "other"
+   },
+   {
+    "text": "CERTIFIED",
+    "role": "other"
+   },
+   {
+    "text": "PATIENT",
+    "role": "other"
+   },
+   {
+    "text": "MR",
+    "role": "other"
+   },
+   {
+    "text": "I -",
+    "role": "other"
+   },
+   {
+    "text": "- - D -",
+    "role": "other"
+   },
+   {
+    "text": "PRINT DATE/TIME",
+    "role": "other"
+   },
+   {
+    "text": "10.20 PM",
+    "role": "other"
+   },
+   {
+    "text": "TEST DESCRIPTION",
+    "role": "header"
+   },
+   {
+    "text": "RESULT",
+    "role": "header"
+   },
+   {
+    "text": "HAEMATOLOGY",
+    "role": "section"
+   },
+   {
+    "text": "HAEMOGRAM",
+    "role": "section"
+   },
+   {
+    "text": "UNITS",
+    "role": "header"
+   },
+   {
+    "text": "REFERENCE RANGES",
+    "role": "header"
+   },
+   {
+    "text": "PARAMETERS",
+    "role": "section"
+   },
+   {
+    "text": "Haemoglobin",
+    "role": "test_name"
+   },
+   {
+    "text": "12.5",
+    "role": "result"
+   },
+   {
+    "text": "(Methad: photometry)",
+    "role": "method"
+   },
+   {
+    "text": "gms%",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "Female: :",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "11.5-16.0",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "RBC Count",
+    "role": "test_name"
+   },
+   {
+    "text": "4.62",
+    "role": "result"
+   },
+   {
+    "text": "(Method: Electronic Impedance)",
+    "role": "method"
+   },
+   {
+    "text": "millcu mm",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "Female 1 4.5-5.1",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "PCV (Haematocrit)",
+    "role": "test_name"
+   },
+   {
+    "text": "37.3",
+    "role": "result"
+   },
+   {
+    "text": "(Method: CALCULATED)",
+    "role": "method"
+   },
+   {
+    "text": "%",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "41.5-50.4",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "WBC Count",
+    "role": "test_name"
+   },
+   {
+    "text": "10300",
+    "role": "result"
+   },
+   {
+    "text": "(Method: Fluorescence Flow cytometry)",
+    "role": "method"
+   },
+   {
+    "text": "cells/cu mm 4000-11000",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "Platelet Count",
+    "role": "test_name"
+   },
+   {
+    "text": "3.05",
+    "role": "result"
+   },
+   {
+    "text": "(Method: Electronic Impedance)",
+    "role": "method"
+   },
+   {
+    "text": "lakhs/cumm 1.5-4.5",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "RED CELLI INDICES",
+    "role": "section"
+   },
+   {
+    "text": "MCV",
+    "role": "test_name"
+   },
+   {
+    "text": "80.7",
+    "role": "result"
+   },
+   {
+    "text": "MCH",
+    "role": "test_name"
+   },
+   {
+    "text": "27,0",
+    "role": "result"
+   },
+   {
+    "text": "L",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "80-96",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "MCHC",
+    "role": "test_name"
+   },
+   {
+    "text": "33.4",
+    "role": "result"
+   },
+   {
+    "text": "pg",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "27-32",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "TOTAL COUNT AND DIFFERENTIAL COUNT",
+    "role": "section"
+   },
+   {
+    "text": "gms %",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "33.4-35.5",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "Neutrophils",
+    "role": "test_name"
+   },
+   {
+    "text": "60",
+    "role": "result"
+   },
+   {
+    "text": "Lymphocytes",
+    "role": "test_name"
+   },
+   {
+    "text": "34",
+    "role": "result"
+   },
+   {
+    "text": "%",
+    "role": "unit_or_range"
+   },
+   {
+    "text": ">14Y:40-75",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "Monocytes",
+    "role": "test_name"
+   },
+   {
+    "text": "02",
+    "role": "result"
+   },
+   {
+    "text": "%",
+    "role": "unit_or_range"
+   },
+   {
+    "text": ">1 14Y:20-45",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "Eosinophils",
+    "role": "test_name"
+   },
+   {
+    "text": "04",
+    "role": "result"
+   },
+   {
+    "text": "2-10",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "Basophils",
+    "role": "test_name"
+   },
+   {
+    "text": "00",
+    "role": "result"
+   },
+   {
+    "text": "0-5",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "%",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "MICROSCOPIC BLOOD PICTURE",
+    "role": "section"
+   },
+   {
+    "text": "0-2",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "RBC",
+    "role": "test_name"
+   },
+   {
+    "text": "WBC",
+    "role": "test_name"
+   },
+   {
+    "text": "NORMOCYTIC",
+    "role": "finding"
+   },
+   {
+    "text": "NORMOCHROMIC",
+    "role": "finding"
+   },
+   {
+    "text": "Platelets",
+    "role": "test_name"
+   },
+   {
+    "text": "WITH IN NORMAL LIMITS.",
+    "role": "finding"
+   },
+   {
+    "text": "ADEQUATE",
+    "role": "finding"
+   },
+   {
+    "text": "ESR",
+    "role": "section"
+   },
+   {
+    "text": "ESRI Hr",
+    "role": "test_name"
+   },
+   {
+    "text": "32",
+    "role": "result"
+   },
+   {
+    "text": "(Method: westergen)",
+    "role": "method"
+   },
+   {
+    "text": "mm",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "0-15",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "ESR I Hr.",
+    "role": "test_name"
+   },
+   {
+    "text": "60",
+    "role": "result"
+   },
+   {
+    "text": "(Method: Westergren)",
+    "role": "method"
+   },
+   {
+    "text": "mm",
+    "role": "unit_or_range"
+   },
+   {
+    "text": "5-20",
+    "role": "unit_or_range"
+   },
+   {
+    "text": ": END OF THE REPORT",
+    "role": "other"
+   },
+   {
+    "text": "OSSHO",
+    "role": "other"
+   },
+   {
+    "text": "LAB INCHARGE",
+    "role": "other"
+   },
+   {
+    "text": "COMMENTS/NOTE:",
+    "role": "other"
+   },
+   {
+    "text": "DR.P.PRATHIMA",
+    "role": "other"
+   },
+   {
+    "text": "Kindly Corrmiate Clincally, Discuss with the Treating Doctor fora any Clanfications,",
+    "role": "other"
+   },
+   {
+    "text": "MD.PATHOLOGIST",
+    "role": "other"
+   },
+   {
+    "text": "#5 5-5-1211, Opp. Panama Arch, Panama",
+    "role": "other"
+   },
+   {
+    "text": "Tel:",
+    "role": "other"
+   },
+   {
+    "text": "040-24123456 / 24123344 I E-mail:",
+    "role": "other"
+   },
+   {
+    "text": "Godowns, Ganesh Nagar - 1811, Vanasthalipuram,",
+    "role": "other"
+   },
+   {
+    "text": "Hyderabad- 500 068.",
+    "role": "other"
+   },
+   {
+    "text": "Fw www.facebook.o com/evvahospitals I a WAA",
+    "role": "other"
+   },
+   {
+    "text": "exgahospitais@gmail.com",
+    "role": "other"
+   },
+   {
+    "text": "www.exyahospitals.com",
+    "role": "other"
+   }
+  ]
+ }
+}

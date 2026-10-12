@@ -1,0 +1,42 @@
+"""HTTP client for the local extraction service (services/extract/server.py)."""
+
+from __future__ import annotations
+
+import base64
+from typing import Any
+
+import httpx
+
+
+class ExtractClient:
+    def __init__(self, base_url: str = "http://127.0.0.1:8030", timeout: float = 180):
+        self.base_url = base_url.rstrip("/")
+        self.timeout = timeout
+
+    def extract(self, model: str, document: bytes, page: int, schema: dict[str, str], threshold: float = 0.5,
+                segment: bool = True) -> dict[str, Any]:
+        """One page of a PDF, or a scanned image (read with OCR): its rendered image (base64 JPEG), the
+        spans, and one box per text line of each span. `segment` splits the page at numbered items
+        first, so no span runs into the next item."""
+        kind = "pdf" if document.startswith(b"%PDF") else "image"
+        response = httpx.post(
+            f"{self.base_url}/extract",
+            json={"model": model, kind: base64.b64encode(document).decode("ascii"), "page": page,
+                  "schema": schema, "threshold": threshold, "segment": segment},
+            timeout=self.timeout,
+        )
+        return self._json(response)
+
+    def ocr(self, image: bytes) -> dict[str, Any]:
+        """A scanned page as OCR cells (text, box, row) plus the page image (base64 JPEG)."""
+        response = httpx.post(f"{self.base_url}/ocr", json={"image": base64.b64encode(image).decode("ascii")},
+                              timeout=self.timeout)
+        return self._json(response)
+
+    @staticmethod
+    def _json(response: httpx.Response) -> dict[str, Any]:
+        if response.status_code == 422:
+            detail = response.json().get("detail")
+            raise ValueError(detail if isinstance(detail, str) else "The extraction service rejected the request.")
+        response.raise_for_status()
+        return response.json()

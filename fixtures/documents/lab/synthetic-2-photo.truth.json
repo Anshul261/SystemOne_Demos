@@ -1,0 +1,127 @@
+{
+ "facility": "Lakeside Clinical Laboratory",
+ "tests": [
+  {
+   "section": "Kidney Function Test",
+   "test": "Blood Urea",
+   "value": 33.0,
+   "unit": "mg/dL",
+   "low": 15,
+   "high": 40,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Serum Creatinine",
+   "value": 1.14,
+   "unit": "mg/dL",
+   "low": 0.6,
+   "high": 1.3,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Uric Acid",
+   "value": 6.4,
+   "unit": "mg/dL",
+   "low": 3.5,
+   "high": 7.2,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Sodium",
+   "value": 147.0,
+   "unit": "mmol/L",
+   "low": 135,
+   "high": 145,
+   "flag": "high",
+   "highlighted": false
+  },
+  {
+   "section": "Kidney Function Test",
+   "test": "Potassium",
+   "value": 3.8,
+   "unit": "mmol/L",
+   "low": 3.5,
+   "high": 5.1,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Lipid Profile",
+   "test": "Total Cholesterol",
+   "value": 141.0,
+   "unit": "mg/dL",
+   "low": 125,
+   "high": 200,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Lipid Profile",
+   "test": "Triglycerides",
+   "value": 3.0,
+   "unit": "mg/dL",
+   "low": 40,
+   "high": 150,
+   "flag": "low",
+   "highlighted": false
+  },
+  {
+   "section": "Lipid Profile",
+   "test": "HDL Cholesterol",
+   "value": 39.0,
+   "unit": "mg/dL",
+   "low": 40,
+   "high": 60,
+   "flag": "low",
+   "highlighted": false
+  },
+  {
+   "section": "Lipid Profile",
+   "test": "LDL Cholesterol",
+   "value": 102.0,
+   "unit": "mg/dL",
+   "low": 50,
+   "high": 130,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Thyroid Profile",
+   "test": "T3",
+   "value": 169.0,
+   "unit": "ng/dL",
+   "low": 80,
+   "high": 200,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Thyroid Profile",
+   "test": "T4",
+   "value": 9.6,
+   "unit": "\u00b5g/dL",
+   "low": 5.1,
+   "high": 14.1,
+   "flag": "normal",
+   "highlighted": false
+  },
+  {
+   "section": "Thyroid Profile",
+   "test": "TSH",
+   "value": 5.17,
+   "unit": "\u00b5IU/mL",
+   "low": 0.27,
+   "high": 4.2,
+   "flag": "high",
+   "highlighted": false
+  }
+ ],
+ "findings": [],
+ "capture": "photo"
+}

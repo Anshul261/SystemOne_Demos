@@ -1,0 +1,2209 @@
+{
+ "summary": {
+  "model": "LiquidAI/d1-omni-600M",
+  "revision": "414f8d6438174f5b2133a9c21a478fc42625e308",
+  "n": 54,
+  "strategies": {
+   "direct": {
+    "exact": 6,
+    "binary": 17,
+    "fraud_passed": 37,
+    "valid_flagged": 0,
+    "median_ms": 67.8,
+    "per_class": {
+     "valid": {
+      "valid": 6
+     },
+     "missing": {
+      "wrong_status": 6
+     },
+     "outside_box": {
+      "wrong_status": 4,
+      "valid": 2
+     },
+     "wrong_shape": {
+      "valid": 5,
+      "wrong_status": 1
+     },
+     "wrong_color": {
+      "valid": 6
+     },
+     "wrong_issuer": {
+      "valid": 6
+     },
+     "misspelled": {
+      "valid": 6
+     },
+     "wrong_status": {
+      "valid": 6
+     },
+     "date_mismatch": {
+      "valid": 6
+     }
+    }
+   },
+   "decomposed": {
+    "exact": 6,
+    "binary": 48,
+    "fraud_passed": 0,
+    "valid_flagged": 6,
+    "median_ms": 228.7,
+    "per_class": {
+     "valid": {
+      "missing": 6
+     },
+     "missing": {
+      "missing": 6
+     },
+     "outside_box": {
+      "missing": 6
+     },
+     "wrong_shape": {
+      "missing": 6
+     },
+     "wrong_color": {
+      "missing": 6
+     },
+     "wrong_issuer": {
+      "missing": 6
+     },
+     "misspelled": {
+      "missing": 6
+     },
+     "wrong_status": {
+      "missing": 6
+     },
+     "date_mismatch": {
+      "missing": 6
+     }
+    }
+   },
+   "crop": {
+    "exact": 6,
+    "binary": 48,
+    "fraud_passed": 0,
+    "valid_flagged": 6,
+    "median_ms": 93.3,
+    "per_class": {
+     "valid": {
+      "missing": 6
+     },
+     "missing": {
+      "missing": 6
+     },
+     "outside_box": {
+      "missing": 6
+     },
+     "wrong_shape": {
+      "missing": 6
+     },
+     "wrong_color": {
+      "missing": 6
+     },
+     "wrong_issuer": {
+      "missing": 6
+     },
+     "misspelled": {
+      "missing": 6
+     },
+     "wrong_status": {
+      "missing": 6
+     },
+     "date_mismatch": {
+      "missing": 6
+     }
+    }
+   },
+   "reference": {
+    "exact": null,
+    "binary": 36,
+    "fraud_passed": 12,
+    "valid_flagged": 6,
+    "median_ms": 23.8,
+    "per_class": {
+     "valid": {
+      "flag": 6
+     },
+     "missing": {
+      "valid": 6
+     },
+     "outside_box": {
+      "valid": 6
+     },
+     "wrong_shape": {
+      "flag": 6
+     },
+     "wrong_color": {
+      "flag": 6
+     },
+     "wrong_issuer": {
+      "flag": 6
+     },
+     "misspelled": {
+      "flag": 6
+     },
+     "wrong_status": {
+      "flag": 6
+     },
+     "date_mismatch": {
+      "flag": 6
+     }
+    }
+   }
+  }
+ },
+ "rows": [
+  {
+   "file": "docs/valid-0.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 86.85893399996303,
+    "decomposed": 257.214240000053,
+    "crop": 108.81234900000436,
+    "reference": 25.512832000003982
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.588,
+     "status": "none",
+     "date": 0.02,
+     "in_box": 0.284
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.029,
+     "status": "none",
+     "date": 0.87
+    },
+    "reference": 0.096
+   }
+  },
+  {
+   "file": "docs/valid-1.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 68.12213399996381,
+    "decomposed": 231.13363599998138,
+    "crop": 94.60203300000103,
+    "reference": 23.744721000014124
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.692,
+     "status": "none",
+     "date": 0.01,
+     "in_box": 0.35
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.038,
+     "status": "none",
+     "date": 0.892
+    },
+    "reference": 0.058
+   }
+  },
+  {
+   "file": "docs/valid-2.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 65.97207099997604,
+    "decomposed": 226.0387150000156,
+    "crop": 91.76894399996627,
+    "reference": 23.803221000036956
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.658,
+     "status": "none",
+     "date": 0.037,
+     "in_box": 0.173
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.143,
+     "status": "none",
+     "date": 0.804
+    },
+    "reference": 0.108
+   }
+  },
+  {
+   "file": "docs/valid-3.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 68.42412200001036,
+    "decomposed": 229.1393360000029,
+    "crop": 104.11600099996576,
+    "reference": 23.093431999996028
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.638,
+     "status": "none",
+     "date": 0.013,
+     "in_box": 0.32
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.126,
+     "status": "none",
+     "date": 0.749
+    },
+    "reference": 0.109
+   }
+  },
+  {
+   "file": "docs/valid-4.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.94147299998576,
+    "decomposed": 226.63770700000896,
+    "crop": 91.45981599999686,
+    "reference": 24.344470000016827
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.666,
+     "status": "none",
+     "date": 0.018,
+     "in_box": 0.253
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.086,
+     "status": "none",
+     "date": 0.878
+    },
+    "reference": 0.133
+   }
+  },
+  {
+   "file": "docs/valid-5.png",
+   "label": "valid",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 70.44927100002951,
+    "decomposed": 233.07942499997125,
+    "crop": 95.12743000004775,
+    "reference": 23.56356299998197
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.648,
+     "status": "none",
+     "date": 0.042,
+     "in_box": 0.162
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.11,
+     "status": "none",
+     "date": 0.782
+    },
+    "reference": 0.042
+   }
+  },
+  {
+   "file": "docs/missing-0.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 66.20448400002488,
+    "decomposed": 226.25484600001755,
+    "crop": 91.7345650000243,
+    "reference": 24.72541000003048
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.57,
+     "status": "none",
+     "date": 0.004,
+     "in_box": 0.075
+    },
+    "crop": {
+     "present": 0.013,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.919,
+     "status": "none",
+     "date": 0.885
+    },
+    "reference": 0.618
+   }
+  },
+  {
+   "file": "docs/missing-1.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 68.64201700000194,
+    "decomposed": 230.53361099999847,
+    "crop": 93.32069900000306,
+    "reference": 24.28772400003254
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.699,
+     "status": "none",
+     "date": 0.015,
+     "in_box": 0.168
+    },
+    "crop": {
+     "present": 0.019,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.895,
+     "status": "none",
+     "date": 0.878
+    },
+    "reference": 0.619
+   }
+  },
+  {
+   "file": "docs/missing-2.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 66.49776199998314,
+    "decomposed": 227.56739499999412,
+    "crop": 91.60388699996247,
+    "reference": 26.30951499997991
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.704,
+     "status": "none",
+     "date": 0.006,
+     "in_box": 0.193
+    },
+    "crop": {
+     "present": 0.027,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.914,
+     "status": "none",
+     "date": 0.924
+    },
+    "reference": 0.634
+   }
+  },
+  {
+   "file": "docs/missing-3.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 71.2714560000336,
+    "decomposed": 230.65109300000586,
+    "crop": 96.2625900000944,
+    "reference": 23.590252000019518
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.625,
+     "status": "none",
+     "date": 0.006,
+     "in_box": 0.209
+    },
+    "crop": {
+     "present": 0.022,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.903,
+     "status": "none",
+     "date": 0.896
+    },
+    "reference": 0.586
+   }
+  },
+  {
+   "file": "docs/missing-4.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 67.74282499998208,
+    "decomposed": 226.87518999998701,
+    "crop": 91.83441099997935,
+    "reference": 23.890781999966748
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.742,
+     "status": "none",
+     "date": 0.028,
+     "in_box": 0.189
+    },
+    "crop": {
+     "present": 0.013,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.93,
+     "status": "none",
+     "date": 0.905
+    },
+    "reference": 0.582
+   }
+  },
+  {
+   "file": "docs/missing-5.png",
+   "label": "missing",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 69.02995400002965,
+    "decomposed": 231.4064419999795,
+    "crop": 94.4145679999906,
+    "reference": 24.965724000026057
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.654,
+     "status": "none",
+     "date": 0.008,
+     "in_box": 0.242
+    },
+    "crop": {
+     "present": 0.01,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.913,
+     "status": "none",
+     "date": 0.902
+    },
+    "reference": 0.575
+   }
+  },
+  {
+   "file": "docs/outside_box-0.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 66.82429300002468,
+    "decomposed": 226.51969499997904,
+    "crop": 93.22661799996013,
+    "reference": 25.49056800000926
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.816,
+     "status": "none",
+     "date": 0.025,
+     "in_box": 0.243
+    },
+    "crop": {
+     "present": 0.016,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.934,
+     "status": "none",
+     "date": 0.902
+    },
+    "reference": 0.642
+   }
+  },
+  {
+   "file": "docs/outside_box-1.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 68.26870399999052,
+    "decomposed": 230.50792999998748,
+    "crop": 95.96913400002904,
+    "reference": 23.05176000004394
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.806,
+     "status": "none",
+     "date": 0.04,
+     "in_box": 0.239
+    },
+    "crop": {
+     "present": 0.016,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.937,
+     "status": "none",
+     "date": 0.922
+    },
+    "reference": 0.607
+   }
+  },
+  {
+   "file": "docs/outside_box-2.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 77.41949699999395,
+    "decomposed": 227.24924799996415,
+    "crop": 91.21924900006206,
+    "reference": 23.25841300000775
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.003,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.794,
+     "status": "none",
+     "date": 0.017,
+     "in_box": 0.26
+    },
+    "crop": {
+     "present": 0.017,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.922,
+     "status": "none",
+     "date": 0.876
+    },
+    "reference": 0.613
+   }
+  },
+  {
+   "file": "docs/outside_box-3.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 70.86793299998817,
+    "decomposed": 229.20770900003617,
+    "crop": 95.7217240000432,
+    "reference": 23.470670999984122
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.665,
+     "status": "none",
+     "date": 0.005,
+     "in_box": 0.128
+    },
+    "crop": {
+     "present": 0.008,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.917,
+     "status": "none",
+     "date": 0.905
+    },
+    "reference": 0.594
+   }
+  },
+  {
+   "file": "docs/outside_box-4.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 65.84277099995006,
+    "decomposed": 227.0450100000403,
+    "crop": 92.98601199998302,
+    "reference": 24.345418999985213
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.716,
+     "status": "none",
+     "date": 0.007,
+     "in_box": 0.087
+    },
+    "crop": {
+     "present": 0.008,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.91,
+     "status": "none",
+     "date": 0.896
+    },
+    "reference": 0.588
+   }
+  },
+  {
+   "file": "docs/outside_box-5.png",
+   "label": "outside_box",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "valid"
+   },
+   "ms": {
+    "direct": 67.79342200002247,
+    "decomposed": 229.79484800004002,
+    "crop": 95.22335700000895,
+    "reference": 24.668626999982735
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.79,
+     "status": "none",
+     "date": 0.003,
+     "in_box": 0.266
+    },
+    "crop": {
+     "present": 0.013,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.908,
+     "status": "none",
+     "date": 0.899
+    },
+    "reference": 0.594
+   }
+  },
+  {
+   "file": "docs/wrong_shape-0.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.65096099999346,
+    "decomposed": 226.79894400005196,
+    "crop": 92.53866099993502,
+    "reference": 24.62551200000007
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.003,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.81,
+     "status": "none",
+     "date": 0.009,
+     "in_box": 0.413
+    },
+    "crop": {
+     "present": 0.003,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.912,
+     "status": "none",
+     "date": 0.682
+    },
+    "reference": 0.048
+   }
+  },
+  {
+   "file": "docs/wrong_shape-1.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.91069900003777,
+    "decomposed": 230.96744200000785,
+    "crop": 111.6745019999712,
+    "reference": 23.409611000033692
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.785,
+     "status": "none",
+     "date": 0.003,
+     "in_box": 0.49
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.442,
+     "status": "none",
+     "date": 0.726
+    },
+    "reference": 0.051
+   }
+  },
+  {
+   "file": "docs/wrong_shape-2.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "wrong_status",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 69.98545199996897,
+    "decomposed": 228.83584900000642,
+    "crop": 90.86082599998235,
+    "reference": 23.068454999986443
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.718,
+     "status": "none",
+     "date": 0.003,
+     "in_box": 0.271
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.833,
+     "status": "none",
+     "date": 0.762
+    },
+    "reference": 0.087
+   }
+  },
+  {
+   "file": "docs/wrong_shape-3.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.4432529999649,
+    "decomposed": 228.63904700000148,
+    "crop": 94.27494999994224,
+    "reference": 24.783119000005627
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.615,
+     "status": "none",
+     "date": 0.017,
+     "in_box": 0.312
+    },
+    "crop": {
+     "present": 0.003,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.947,
+     "status": "none",
+     "date": 0.732
+    },
+    "reference": 0.111
+   }
+  },
+  {
+   "file": "docs/wrong_shape-4.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.00080199996228,
+    "decomposed": 227.09812200002943,
+    "crop": 92.03856400000632,
+    "reference": 23.797758000000613
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.576,
+     "status": "none",
+     "date": 0.013,
+     "in_box": 0.265
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.782,
+     "status": "none",
+     "date": 0.549
+    },
+    "reference": 0.089
+   }
+  },
+  {
+   "file": "docs/wrong_shape-5.png",
+   "label": "wrong_shape",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.99681299997928,
+    "decomposed": 229.2287070000043,
+    "crop": 93.96079899994447,
+    "reference": 24.642228000004707
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.765,
+     "status": "none",
+     "date": 0.009,
+     "in_box": 0.337
+    },
+    "crop": {
+     "present": 0.003,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.753,
+     "status": "none",
+     "date": 0.627
+    },
+    "reference": 0.052
+   }
+  },
+  {
+   "file": "docs/wrong_color-0.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.29991699998072,
+    "decomposed": 227.3562689999835,
+    "crop": 91.66044199997714,
+    "reference": 23.54969999998957
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.517,
+     "status": "none",
+     "date": 0.006,
+     "in_box": 0.099
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.038,
+     "status": "none",
+     "date": 0.883
+    },
+    "reference": 0.126
+   }
+  },
+  {
+   "file": "docs/wrong_color-1.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.93835700000272,
+    "decomposed": 230.75416299997187,
+    "crop": 96.1005870000804,
+    "reference": 23.408027000016318
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.636,
+     "status": "none",
+     "date": 0.015,
+     "in_box": 0.243
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.003,
+     "status": "none",
+     "date": 0.867
+    },
+    "reference": 0.062
+   }
+  },
+  {
+   "file": "docs/wrong_color-2.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.88427300002786,
+    "decomposed": 227.02601399998912,
+    "crop": 90.8830870000088,
+    "reference": 23.420115999954305
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.692,
+     "status": "none",
+     "date": 0.016,
+     "in_box": 0.206
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.061,
+     "status": "none",
+     "date": 0.908
+    },
+    "reference": 0.124
+   }
+  },
+  {
+   "file": "docs/wrong_color-3.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.50258399995346,
+    "decomposed": 228.21923999998717,
+    "crop": 94.89337300004763,
+    "reference": 23.65981500003045
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.64,
+     "status": "none",
+     "date": 0.011,
+     "in_box": 0.08
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.022,
+     "status": "none",
+     "date": 0.891
+    },
+    "reference": 0.053
+   }
+  },
+  {
+   "file": "docs/wrong_color-4.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 65.17285099999981,
+    "decomposed": 225.45449200003986,
+    "crop": 91.67852500002027,
+    "reference": 23.905163999984325
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.688,
+     "status": "none",
+     "date": 0.025,
+     "in_box": 0.225
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "none",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.005,
+     "status": "none",
+     "date": 0.928
+    },
+    "reference": 0.075
+   }
+  },
+  {
+   "file": "docs/wrong_color-5.png",
+   "label": "wrong_color",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.3363029999905,
+    "decomposed": 229.1150379999749,
+    "crop": 104.2242739999324,
+    "reference": 24.601187999962804
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.633,
+     "status": "none",
+     "date": 0.017,
+     "in_box": 0.247
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.047,
+     "status": "none",
+     "date": 0.918
+    },
+    "reference": 0.07
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-0.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 68.2707049999749,
+    "decomposed": 226.3783010000111,
+    "crop": 91.71250199995029,
+    "reference": 23.33144699997547
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.003,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.765,
+     "status": "none",
+     "date": 0.011,
+     "in_box": 0.321
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.558,
+     "status": "none",
+     "date": 0.901
+    },
+    "reference": 0.081
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-1.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.90689799998972,
+    "decomposed": 229.7870290000219,
+    "crop": 94.33444700005111,
+    "reference": 23.043620000009923
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.651,
+     "status": "none",
+     "date": 0.006,
+     "in_box": 0.201
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.053,
+     "status": "none",
+     "date": 0.833
+    },
+    "reference": 0.056
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-2.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.09823400001369,
+    "decomposed": 226.2897460000204,
+    "crop": 92.08460499996818,
+    "reference": 23.666868000020713
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.632,
+     "status": "none",
+     "date": 0.006,
+     "in_box": 0.393
+    },
+    "crop": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.574,
+     "status": "none",
+     "date": 0.842
+    },
+    "reference": 0.104
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-3.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.51772300003722,
+    "decomposed": 229.90582300002416,
+    "crop": 93.77320599998029,
+    "reference": 23.77596700000595
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.458,
+     "status": "none",
+     "date": 0.018,
+     "in_box": 0.135
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.036,
+     "status": "approved",
+     "date": 0.853
+    },
+    "reference": 0.086
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-4.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.18363500001578,
+    "decomposed": 226.30024500000445,
+    "crop": 92.09871100000555,
+    "reference": 23.3820429999696
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.656,
+     "status": "none",
+     "date": 0.04,
+     "in_box": 0.252
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.082,
+     "status": "none",
+     "date": 0.883
+    },
+    "reference": 0.079
+   }
+  },
+  {
+   "file": "docs/wrong_issuer-5.png",
+   "label": "wrong_issuer",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 71.96013300000459,
+    "decomposed": 228.8549100000523,
+    "crop": 94.1426999999635,
+    "reference": 23.970624999947177
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.64,
+     "status": "none",
+     "date": 0.016,
+     "in_box": 0.176
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.088,
+     "status": "none",
+     "date": 0.811
+    },
+    "reference": 0.112
+   }
+  },
+  {
+   "file": "docs/misspelled-0.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 65.72105399999373,
+    "decomposed": 226.5072170000053,
+    "crop": 92.70852100002003,
+    "reference": 23.822771000027387
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.651,
+     "status": "none",
+     "date": 0.017,
+     "in_box": 0.271
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.041,
+     "status": "none",
+     "date": 0.848
+    },
+    "reference": 0.079
+   }
+  },
+  {
+   "file": "docs/misspelled-1.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.1529210000017,
+    "decomposed": 230.17879000002495,
+    "crop": 92.95575799995959,
+    "reference": 23.25970200001848
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.727,
+     "status": "none",
+     "date": 0.031,
+     "in_box": 0.358
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.42,
+     "status": "none",
+     "date": 0.893
+    },
+    "reference": 0.103
+   }
+  },
+  {
+   "file": "docs/misspelled-2.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 65.71058800000174,
+    "decomposed": 225.30831900002113,
+    "crop": 90.8983919999855,
+    "reference": 23.389173999987634
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.665,
+     "status": "none",
+     "date": 0.023,
+     "in_box": 0.318
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.112,
+     "status": "none",
+     "date": 0.83
+    },
+    "reference": 0.071
+   }
+  },
+  {
+   "file": "docs/misspelled-3.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.59307300001183,
+    "decomposed": 229.03785399995513,
+    "crop": 96.87741499999447,
+    "reference": 23.24793299999328
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.708,
+     "status": "none",
+     "date": 0.018,
+     "in_box": 0.262
+    },
+    "crop": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.575,
+     "status": "none",
+     "date": 0.897
+    },
+    "reference": 0.057
+   }
+  },
+  {
+   "file": "docs/misspelled-4.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 72.27511700000377,
+    "decomposed": 226.2729550000131,
+    "crop": 92.25781399993593,
+    "reference": 23.442579999993995
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.714,
+     "status": "none",
+     "date": 0.005,
+     "in_box": 0.246
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.051,
+     "status": "none",
+     "date": 0.892
+    },
+    "reference": 0.093
+   }
+  },
+  {
+   "file": "docs/misspelled-5.png",
+   "label": "misspelled",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 69.36616699999831,
+    "decomposed": 233.3533600000237,
+    "crop": 94.20213000004196,
+    "reference": 23.476401000039004
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.715,
+     "status": "none",
+     "date": 0.045,
+     "in_box": 0.232
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.004,
+     "status": "none",
+     "date": 0.873
+    },
+    "reference": 0.074
+   }
+  },
+  {
+   "file": "docs/wrong_status-0.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.00577399999474,
+    "decomposed": 226.66054600000507,
+    "crop": 91.5407100000607,
+    "reference": 23.51542700000664
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.543,
+     "status": "none",
+     "date": 0.021,
+     "in_box": 0.189
+    },
+    "crop": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.02,
+     "status": "none",
+     "date": 0.768
+    },
+    "reference": 0.062
+   }
+  },
+  {
+   "file": "docs/wrong_status-1.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.67102000003433,
+    "decomposed": 232.14215600000898,
+    "crop": 94.79307599997355,
+    "reference": 26.008787000023403
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.51,
+     "status": "none",
+     "date": 0.024,
+     "in_box": 0.298
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.045,
+     "status": "none",
+     "date": 0.834
+    },
+    "reference": 0.053
+   }
+  },
+  {
+   "file": "docs/wrong_status-2.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 72.24643400002151,
+    "decomposed": 226.5020459999505,
+    "crop": 90.93263000005436,
+    "reference": 23.032892999992782
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.565,
+     "status": "none",
+     "date": 0.014,
+     "in_box": 0.298
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.116,
+     "status": "none",
+     "date": 0.838
+    },
+    "reference": 0.113
+   }
+  },
+  {
+   "file": "docs/wrong_status-3.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 70.21515499997122,
+    "decomposed": 229.65787900000123,
+    "crop": 101.09959999999774,
+    "reference": 23.828255000012177
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.556,
+     "status": "none",
+     "date": 0.023,
+     "in_box": 0.242
+    },
+    "crop": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.024,
+     "status": "none",
+     "date": 0.84
+    },
+    "reference": 0.046
+   }
+  },
+  {
+   "file": "docs/wrong_status-4.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 73.45560800001749,
+    "decomposed": 227.45642299997826,
+    "crop": 91.0046360000365,
+    "reference": 24.06455499999538
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.541,
+     "status": "none",
+     "date": 0.022,
+     "in_box": 0.248
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.032,
+     "status": "none",
+     "date": 0.822
+    },
+    "reference": 0.126
+   }
+  },
+  {
+   "file": "docs/wrong_status-5.png",
+   "label": "wrong_status",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 71.50000100000398,
+    "decomposed": 230.28679600002988,
+    "crop": 94.76435499999525,
+    "reference": 23.86023200000409
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.002,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.344,
+     "status": "none",
+     "date": 0.012,
+     "in_box": 0.133
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "none",
+     "issuer": "other",
+     "spelling": 0.038,
+     "status": "none",
+     "date": 0.88
+    },
+    "reference": 0.108
+   }
+  },
+  {
+   "file": "docs/date_mismatch-0.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.52964099998826,
+    "decomposed": 226.43489199998612,
+    "crop": 91.19055600001502,
+    "reference": 24.10662400001229
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.74,
+     "status": "none",
+     "date": 0.023,
+     "in_box": 0.123
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.002,
+     "status": "none",
+     "date": 0.704
+    },
+    "reference": 0.059
+   }
+  },
+  {
+   "file": "docs/date_mismatch-1.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 67.64381700003241,
+    "decomposed": 229.29235499998413,
+    "crop": 94.75584300002993,
+    "reference": 23.69817599998214
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.643,
+     "status": "none",
+     "date": 0.006,
+     "in_box": 0.18
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.291,
+     "status": "none",
+     "date": 0.816
+    },
+    "reference": 0.121
+   }
+  },
+  {
+   "file": "docs/date_mismatch-2.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 66.29258300000629,
+    "decomposed": 226.06653700000834,
+    "crop": 91.95382700005439,
+    "reference": 24.100776000011592
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.631,
+     "status": "none",
+     "date": 0.006,
+     "in_box": 0.217
+    },
+    "crop": {
+     "present": 0.0,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.107,
+     "status": "none",
+     "date": 0.77
+    },
+    "reference": 0.137
+   }
+  },
+  {
+   "file": "docs/date_mismatch-3.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 68.13326200000347,
+    "decomposed": 230.0019620000171,
+    "crop": 94.03889999998682,
+    "reference": 23.952233999978034
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.696,
+     "status": "none",
+     "date": 0.02,
+     "in_box": 0.216
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.425,
+     "status": "none",
+     "date": 0.838
+    },
+    "reference": 0.071
+   }
+  },
+  {
+   "file": "docs/date_mismatch-4.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 73.31311199999391,
+    "decomposed": 226.44140400001334,
+    "crop": 90.96216500000764,
+    "reference": 23.233683999990262
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.609,
+     "status": "none",
+     "date": 0.015,
+     "in_box": 0.228
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.03,
+     "status": "none",
+     "date": 0.755
+    },
+    "reference": 0.083
+   }
+  },
+  {
+   "file": "docs/date_mismatch-5.png",
+   "label": "date_mismatch",
+   "pred": {
+    "direct": "valid",
+    "decomposed": "missing",
+    "crop": "missing",
+    "reference": "flag"
+   },
+   "ms": {
+    "direct": 68.42733299998827,
+    "decomposed": 230.86381600001005,
+    "crop": 94.38081300004342,
+    "reference": 23.19106599998122
+   },
+   "raw": {
+    "decomposed": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "red",
+     "issuer": "other",
+     "spelling": 0.726,
+     "status": "none",
+     "date": 0.013,
+     "in_box": 0.166
+    },
+    "crop": {
+     "present": 0.001,
+     "shape": "rect",
+     "color": "black",
+     "issuer": "other",
+     "spelling": 0.104,
+     "status": "none",
+     "date": 0.829
+    },
+    "reference": 0.066
+   }
+  }
+ ]
+}

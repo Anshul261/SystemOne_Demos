@@ -1,0 +1,16 @@
+[project]
+name = "systemone-d1-service"
+version = "0.1.0"
+description = "Local LiquidAI d1 decision API for SystemOne Demos"
+requires-python = ">=3.12"
+dependencies = [
+    "torch==2.14.1",
+    "torchvision",
+    "transformers==5.19.0",
+    "pillow",
+    "fastapi==0.142.2",
+    "uvicorn==0.54.0",
+]
+
+[tool.uv]
+package = false

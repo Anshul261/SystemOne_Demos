@@ -36,7 +36,11 @@ CLINIC_QUEUES = {
     "symptom_question": "clinical_review",
     "other": "clinical_review",
 }
-CLINIC_PRIORITIES = ["routine", "soon", "urgent"]
+CLINIC_PRIORITIES = {
+    "routine": "Can wait for a normal reply or appointment",
+    "soon": "Needs attention within a few days, such as medicine running out",
+    "urgent": "Needs a clinician now: severe symptoms happening right now",
+}
 CLINIC_TOPICS = ["symptoms", "medication", "lab_results", "scheduling", "billing"]
 
 HELPDESK_QUEUES = {
@@ -47,7 +51,12 @@ HELPDESK_QUEUES = {
     "expense_reimbursement": "Employee travel and expense claims",
     "manager_approval": "Requests that require a manager's approval",
 }
-HELPDESK_PRIORITIES = ["low", "normal", "high", "urgent"]
+HELPDESK_PRIORITIES = {
+    "low": "A question or minor issue with no deadline",
+    "normal": "Should be handled within the week",
+    "high": "Will block the employee's work soon, such as by tomorrow",
+    "urgent": "Blocks the employee's work right now",
+}
 
 
 def _single(value: Decision | list[Decision], task: str) -> Decision:

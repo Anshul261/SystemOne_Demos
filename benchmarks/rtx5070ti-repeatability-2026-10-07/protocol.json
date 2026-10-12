@@ -1,0 +1,77 @@
+{
+  "rounds": 5,
+  "micro_requests_per_round": 500,
+  "warmup_requests_per_round": 50,
+  "browser_iterations_per_round": 10,
+  "seed": 20261007,
+  "orders": [
+    [
+      "piko",
+      "rpa",
+      "piko-excel",
+      "parabank"
+    ],
+    [
+      "rpa",
+      "piko-excel",
+      "parabank",
+      "piko"
+    ],
+    [
+      "piko-excel",
+      "parabank",
+      "piko",
+      "rpa"
+    ],
+    [
+      "parabank",
+      "piko",
+      "rpa",
+      "piko-excel"
+    ],
+    [
+      "piko",
+      "rpa",
+      "piko-excel",
+      "parabank"
+    ]
+  ],
+  "system": {
+    "machine": "x86_64",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.13.7",
+    "logical_cpu_count": 10,
+    "host_memory_gib": 54.93,
+    "gpu": "NVIDIA GeForce RTX 5070 Ti, 617.14, 12.0",
+    "git_commit": "fa7e14a446fca34cd9dace33a1fdd8d5a5369dab",
+    "packages": {
+      "httpx": "0.28.1",
+      "openpyxl": "3.1.5",
+      "playwright": "1.55.0"
+    }
+  },
+  "model": {
+    "status": "ok",
+    "model": "fastino/GLiNER2.5-Decide",
+    "device": "cuda"
+  },
+  "model_cache_revision": "5a7adf72a23b4d311abae6ce050d7f0012bb3416",
+  "source_sha256": {
+    "benchmark.py": "70f67ff886f75ca77a5620015572619ab72ff30d69c61a5e31d03aa8c0d0836a",
+    "run.py": "52d36ae56751afe2fdc9642b828742c63ae2899a296ea53df800f82ecf6b91fb",
+    "browser_forms.py": "69fc042437d96a5998f2ba720cf1948a9be0af5aa308d78c6b0f7c97dfbb119b",
+    "gliner_client.py": "f6a71f3029654a2d89f22d7e77192545327b91565b97728aeedb4dce2ddece56",
+    "services/gliner/server.py": "61ab9eae16b3e6d7e00b8b7dc4abeebc409d080370492d4c45bfd5ee3dc22852",
+    "services/gliner/uv.lock": "dbc5dde431d6767967c54373c0937546ee2a538f473508679e2fb2164871ee93",
+    "uv.lock": "2b13d7c509e621d6251b087cd513f4f5d18de51c1db0470fd709410edfaed06e",
+    "benchmarks/run_repeatability.py": "b4cb1108b99585af876b17d744edaf71cf8f22eacbf946d5cfe425970f2094cb",
+    "fixtures/claim.json": "eac2fd32d3c4d66c9ba8f1f70488d2f8eaaf883a692f4269fbc01e41ca685595",
+    "fixtures/clinic_requests.json": "3f59015a8026bba34e25eb3b9d5b8bf628e55a5fa24768dca164f1b8ed008f44",
+    "fixtures/helpdesk_tickets.json": "6881d37be1308655eb77c3085b1ea13f055ea9e003814b157ddaed5c1f8c4f2d",
+    "fixtures/insured.json": "dea8ef1580ce08f5500b13d8da73e3ec71c8571e28d316d544546eb5b2404775"
+  },
+  "fontconfig_file": "/home/anshul/projects/SystemOne_Demos/benchmarks/rtx5070ti-repeatability-2026-10-07/fontconfig.xml",
+  "earlier_pilot_included": false,
+  "service_restarted_between_rounds": false,
+  "ci_method": "95% Student t across five round means, df=4"
+}

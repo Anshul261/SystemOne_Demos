@@ -109,7 +109,10 @@ def fill_classified_form(
     candidates = {key: descriptions[key] for key in values}
     ignored = {label.casefold() for label in (ignored_labels or set())}
 
-    for field in visible_fields(root):
+    fields = visible_fields(root)
+    if not fields:  # never submit a form the reader could not see
+        raise DecisionError("No labelled form fields are visible; the page may not have finished loading.")
+    for field in fields:
         if field.label.casefold() in ignored:
             audit.write("field_ignored", field=asdict(field))
             continue

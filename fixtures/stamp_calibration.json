@@ -1,0 +1,275 @@
+{
+ "region": [
+  0.55,
+  0.68,
+  0.99,
+  0.99
+ ],
+ "note": "Questions and thresholds chosen on the calibration split only (experiments/d1/calibrate.py).",
+ "models": {
+  "omni": {
+   "repo": "LiquidAI/d1-omni-600M",
+   "revision": "414f8d6438174f5b2133a9c21a478fc42625e308",
+   "checks": {
+    "anywhere": {
+     "question": {
+      "type": "choice",
+      "instructions": "Describe this document.",
+      "criteria": {
+       "stamp": "A typed document with a round or square rubber stamp mark",
+       "none": "A typed document with a signature but no stamp mark"
+      }
+     },
+     "positive": "stamp",
+     "threshold": 0.0003,
+     "calib_auroc": 0.615,
+     "test_auroc": 0.675
+    },
+    "in_box": {
+     "question": {
+      "type": "choice",
+      "instructions": "Describe the image.",
+      "criteria": {
+       "stamp": "A rubber stamp mark with printed text",
+       "empty": "A blank rectangle on white paper"
+      }
+     },
+     "positive": "stamp",
+     "threshold": 0.0002,
+     "calib_auroc": 1.0,
+     "test_auroc": 0.999
+    },
+    "shape": {
+     "question": {
+      "type": "choice",
+      "instructions": "Describe the image.",
+      "criteria": {
+       "rect": "A rectangular frame stamp",
+       "round": "A ring-shaped round stamp"
+      }
+     },
+     "positive": "round",
+     "threshold": 0.063,
+     "calib_auroc": 0.927,
+     "test_auroc": 0.863
+    },
+    "color": {
+     "question": {
+      "type": "choice",
+      "instructions": "Describe the image.",
+      "criteria": {
+       "blue": "Blue ink marks on paper",
+       "red": "Red ink marks on paper",
+       "grey": "Black and grey marks on a black-and-white copy"
+      }
+     },
+     "positive": "blue",
+     "threshold": 0.1499,
+     "calib_auroc": 0.449,
+     "test_auroc": 0.569
+    },
+    "issuer": {
+     "question": {
+      "type": "noul",
+      "instructions": "Does the stamp read SPRINGFIELD MUTUAL INSURANCE?"
+     },
+     "positive": "springfield",
+     "threshold": 0.0749,
+     "calib_auroc": 0.771,
+     "test_auroc": 0.534
+    },
+    "spelling": {
+     "question": {
+      "type": "choice",
+      "instructions": "Read the first word around the top of the stamp letter by letter. Which spelling is printed?",
+      "criteria": {
+       "correct": "SPRINGFIELD",
+       "fil": "SPRINGFILED",
+       "nf": "SPRINFGIELD",
+       "ri": "SPIRNGFIELD"
+      }
+     },
+     "positive": "correct",
+     "threshold": 0.382,
+     "calib_auroc": 0.401,
+     "test_auroc": 0.433
+    },
+    "status": {
+     "question": {
+      "type": "choice",
+      "instructions": "Which word is in the centre of the stamp?",
+      "criteria": {
+       "approved": "A stamp with the word APPROVED in the centre",
+       "void": "A stamp with the word VOID in the centre",
+       "received": "A stamp with the word RECEIVED in the centre"
+      }
+     },
+     "positive": "approved",
+     "threshold": 0.6925,
+     "calib_auroc": 0.993,
+     "test_auroc": 0.969
+    },
+    "date": {
+     "question": {
+      "type": "noul",
+      "instructions": "Does the date on the stamp read 14 SEP 2026?"
+     },
+     "positive": "match",
+     "threshold": 0.8676,
+     "calib_auroc": 0.835,
+     "test_auroc": 0.816
+    },
+    "genuine": {
+     "question": {
+      "type": "choice",
+      "instructions": "How was this stamp made?",
+      "criteria": {
+       "ink": "A real rubber-stamp impression with uneven, patchy ink",
+       "digital": "A clean digital stamp image with perfectly solid, uniform colour"
+      }
+     },
+     "positive": "ink",
+     "threshold": 0.0027,
+     "calib_auroc": 0.894,
+     "test_auroc": 0.956
+    }
+   }
+  },
+  "3b": {
+   "repo": "LiquidAI/d1-3B",
+   "revision": "da1fe36a861f24690f27f622dca1d8688503d113",
+   "checks": {
+    "anywhere": {
+     "question": {
+      "type": "choice",
+      "instructions": "Does this document page carry a stamp?",
+      "criteria": {
+       "stamp": "A document page with an ink stamp printed on it",
+       "none": "A document page with no stamp anywhere, only typed text"
+      }
+     },
+     "positive": "stamp",
+     "threshold": 0.2194,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    },
+    "in_box": {
+     "question": {
+      "type": "choice",
+      "instructions": "What is inside the box?",
+      "criteria": {
+       "stamp": "An ink stamp impression inside a box",
+       "empty": "An empty box with only blank paper inside"
+      }
+     },
+     "positive": "stamp",
+     "threshold": 0.7446,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    },
+    "shape": {
+     "question": {
+      "type": "choice",
+      "instructions": "What shape is the stamp?",
+      "criteria": {
+       "round": "A round circular stamp with text curving around its edge",
+       "rect": "A rectangular stamp with straight edges and straight lines of text"
+      }
+     },
+     "positive": "round",
+     "threshold": 0.5058,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    },
+    "color": {
+     "question": {
+      "type": "choice",
+      "instructions": "What colour is the stamp ink?",
+      "criteria": {
+       "blue": "A stamp in blue ink",
+       "red": "A stamp in red ink",
+       "grey": "A stamp in black or grey, like a photocopy"
+      }
+     },
+     "positive": "blue",
+     "threshold": 0.289,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    },
+    "issuer": {
+     "question": {
+      "type": "choice",
+      "instructions": "Which company name is on the stamp?",
+      "criteria": {
+       "springfield": "A stamp reading SPRINGFIELD MUTUAL INSURANCE",
+       "shelbyville": "A stamp reading SHELBYVILLE MUTUAL INSURANCE"
+      }
+     },
+     "positive": "springfield",
+     "threshold": 0.4951,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    },
+    "spelling": {
+     "question": {
+      "type": "choice",
+      "instructions": "Read the first word around the top of the stamp letter by letter. Which spelling is printed?",
+      "criteria": {
+       "correct": "SPRINGFIELD",
+       "fil": "SPRINGFILED",
+       "nf": "SPRINFGIELD",
+       "ri": "SPIRNGFIELD"
+      }
+     },
+     "positive": "correct",
+     "threshold": 0.9342,
+     "calib_auroc": 0.744,
+     "test_auroc": 0.749
+    },
+    "status": {
+     "question": {
+      "type": "choice",
+      "instructions": "Which word is in the centre of the stamp?",
+      "criteria": {
+       "approved": "A stamp with the word APPROVED in the centre",
+       "void": "A stamp with the word VOID in the centre",
+       "received": "A stamp with the word RECEIVED in the centre"
+      }
+     },
+     "positive": "approved",
+     "threshold": 0.4892,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    },
+    "date": {
+     "question": {
+      "type": "choice",
+      "instructions": "Which date is on the stamp?",
+      "criteria": {
+       "match": "A stamp dated 14 SEP 2026",
+       "other": "A stamp with some other date"
+      }
+     },
+     "positive": "match",
+     "threshold": 0.1708,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    },
+    "genuine": {
+     "question": {
+      "type": "choice",
+      "instructions": "How was this stamp made?",
+      "criteria": {
+       "ink": "A real rubber-stamp impression with uneven, patchy ink",
+       "digital": "A clean digital stamp image with perfectly solid, uniform colour"
+      }
+     },
+     "positive": "ink",
+     "threshold": 0.1674,
+     "calib_auroc": 1.0,
+     "test_auroc": 1.0
+    }
+   }
+  }
+ }
+}

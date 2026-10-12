@@ -15,8 +15,11 @@ def test_each_demo_has_a_short_dynamic_guide():
         guide = demo_guide(name)
         assert "<ol>" in guide
         assert guide.count("<li>") == 3
-        assert "GLiNER" in guide
-        assert "JPT" in demo_guide(name, "jpt")
+        if DEMO_NAMES[name] in ("stamp", "lab"):
+            assert "d1" in guide  # the vision workflow names its own model family
+            continue
+        assert "d1-omni-600M" in guide  # the default decision model
+        assert "GLiNER2.5 Multi" in demo_guide(name, "multi")
 
 
 def test_request_stream_uses_edited_text_without_opening_a_browser(monkeypatch, tmp_path):
