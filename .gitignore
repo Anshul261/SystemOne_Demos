@@ -12,3 +12,6 @@ d1.log
 .extract.pid
 extract.log
 fixtures/documents/local/
+agent_poc/.env
+agent_poc/appointments.db
+agent_poc/.demo.pid
