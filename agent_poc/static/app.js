@@ -1,6 +1,6 @@
 // Demo console: sign in, chat or replay scenarios, and show each turn's path through the six layers.
 
-const LAYER_NAMES = ["Session token", "ServiceNow account", "Per-user graph", "d1 screen + router", "Scoped tools", "Qwen agent"];
+const LAYER_NAMES = ["Session token", "ServiceNow account", "Per-user graph", "System One decides", "Scoped tools", "System Two acts"];
 const STEP_LABEL = { blocked: "blocked by d1", clarify: "clarifying question", denied: "not in plan" };
 const state = {
   status: null, persona: null, token: null, session: null, chat: [],
@@ -50,10 +50,16 @@ function stopLayer(turn) {
   return null;
 }
 
+// The System One model's display name: "Jev · TypeSafe", "d1:free · Liquid" or "d1-3B · local".
+function modelLabel(detail) {
+  const [model, backend] = [detail.split(" ")[0], detail.match(/\((.+)\)/)?.[1] || "local"];
+  return backend === "local" ? `d1-${model.toUpperCase()} · local` : `${model} · ${backend.replace(" API", "")}`;
+}
+
 // ---- Header: live readiness checks
 async function loadStatus() {
   state.status = await (await fetch("/api/status")).json();
-  const short = { d1: (d) => `d1-${d.split(" ")[0].toUpperCase()}`, servicenow: (d) => `ServiceNow ${d.split(" ")[0]}`,
+  const short = { d1: modelLabel, servicenow: (d) => `ServiceNow ${d.split(" ")[0]}`,
     llm: (d) => d.split("/").pop() };
   $("checks").innerHTML = Object.entries(state.status.checks).map(([key, c]) =>
     `<span class="check ${c.ok ? "ok" : "bad"}" title="${esc(c.detail)}">${esc(c.ok ? short[key](c.detail) : `${key}: ${c.detail}`)}</span>`).join("");
@@ -73,6 +79,8 @@ async function signIn(persona) {
   Object.assign(state, { persona, token: info.token, session: crypto.randomUUID(), chat: [], viewing: null, selected: null });
   document.querySelectorAll(".persona").forEach((el) => el.classList.toggle("active", el.dataset.id === persona));
   renderSession(info);
+  state.snow = {};
+  loadServiceNow();
   showTab("chat");
   renderTranscript();
   renderTrace();
@@ -121,7 +129,26 @@ $("composer").addEventListener("submit", async (e) => {
   $("send").disabled = false;
   renderTranscript();
   renderTrace();
+  loadServiceNow();
 });
+
+// ---- Left: the user's incidents, read live from ServiceNow; new or changed records light up
+async function loadServiceNow() {
+  if (!state.token) { $("snow").innerHTML = ""; return; }
+  const response = await fetch(`/api/servicenow?token=${encodeURIComponent(state.token)}`);
+  if (!response.ok) { $("snow").innerHTML = ""; return; }
+  const data = await response.json();
+  const seen = state.snow || {};
+  const first = !Object.keys(seen).length;
+  $("snow").innerHTML = `<h2>Live in ServiceNow</h2>
+    <p class="muted" style="font-size:12px;margin:0 0 8px">${esc(data.instance)} · ${esc(data.user)}'s incidents, read through the integration user</p>
+    ${data.incidents.map((i) => {
+      const fresh = !first && seen[i.number] !== i.sys_updated_on;
+      return `<div class="inc ${fresh ? "fresh" : ""}"><div><b>${esc(i.number)}</b> <span class="muted">${esc(i.state)}</span>${fresh ? `<span class="new">${seen[i.number] ? "updated" : "new"}</span>` : ""}</div>
+        <div>${esc(i.short_description)}</div></div>`;
+    }).join("") || `<p class="muted">No incidents.</p>`}`;
+  state.snow = Object.fromEntries(data.incidents.map((i) => [i.number, i.sys_updated_on]));
+}
 
 function renderTranscript() {
   const turns = state.viewing ? state.results[state.viewing]?.turns || [] : state.chat;
@@ -319,7 +346,7 @@ function renderTrace() {
       <div class="q">Which agent should answer? (start ≥ ${t.start}, switch ≥ ${t.switch})</div>
       ${bars(d.agent, ["support", "appointments", "unclear"], false)}
       <div class="rule">→ ${esc(d.rule)} · <b>${esc(STEP_LABEL[d.step] || d.step)}</b></div>
-      <div class="q">${esc(d.model)} · one forward pass · 0 output tokens</div>`, d.model_ms ? Math.round(d.model_ms) : d.ms);
+      <div class="q">${esc(modelLabel(state.status.checks.d1.detail))} · one forward pass · 0 output tokens</div>`, d.model_ms ? Math.round(d.model_ms) : d.ms);
   } else layer(4, `<span class="muted">${auth?.ok ? "deciding…" : "not reached"}</span>`);
   // 5: the tools, built for this user only
   if (stop) layer(5, `<span class="muted">not reached</span>`);

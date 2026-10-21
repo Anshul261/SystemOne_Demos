@@ -10,7 +10,7 @@ from functools import cache
 
 import httpx
 
-FIELDS = "number,short_description,state,priority,sys_created_on,comments"
+FIELDS = "number,short_description,state,priority,sys_created_on,sys_updated_on,comments"
 NUMBER = re.compile(r"INC\d{7}")  # anything else could smuggle "^OR..." into the encoded query
 
 

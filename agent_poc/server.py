@@ -9,6 +9,7 @@ import json
 import os
 import queue
 import threading
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import httpx
@@ -36,7 +37,13 @@ PERSONAS = {  # who the console can sign in as; the last four are bad sessions t
     "unsigned": ("Unsigned token", "Claims David Loo with alg: none", lambda: forged("david.loo", "", "none")),
 }
 
-app = FastAPI(title="Routed support agent demo")
+@asynccontextmanager
+async def lifespan(_):
+    graph.warm_up()  # so the first decision on stage isn't the slow one
+    yield
+
+
+app = FastAPI(title="Routed support agent demo", lifespan=lifespan)
 
 
 class SessionRequest(BaseModel):
@@ -64,9 +71,9 @@ def status():
     checks = {}
     try:
         url, model = graph.D1
-        health = httpx.get(url.rsplit("/", 1)[0] + "/health", timeout=5).json() if not graph.LIQUID_API_KEY else {}
-        checks["d1"] = {"ok": graph.LIQUID_API_KEY is not None or model in health.get("loaded", []),
-                        "detail": f"{model} ({'Liquid API' if graph.LIQUID_API_KEY else 'local'})"}
+        hosted = graph.BACKEND != "local"
+        health = {} if hosted else httpx.get(url.rsplit("/", 1)[0] + "/health", timeout=5).json()
+        checks["d1"] = {"ok": hosted or model in health.get("loaded", []), "detail": f"{model} ({graph.BACKEND})"}
     except httpx.HTTPError as error:
         checks["d1"] = {"ok": False, "detail": f"unreachable: {error}"}
     try:
@@ -145,6 +152,16 @@ def scenario(request: ScenarioRequest):
 
     threading.Thread(target=work, daemon=True).start()
     return ndjson(iter(events.get, None))
+
+
+@app.get("/api/servicenow")
+def servicenow_view(token: str):
+    """The signed-in user's latest incidents, read live from ServiceNow, to show where the agent's work lands."""
+    try:
+        user = authenticate(token)
+    except AuthError as error:
+        raise HTTPException(401, str(error)) from None
+    return {"instance": os.environ["SN_INSTANCE"], "user": user.name, "incidents": servicenow.incidents(user.id)[:5]}
 
 
 @app.post("/api/reset")

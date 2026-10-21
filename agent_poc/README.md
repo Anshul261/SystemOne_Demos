@@ -88,7 +88,9 @@ HF_TOKEN=$(hf auth token) uv run --env-file .env python eval_poc.py [--repeat N]
 uv run pytest -q test_poc.py                      # 14 security tests, offline
 ```
 
-Set `LIQUID_API_KEY` to route with Liquid's managed d1 (`d1:free`) instead of the local service.
+Set `TYPESAFE_API_KEY` to route with TypeSafe's hosted Jev (`jev-latest`, or `TYPESAFE_MODEL`), or `LIQUID_API_KEY` for Liquid's hosted d1 (`d1:free`), instead of the local d1 service. All three take the same request.
+
+`../.venv/bin/python video/record.py` records the captioned demo video into `video/out/`. It needs the console running and the repo's Playwright. Every caption is checked against the screen, and a take aborts if the live behaviour doesn't match. Note that each take files a real ServiceNow incident.
 
 | File | What it holds |
 |---|---|

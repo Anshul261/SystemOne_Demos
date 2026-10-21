@@ -18,12 +18,16 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from agents import AGENTS
 from auth import User
 
-# Liquid's managed d1 when a key is set (d1:free is text-only, which is all routing needs),
-# otherwise the local service. d1-3B routes more confidently than d1-omni-600M at about the same speed.
-# Both endpoints take the same request and return the same answers.
-LIQUID_API_KEY = os.getenv("LIQUID_API_KEY")
-D1 = (("https://api.liquid.ai/decisions/v1/systemone", os.getenv("D1_MODEL", "d1:free")) if LIQUID_API_KEY
-      else (os.getenv("D1_URL", "http://127.0.0.1:8020") + "/system_one", os.getenv("D1_LOCAL_MODEL", "3b")))
+# Where the System One model runs. TypeSafe's hosted Jev when TYPESAFE_API_KEY is set, Liquid's hosted d1
+# when LIQUID_API_KEY is set, otherwise the local d1 service (d1-3B routes more confidently than
+# d1-omni-600M at about the same speed). All three take the same request and return the same answers.
+API_KEY, D1, BACKEND = next((key, endpoint, name) for key, endpoint, name in [
+    (os.getenv("TYPESAFE_API_KEY"), ("https://api.typesafe.ai/v1/systemone", os.getenv("TYPESAFE_MODEL", "jev-latest")),
+     "TypeSafe API"),
+    (os.getenv("LIQUID_API_KEY"), ("https://api.liquid.ai/decisions/v1/systemone", os.getenv("D1_MODEL", "d1:free")),
+     "Liquid API"),
+    ("", (os.getenv("D1_URL", "http://127.0.0.1:8020") + "/system_one", os.getenv("D1_LOCAL_MODEL", "3b")), "local"),
+] if key is not None)
 MIN_CONFIDENCE = 0.6  # to pick an agent at the start of a conversation
 SWITCH_CONFIDENCE = 0.75  # to leave the agent already helping; "yes, go ahead" stays put
 SCREEN_CONFIDENCE = 0.5  # to block a turn the screen flags
@@ -65,7 +69,7 @@ def decide(message: str, previous: str | None = None) -> dict:
                   "criteria": {name: agent.description for name, agent in AGENTS.items()} | {"unclear": UNCLEAR}},
     }
     url, model = D1
-    headers = {"Authorization": f"Bearer {LIQUID_API_KEY}"} if LIQUID_API_KEY else {}
+    headers = {"Authorization": f"Bearer {API_KEY}"} if API_KEY else {}
     start = time.perf_counter()
     response = httpx.post(url, headers=headers, timeout=30,
                           json={"model": model, "questions": questions,
@@ -74,6 +78,14 @@ def decide(message: str, previous: str | None = None) -> dict:
     body = response.json()
     return {**body["answers"], "model": model, "ms": round((time.perf_counter() - start) * 1000),
             "model_ms": body.get("model_ms")}
+
+
+def warm_up() -> None:
+    """Run the router once over messages of a few lengths; d1's first pass at a new length is slow."""
+    for message in ["hi", "My VPN drops every hour", "Can I book a call with an engineer tomorrow morning please?",
+                    "Outlook crashes every time I open a PDF attachment, and it started after this morning's update."]:
+        decide(message)
+        decide(message, "Do you need help with a support issue, or would you like to book a call?")
 
 
 def sub_agent(user: User, name: str):

@@ -7,9 +7,7 @@ if [ -f .demo.pid ] && kill -0 "$(cat .demo.pid)" 2>/dev/null; then
   exit 0
 fi
 curl -fsS http://127.0.0.1:8020/health >/dev/null 2>&1 || (cd .. && ./start-d1.sh)
-# Warm d1-3B so the first decision in the demo isn't the slow one.
-curl -fsS -o /dev/null http://127.0.0.1:8020/system_one -H 'Content-Type: application/json' \
-  -d '{"model":"3b","state":"hi","questions":{"w":{"type":"noul","instructions":"Is this a greeting?"}}}'
+# The server warms d1 with real router questions on startup (graph.warm_up).
 export HF_TOKEN="${HF_TOKEN:-$(hf auth token 2>/dev/null | tail -1)}"
 echo $$ > .demo.pid  # exec keeps this PID
 exec uv run --env-file .env uvicorn server:app --host 127.0.0.1 --port "${PORT:-8040}"
