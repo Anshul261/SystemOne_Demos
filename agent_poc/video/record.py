@@ -526,9 +526,15 @@ def main():
     narration = OUT / "narration.wav"
     mix(placements, title_s + roles_s + live_s + results_s, narration)
     final = OUT / "servicenow-agent-demo.mp4"
-    ffmpeg("-i", str(silent), "-i", str(narration), "-map", "0:v", "-map", "1:a", "-c:v", "copy",
-           "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", str(final))
-    print(f"{final} · {duration(final):.0f} s · {final.stat().st_size / 1e6:.1f} MB")
+    # 48 kHz stereo at -16 LUFS: Kokoro's 24 kHz mono plays silently or very quietly in some players.
+    audio = ["-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "48000", "-ac", "2", "-c:a", "aac", "-b:a", "192k"]
+    ffmpeg("-i", str(silent), "-i", str(narration), "-map", "0:v", "-map", "1:a", "-c:v", "copy", *audio,
+           "-shortest", "-movflags", "+faststart", str(final))
+    small = OUT / "servicenow-agent-demo-small.mp4"  # under 30 MB, for phones and upload limits
+    ffmpeg("-i", str(final), "-c:v", "libx264", "-crf", "27", "-preset", "slow", "-pix_fmt", "yuv420p",
+           "-c:a", "copy", "-movflags", "+faststart", str(small))
+    for path in (final, small):
+        print(f"{path} · {duration(path):.0f} s · {path.stat().st_size / 1e6:.1f} MB")
 
 
 if __name__ == "__main__":
