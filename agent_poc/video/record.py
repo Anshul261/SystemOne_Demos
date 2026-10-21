@@ -1,26 +1,37 @@
-"""Record the ServiceNow demo video: title cards, then one captioned live run of the console, then results.
+"""Record the narrated ServiceNow demo video: title cards, one captioned live run of the console, results.
 
     ./demo.sh                                       # console on :8040
     ../.venv/bin/python video/record.py             # from agent_poc/, using the repo's Playwright
+    ../.venv/bin/python video/record.py --remix     # rebuild the narration for the last take only
 
 Writes video/out/servicenow-agent-demo.mp4. Everything on screen is live: real d1 decisions, real Qwen
-calls, real ServiceNow records. Captions only describe what the trace on screen already shows.
+calls, real ServiceNow records. Captions only describe what the trace on screen already shows, and a
+Kokoro voice reads each one; a caption waits for the previous line to finish, so voice and screen stay in step.
 """
 
 import json
 import os
+import re
 import subprocess
 import sys
+import time
+import wave
 from datetime import date, timedelta
 from pathlib import Path
 
 import httpx
+import numpy as np
 from playwright.sync_api import sync_playwright
 
 HERE = Path(__file__).parent
 OUT = HERE / "out"
 URL = "http://127.0.0.1:8040"
 W, H = 1920, 1080
+TRIM = 1.2  # seconds cut from the start of the browser recording (page load)
+RATE = 24000  # Kokoro's sample rate
+KOKORO = ["uv", "run", "--quiet", "--no-project", "--python", "3.12", "--with", "kokoro", "--with", "soundfile", "--with",
+          "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/"
+          "en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl", "python", "video/narrate.py"]
 
 # Issues Abel might report; the first one he hasn't already got a ticket for is used, so retakes stay genuine.
 ISSUES = [
@@ -29,7 +40,26 @@ ISSUES = [
     ("wi-fi", "The office Wi-Fi drops every 20 minutes on my laptop. Please log a ticket."),
     ("printer", "The third floor printer shows a paper jam but nothing is stuck. Please log a ticket."),
     ("keyboard", "My laptop keyboard types double letters since the last update. Please log a ticket."),
+    ("battery", "My laptop battery drains from full to empty in under two hours. Please log a ticket."),
+    ("shared drive", "I can't open the finance shared drive since this morning. Please log a ticket."),
+    ("docking", "My docking station stopped charging my laptop. Please log a ticket."),
 ]
+
+# Push in on one element of the console: scale and shift the main grid so the element sits centred below the
+# caption bar, never revealing anything outside the grid. The caption and cursor are outside it, so they stay sharp.
+ZOOM = """([selector, most]) => {
+  const main = document.querySelector('main.grid'), el = document.querySelector(selector);
+  el.scrollIntoView({block: 'nearest'});
+  const m = main.getBoundingClientRect(), r = el.getBoundingClientRect();
+  const top = 130, view = innerHeight - top;
+  const scale = Math.max(1.15, Math.min(most, 0.9 * innerWidth / r.width, 0.88 * view / r.height));
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const tx = Math.min(0, Math.max(m.width * (1 - scale), innerWidth / 2 - m.left - scale * (cx - m.left)));
+  const ty = Math.min(0, Math.max(m.height * (1 - scale), top + view / 2 - m.top - scale * (cy - m.top)));
+  main.style.transformOrigin = '0 0';
+  main.style.transition = 'transform 1.1s cubic-bezier(.25,.8,.25,1)';
+  main.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+}"""
 
 OVERLAY = """
 #vo-cap { position: fixed; top: 16px; left: 20px; width: 1010px; z-index: 9999; background: #262923; color: #f7f6ee;
@@ -48,20 +78,35 @@ OVERLAY = """
 class Stage:
     """The recorded browser page, with a caption bar and a visible cursor."""
 
-    def __init__(self, page):
+    def __init__(self, page, script, voice):
         self.page = page
+        self.script, self.voice = script, voice
         self.replies = 0  # finished replies in the current chat
+        self.start = time.monotonic()  # the recording starts with the page
+        self.busy_until = 0.0  # when the narration in progress ends
+        self.timeline = []  # (seconds into the recording, narration id)
 
     def setup(self):
         self.page.add_style_tag(content=OVERLAY)
         self.page.evaluate("""() => { for (const id of ['vo-cap', 'vo-cursor']) {
             const el = document.createElement('div'); el.id = id; document.body.appendChild(el); } }""")
-        self.page.evaluate("() => document.getElementById('vo-cap').style.opacity = 0")
+        self.page.evaluate("() => { document.getElementById('vo-cap').style.opacity = 0;"
+                           " document.body.style.overflow = 'hidden'; }")
 
-    def caption(self, chapter, text, hold=0):
+    def caption(self, chapter, key, hold=0):
+        """Show a caption once the previous narration has finished, and start reading it."""
+        self.quiet()
         self.page.evaluate("""([chapter, text]) => { const el = document.getElementById('vo-cap');
-            el.innerHTML = `<span class="ch">${chapter}</span>${text}`; el.style.opacity = 1; }""", [chapter, text])
+            el.innerHTML = `<span class="ch">${chapter}</span>${text}`; el.style.opacity = 1; }""",
+                           [chapter, self.script[key][0]])
+        now = time.monotonic()
+        self.timeline.append((now - self.start, key))
+        self.busy_until = now + self.voice[key]["seconds"] + 0.35
         self.wait(hold)
+
+    def quiet(self):
+        """Wait for the narration in progress to finish."""
+        self.wait(int(max(0.0, self.busy_until - time.monotonic()) * 1000))
 
     def wait(self, ms):
         if ms:
@@ -104,6 +149,13 @@ class Stage:
         shown = " ".join(self.page.locator(selector).all_inner_texts())
         if (text in shown) != present:
             raise SystemExit(f"Take aborted: expected {selector!r} {'to show' if present else 'not to show'} {text!r}")
+
+    def zoom(self, selector, hold=3500, most=2.0):
+        """Push in on an element, hold, then pull back out."""
+        self.page.evaluate(ZOOM, [selector, most])
+        self.wait(1200 + hold)
+        self.page.evaluate("() => document.querySelector('main.grid').style.transform = ''")
+        self.wait(1200)
 
     def scroll(self, pane, where="bottom"):
         self.page.evaluate("""([pane, where]) => { const el = document.querySelector(pane);
@@ -171,7 +223,7 @@ h1 {{ font: 600 76px/1.1 'IBM Plex Mono', monospace; margin: 18px 0 22px; letter
 </style></head><body>{body}</body></html>"""
 
 
-def cards(model):
+def cards(model, provider):
     stats = latest_eval()
     most = max(stats["tally"].values())
     bars = "".join(f'<div class="bar"><span>{layer}</span><i style="width:{n / most * 100:.0f}%"></i><b>{n}</b></div>'
@@ -180,12 +232,12 @@ def cards(model):
         "00-title": (6, f"""<div class="brand">SYSTEMONE / DECISION MODULES</div>
             <h1>An IT support agent<br>on ServiceNow</h1>
             <div class="sub">System One decides. Code enforces. System Two acts.</div>
-            <div class="foot">{model} on a local GPU · Qwen3.8-27B via Hugging Face · ServiceNow · LangGraph</div>"""),
+            <div class="foot">{model} on a local GPU · Qwen3.8-27B on {provider} · ServiceNow · LangGraph</div>"""),
         "01-roles": (11, f"""<div class="brand">WHO DOES WHAT</div>
             <div class="cols">
               <div class="col" style="--c:#24569b"><h2>System One · {model}</h2><h3>Decides</h3>
                 <p>Screens every message for attacks and picks the agent that should answer. One forward pass,
-                tens of milliseconds, zero output tokens.</p></div>
+                under 200 milliseconds, zero output tokens.</p></div>
               <div class="col" style="--c:#286044"><h2>Plain code</h2><h3>Enforces</h3>
                 <p>Verifies the session token, reads the user's groups live from ServiceNow, and builds an agent
                 that only has that user's tools.</p></div>
@@ -204,8 +256,101 @@ def cards(model):
     }
 
 
-def record(model):
-    beth_incident = incidents("beth.anglin")[0]["number"]
+def script(model, beth_incident, stats):
+    """Every caption, keyed by id: (text on screen, words spoken). Cards have narration only."""
+    spoken_model = "D one, three B" if model == "d1-3B" else model
+
+    def say(text):  # how the caption reads aloud
+        text = text.replace(f" ({model})", "").replace(" (Qwen)", "").replace("Qwen", "Kwen")
+        return re.sub(r"[\u201c\u201d]", "", text)
+
+    captions = {
+        "c1_signin": "Abel signs in. The server verifies his session token, then reads his groups live from ServiceNow.",
+        "c1_report": "He reports a problem in plain language.",
+        "c1_watch": "The trace on the right fills in as the message moves through each layer.",
+        "c1_s1": f"System One ({model}) judged it a normal request and picked the support agent, in one forward pass.",
+        "c1_s2": "System Two (Qwen) checked Abel's incidents, then opened a new one through the ServiceNow API.",
+        "c1_snow": "The incident is live in ServiceNow, filed under Abel by the integration user.",
+        "c2_switch": "A new request in the same conversation. System One switches to the appointments agent.",
+        "c2_yes": "A bare \u201cyes\u201d has no request of its own, so the conversation stays with appointments.",
+        "c2_booked": "The appointments agent booked the slot. Its tools write to the calendar as Abel, and only as Abel.",
+        "c3_beth": "Beth isn't in the Premium Support group in ServiceNow, so her agent graph has no appointments agent.",
+        "c3_refused": "System One routes it correctly, but that agent doesn't exist for Beth. "
+                      "A fixed refusal, and zero LLM calls.",
+        "c4_ask": "The same forward pass also asks: what is the user trying to do?",
+        "c4_blocked": "Flagged as harmful and blocked in the same forward pass. The LLM never sees the message.",
+        "c5_forged": "A token that claims to be David Loo, signed with the wrong key.",
+        "c5_rejected": "Rejected at the signature check. No model ran and ServiceNow was never queried.",
+        "c6_ask": f"David asks about Beth's incident {beth_incident} by its number.",
+        "c6_pinned": "To System One this looks like a normal question, and it is. But every ServiceNow query is pinned "
+                     "to the signed-in caller, so Beth's ticket never comes back.",
+    }
+    lines = {key: (text, say(text)) for key, text in captions.items()}
+    lines["c6_ask"] = (captions["c6_ask"], "David asks about one of Beth's incidents, by its number.")
+    genuine_ok, genuine_n = stats["genuine"].split("/")
+    attacks_ok, attacks_n = stats["attacks"].split("/")
+    lines |= {
+        "title": ("", "This is an IT support agent on ServiceNow. A small System One model decides, plain code "
+                      "enforces the rules, and a System Two language model does the talking."),
+        "roles": ("", f"System One, {spoken_model}, screens every message and picks the agent in a single forward "
+                      "pass, in milliseconds, without generating any text. Plain code verifies the session, reads the "
+                      "user's groups live from ServiceNow, and builds an agent that only has that user's tools. "
+                      "System Two, Kwen, talks to the user and calls the tools, but only once both have said yes."),
+        "results": ("", f"We ran the full evaluation live against ServiceNow. {genuine_ok} of {genuine_n} genuine "
+                        f"requests were handled, and {attacks_ok} of {attacks_n} attacks were stopped. "
+                        "The bars show which layer stopped each one."),
+    }
+    return lines
+
+
+def synthesise(lines):
+    """Kokoro audio for every spoken line: {id: {"path", "seconds"}}."""
+    spec = OUT / "narration.json"
+    spec.write_text(json.dumps({key: spoken for key, (_, spoken) in lines.items()}))
+    result = subprocess.run([*KOKORO, str(spec)], cwd=HERE.parent, capture_output=True, text=True)
+    if result.returncode:
+        sys.exit(f"Narration failed:\n{result.stderr[-2000:]}")
+    return json.loads(result.stdout.strip().splitlines()[-1])
+
+
+def caption_changes(clip):
+    """Seconds into a clip at which the caption bar's contents change, read from the frames themselves."""
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(clip), "-vf",
+                          "fps=10,crop=1010:86:20:16,format=gray", "-f", "rawvideo", "-"], capture_output=True).stdout
+    frames = np.frombuffer(raw, np.uint8).reshape(-1, 86, 1010).astype(np.int16)
+    changes = []
+    for i in range(1, len(frames)):
+        if np.abs(frames[i] - frames[i - 1]).mean() > 4 and (not changes or i / 10 - changes[-1] > 1.0):
+            changes.append(i / 10)
+    return changes
+
+
+def align(keys, offsets, clip, seconds):
+    """When each narrated caption appears in the clip. The browser's recording runs slightly slower than
+    the wall clock, so wall-clock offsets drift; each caption is matched to the frame where it changes."""
+    changes = [c for c in caption_changes(clip) if 1.0 <= c <= seconds - 1.5]  # skip the fade in and the page closing
+    if len(changes) == len(keys):
+        return dict(zip(keys, changes))
+    scale = seconds / max(offsets[-1] - TRIM + 5, 1)  # fallback: stretch wall-clock offsets to the clip
+    return {key: min(changes or [0], key=lambda c: abs(c - (at - TRIM) * scale)) for key, at in zip(keys, offsets)}
+
+
+def mix(placements, seconds, path):
+    """One mono narration track: each clip placed at its start time, silence between."""
+    track = np.zeros(int((seconds + 1) * RATE), np.int16)
+    for start, clip in placements:
+        with wave.open(clip) as w:
+            data = np.frombuffer(w.readframes(w.getnframes()), np.int16)
+        i = int(start * RATE)
+        track[i:i + len(data)] = data[:len(track) - i]
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(RATE)
+        w.writeframes(track.tobytes())
+
+
+def record(model, beth_incident, script, voice):
     abel_has = " ".join(i["short_description"].lower() for i in incidents("abel.tuter"))
     issue = next(text for word, text in ISSUES if word not in abel_has)
     when = next_weekday()
@@ -226,68 +371,74 @@ def record(model):
         page.goto(URL)
         page.wait_for_selector(".persona")
         page.wait_for_timeout(1500)
-        s = Stage(page)
+        s = Stage(page, script, voice)
         s.setup()
 
         ch = "1 / 6 · A real ticket, filed in ServiceNow"
-        s.caption(ch, "Abel signs in. The server verifies his session token, then reads his groups live from ServiceNow.")
+        s.caption(ch, "c1_signin")
         s.sign_in("abel.tuter")
         s.wait(3500)
-        s.caption(ch, "He reports a problem in plain language.")
+        s.caption(ch, "c1_report")
         s.say(lines[0])
-        s.caption(ch, f"System One ({model}) screens the message and picks the support agent in one forward pass.")
+        s.caption(ch, "c1_watch")
         s.finished()
         s.expect("#trace", "open_ticket")
         page.wait_for_selector("#snow .inc.fresh", timeout=15000)  # the panel refreshes just after the reply
-        s.caption(ch, "System Two (Qwen) checks Abel's incidents, then opens a new one through the ServiceNow API.", 3000)
-        s.scroll("aside.right")
-        s.wait(3500)
-        s.caption(ch, "The incident is live in ServiceNow, filed under Abel by the integration user.")
+        s.caption(ch, "c1_s1")
+        s.zoom("#trace .layer:nth-child(4)")
+        s.caption(ch, "c1_s2")
+        s.zoom("#trace .layer:nth-child(5)", 4500)
+        s.caption(ch, "c1_snow")
         s.scroll("aside.left")
-        s.wait(5000)
+        s.zoom("#snow", 4500, most=2.2)
         s.scroll("aside.right", "top")
         s.scroll("aside.left", "top")
 
         ch = "2 / 6 · Follow-ups stay with the right agent"
-        s.caption(ch, "A new request in the same conversation. System One switches to the appointments agent.")
+        s.caption(ch, "c2_switch")
         s.say(lines[1])
         s.finished()
         s.expect("#transcript .msg.bot:last-child .meta", "appointments")
-        s.wait(4000)
-        s.caption(ch, "A bare “yes” has no request of its own, so the conversation stays with appointments.")
+        s.zoom("#trace .layer:nth-child(4)", 3000)
+        s.caption(ch, "c2_yes")
         s.say(lines[2])
         s.finished()
         s.expect("#trace", "Booked")
-        s.wait(5000)
+        s.zoom("#trace .layer:nth-child(4)", 3000)
+        s.caption(ch, "c2_booked")
+        s.zoom("#trace .layer:nth-child(5)", 4000)
 
         ch = "3 / 6 · Plans come from ServiceNow"
-        s.caption(ch, "Beth isn't in the Premium Support group in ServiceNow, so her agent graph has no appointments agent.")
+        s.caption(ch, "c3_beth")
         s.sign_in("beth.anglin")
         s.wait(3000)
         s.say(lines[3])
         s.finished()
         s.expect("#transcript .msg.bot:last-child .meta", "not in plan")
-        s.caption(ch, "System One routes it correctly, but that agent doesn't exist for Beth. A fixed refusal, and zero LLM calls.", 6000)
+        s.caption(ch, "c3_refused")
+        s.zoom("#trace .layer:nth-child(3)", 4500)
 
         ch = "4 / 6 · System One as a guardrail"
-        s.caption(ch, "The same forward pass also asks: what is the user trying to do?")
+        s.caption(ch, "c4_ask")
         s.say(lines[4])
         s.finished()
         s.expect("#transcript .msg.bot:last-child .meta", "blocked by d1")
         s.expect("#trace", "harmful")
-        s.caption(ch, "Flagged as harmful in milliseconds and blocked. The LLM never sees the message.", 6000)
+        s.caption(ch, "c4_blocked")
+        s.zoom("#trace .layer:nth-child(4)", 4500)
 
         ch = "5 / 6 · Bad sessions never reach a model"
-        s.caption(ch, "A token that claims to be David Loo, signed with the wrong key.")
+        s.caption(ch, "c5_forged")
         s.sign_in("forged")
-        s.wait(3000)
+        s.zoom("#session", 3000, most=2.2)
         s.say(lines[5])
         s.finished()
         s.expect("#transcript .msg.system", "Signature verification failed")
-        s.caption(ch, "Rejected at the signature check. No model ran and ServiceNow was never queried.", 5500)
+        s.caption(ch, "c5_rejected")
+        s.zoom("#trace .layer:nth-child(1)", 4000)
 
         ch = "6 / 6 · What a model can't see, code enforces"
-        s.caption(ch, f"David asks about Beth's incident {beth_incident} by its number.")
+        s.caption(ch, "c6_ask")
         s.sign_in("david.loo")
         s.wait(1500)
         s.say(lines[6])
@@ -295,28 +446,33 @@ def record(model):
         s.expect("#trace", "my_tickets")
         s.expect("#trace pre.tool", beth_incident, present=False)
         s.expect("#transcript .msg.bot:last-child .meta", "support")
-        s.caption(ch, "To System One this looks like a normal question, and it is. But every ServiceNow query is pinned "
-                      "to the signed-in caller, so Beth's ticket never comes back.", 4000)
-        s.scroll("aside.right")
-        s.wait(5500)
+        s.caption(ch, "c6_pinned", 2500)
+        s.zoom("#trace .layer:nth-child(5)", 5500)
+        s.quiet()
+        s.wait(1500)
 
         context.close()
         browser.close()
-        return page.video.path()
+        return page.video.path(), s.timeline
 
 
-def render_cards(model):
+def render_cards(model, provider):
     paths = {}
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page(viewport={"width": W, "height": H})
-        for name, (seconds, body) in cards(model).items():
+        for name, (seconds, body) in cards(model, provider).items():
             page.set_content(CARD.format(body=body), wait_until="networkidle")
             path = OUT / f"{name}.png"
             page.screenshot(path=str(path))
             paths[name] = (path, seconds)
         browser.close()
     return paths
+
+
+def duration(path):
+    return float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
+                                 str(path)], capture_output=True, text=True).stdout)
 
 
 def ffmpeg(*args):
@@ -331,32 +487,48 @@ def main():
     model, backend = status["checks"]["d1"]["detail"].split(" (")
     model = f"d1-{model.upper()}" if backend.startswith("local") else model  # e.g. d1-3B, or jev-latest
 
-    encode = ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", "30", "-preset", "medium", "-crf", "20"]
-    clips = []
-    cards_ = render_cards(model)
-    for name in ("00-title", "01-roles"):
-        path, seconds = cards_[name]
+    beth_incident = incidents("beth.anglin")[0]["number"]
+    lines = script(model, beth_incident, latest_eval())
+    voice = synthesise(lines)
+    lead = 0.6  # narration starts this far into a card
+
+    def card_clip(name, path, minimum, key, fade_out=0.5):
+        seconds = max(minimum, lead + voice[key]["seconds"] + 1.2)
         clip = OUT / f"{name}.mp4"
-        ffmpeg("-loop", "1", "-i", str(path), "-t", str(seconds),
-               "-vf", f"fade=in:st=0:d=0.5,fade=out:st={seconds - 0.5}:d=0.5", *encode, str(clip))
-        clips.append(clip)
-    raw = record(model)
+        ffmpeg("-loop", "1", "-i", str(path), "-t", f"{seconds:.2f}",
+               "-vf", f"fade=in:st=0:d=0.5,fade=out:st={seconds - fade_out:.2f}:d={fade_out}", *encode, str(clip))
+        return clip, seconds
+
+    encode = ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", "30", "-preset", "medium", "-crf", "20"]
+    provider = status["checks"]["llm"]["detail"].split("(")[-1].rstrip(")")
+    cards_ = render_cards(model, provider)
+    title, title_s = card_clip("00-title", cards_["00-title"][0], cards_["00-title"][1], "title")
+    roles, roles_s = card_clip("01-roles", cards_["01-roles"][0], cards_["01-roles"][1], "roles")
     live = OUT / "02-live.mp4"
-    ffmpeg("-ss", "1.2", "-i", str(raw), "-vf", "fade=in:st=0:d=0.5", *encode, str(live))
-    clips.append(live)
-    path, seconds = cards_["99-results"]
-    clip = OUT / "99-results.mp4"
-    ffmpeg("-loop", "1", "-i", str(path), "-t", str(seconds),
-           "-vf", f"fade=in:st=0:d=0.5,fade=out:st={seconds - 0.8}:d=0.8", *encode, str(clip))
-    clips.append(clip)
+    if "--remix" in sys.argv:  # reuse the last take
+        timeline = [tuple(entry) for entry in json.loads((OUT / "timeline.json").read_text())]
+    else:
+        raw, timeline = record(model, beth_incident, lines, voice)
+        (OUT / "timeline.json").write_text(json.dumps(timeline))
+        ffmpeg("-ss", str(TRIM), "-i", str(raw), "-vf", "fade=in:st=0:d=0.5", *encode, str(live))
+    live_s = duration(live)
+    starts = align([key for _, key in timeline], [at for at, _ in timeline], live, live_s)
+    results, results_s = card_clip("99-results", cards_["99-results"][0], cards_["99-results"][1], "results", 0.8)
 
     listing = OUT / "concat.txt"
-    listing.write_text("".join(f"file '{c.name}'\n" for c in clips))
+    listing.write_text("".join(f"file '{c.name}'\n" for c in (title, roles, live, results)))
+    silent = OUT / "servicenow-agent-demo-silent.mp4"
+    ffmpeg("-f", "concat", "-safe", "0", "-i", str(listing), "-c", "copy", str(silent))
+
+    placements = [(lead, voice["title"]["path"]), (title_s + lead, voice["roles"]["path"]),
+                  (title_s + roles_s + live_s + lead, voice["results"]["path"])]
+    placements += [(title_s + roles_s + starts[key], voice[key]["path"]) for _, key in timeline]
+    narration = OUT / "narration.wav"
+    mix(placements, title_s + roles_s + live_s + results_s, narration)
     final = OUT / "servicenow-agent-demo.mp4"
-    ffmpeg("-f", "concat", "-safe", "0", "-i", str(listing), "-c", "copy", "-movflags", "+faststart", str(final))
-    seconds = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
-                                    str(final)], capture_output=True, text=True).stdout)
-    print(f"{final} · {seconds:.0f} s · {final.stat().st_size / 1e6:.1f} MB")
+    ffmpeg("-i", str(silent), "-i", str(narration), "-map", "0:v", "-map", "1:a", "-c:v", "copy",
+           "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", str(final))
+    print(f"{final} · {duration(final):.0f} s · {final.stat().st_size / 1e6:.1f} MB")
 
 
 if __name__ == "__main__":

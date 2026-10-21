@@ -47,12 +47,16 @@ def caller_id(user_name: str) -> str:
     return user["sys_id"]
 
 
-def incidents(user_name: str, number: str | None = None) -> list[dict]:
-    """The caller's incidents, newest first; a number narrows it to one of theirs."""
+def incidents(user_name: str, number: str | None = None, limit: int = 5) -> list[dict]:
+    """The caller's newest incidents; a number narrows it to one of theirs. Only each one's latest comment is
+    kept, so the LLM isn't sent whole comment histories."""
     if number and not NUMBER.fullmatch(number):
         return []
     query = f"caller_id={caller_id(user_name)}" + (f"^number={number}" if number else "")
-    return _get("incident", query + "^ORDERBYDESCsys_created_on", FIELDS)
+    found = _get("incident", query + "^ORDERBYDESCsys_created_on", FIELDS, limit)
+    for incident in found:
+        incident["comments"] = incident["comments"].split("\n\n")[0][:400]  # newest entry first
+    return found
 
 
 def open_incident(user_name: str, short_description: str, description: str) -> str:

@@ -90,7 +90,9 @@ uv run pytest -q test_poc.py                      # 14 security tests, offline
 
 Set `TYPESAFE_API_KEY` to route with TypeSafe's hosted Jev (`jev-latest`, or `TYPESAFE_MODEL`), or `LIQUID_API_KEY` for Liquid's hosted d1 (`d1:free`), instead of the local d1 service. All three take the same request.
 
-`../.venv/bin/python video/record.py` records the captioned demo video into `video/out/`. It needs the console running and the repo's Playwright. Every caption is checked against the screen, and a take aborts if the live behaviour doesn't match. Note that each take files a real ServiceNow incident.
+Set `CEREBRAS_API_KEY` to run System Two (Qwen3.8-27B) on Cerebras's own API instead of the Hugging Face router. The router's shared provider hit a tokens-per-minute limit (HTTP 429) during long sessions. Every LLM call has a 30-second timeout and two retries.
+
+`../.venv/bin/python video/record.py` records the narrated demo video into `video/out/`. The narration uses Kokoro-82M (`video/narrate.py`, voice set by `NARRATOR_VOICE`), and each line is anchored to the frame where its caption appears. `--remix` rebuilds the narration and cards for the last take without re-recording. It needs the console running and the repo's Playwright. Every caption is checked against the screen, and a take aborts if the live behaviour doesn't match. Note that each take files a real ServiceNow incident.
 
 | File | What it holds |
 |---|---|

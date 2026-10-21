@@ -81,7 +81,8 @@ def status():
         checks["servicenow"] = {"ok": True, "detail": f"{os.environ['SN_INSTANCE']} as {os.environ['SN_USER']}"}
     except Exception as error:  # noqa: BLE001 - any failure means the instance isn't usable
         checks["servicenow"] = {"ok": False, "detail": str(error)[:120]}
-    checks["llm"] = {"ok": bool(os.getenv("HF_TOKEN")), "detail": os.getenv("LLM_MODEL", "Qwen/Qwen3.8-27B")}
+    url, model, key, provider = graph.LLM
+    checks["llm"] = {"ok": bool(os.getenv(key)), "detail": f"{model} ({provider})"}
     return {"checks": checks, "access": ACCESS, "layers": LAYERS,
             "thresholds": {"start": graph.MIN_CONFIDENCE, "switch": graph.SWITCH_CONFIDENCE,
                            "screen": graph.SCREEN_CONFIDENCE}}

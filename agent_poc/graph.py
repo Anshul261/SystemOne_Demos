@@ -52,9 +52,16 @@ class State(MessagesState):
     trace: dict  # this turn's d1 answers, the rule that fired and the step taken
 
 
+# System Two: Qwen3.8-27B on Cerebras's own API when CEREBRAS_API_KEY is set, else through the HF router
+# (which picks a provider for us, and shares that provider's rate limits).
+LLM = (("https://api.cerebras.ai/v1", os.getenv("LLM_MODEL", "qwen-3.8-27b"), "CEREBRAS_API_KEY", "Cerebras")
+       if os.getenv("CEREBRAS_API_KEY") else
+       ("https://router.huggingface.co/v1", os.getenv("LLM_MODEL", "Qwen/Qwen3.8-27B"), "HF_TOKEN", "HF router"))
+
+
 def llm() -> ChatOpenAI:
-    return ChatOpenAI(model=os.getenv("LLM_MODEL", "Qwen/Qwen3.8-27B"),
-                      base_url="https://router.huggingface.co/v1", api_key=os.environ["HF_TOKEN"])
+    url, model, key, _ = LLM
+    return ChatOpenAI(model=model, base_url=url, api_key=os.environ[key], timeout=30, max_retries=2)
 
 
 def decide(message: str, previous: str | None = None) -> dict:
