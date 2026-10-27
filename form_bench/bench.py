@@ -15,6 +15,7 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
+from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page, sync_playwright
 
 CDP_PORT = int(os.getenv("BENCH_CDP_PORT", "9333"))
@@ -23,7 +24,8 @@ os.environ.setdefault("BU_CDP_URL", f"http://127.0.0.1:{CDP_PORT}")
 os.environ.setdefault("BU_NAME", "form-bench")
 
 from cases import load_cases  # noqa: E402
-from runners import AGENTS, LLM_MODEL, SYSTEM_ONE, control, metered, open_screen, read_form  # noqa: E402
+from runners import (AGENTS, LLM_MODEL, LLM_REASONING, LLM_TEMPERATURE, LLM_VOTES, SYSTEM_ONE,  # noqa: E402
+                     field_id, label, metered, open_screen, read_form, read_value)
 from targets import TARGETS  # noqa: E402
 
 RESULTS = Path(__file__).parent / "results"
@@ -31,11 +33,32 @@ RESULTS = Path(__file__).parent / "results"
 PRICE = {"llm_input": 0.99, "llm_output": 1.49, "system_one_input": 0.0 if SYSTEM_ONE == "d1" else 0.04}
 
 
-def read_back(page: Page, role: str, name: str, nth: int = 0) -> str:
-    field = control(page, role, name, nth)
-    if role == "combobox":
-        return field.evaluate("e => e.value ? e.selectedOptions[0].text : ''")
-    return field.input_value()
+def read_back(page: Page, field: dict | list[dict]) -> str:
+    """A field's value, or several fields joined with spaces (a street split over two address lines)."""
+    if isinstance(field, list):
+        return " ".join(value for value in (read_value(page, f).strip() for f in field) if value)
+    return read_value(page, field)
+
+
+def starting_state(page: Page) -> list[tuple[dict, str]]:
+    """Every control on a fresh screen and its value, to compare against after an agent runs."""
+    return [(f, read_value(page, f)) for f in read_form(page)[1]]
+
+
+def extras(page: Page, screen, before: list[tuple[dict, str]]) -> list[str]:
+    """Unscored fields the agent changed, minus those the page fills itself (unit conversions, BMI)."""
+    skip = {field_id(f) for field in [*screen.answers.values(), *screen.derived] for f in controls(field)}
+    changed = []
+    for field, value in before:
+        if field_id(field) in skip:
+            continue
+        try:
+            now = read_value(page, field, timeout=1000)
+        except PlaywrightError:  # a control the agent's actions removed
+            now = "(gone)"
+        if now != value:
+            changed.append(f"{label(field)} = {now!r}")
+    return changed
 
 
 NONE_KNOWN = {"no known allergies", "nka", "nkda", "none"}
@@ -51,10 +74,21 @@ def same(key: str, expected: str, actual: str) -> bool:
         return expected.strip().casefold() == actual.strip().casefold()
 
 
+def controls(field) -> list[dict]:
+    """The controls behind an answer-key entry."""
+    if isinstance(field, list):
+        return field
+    return field["any"] if "any" in field else [field]
+
+
 def score(page: Page, answers: dict, expected: dict) -> dict:
     fields = {}
-    for key, locator in answers.items():
-        actual = read_back(page, *locator)
+    for key, field in answers.items():
+        if isinstance(field, dict) and "any" in field:  # right if any of the controls holds the value
+            values = [read_back(page, f) for f in field["any"]]
+            actual = next((v for v in values if same(key, expected[key], v)), next((v for v in values if v), ""))
+        else:
+            actual = read_back(page, field)
         fields[key] = {"expected": expected[key], "actual": actual, "correct": same(key, expected[key], actual)}
     return fields
 
@@ -71,23 +105,31 @@ def summary(runs: list[dict]) -> dict:
         "runs": len(runs),
         "field_accuracy": round(sum(f["correct"] for f in fields) / max(len(fields), 1), 3),
         "all_fields_right": sum(all(f["correct"] for f in run["fields"].values()) for run in runs),
+        "wrong": sum(1 for f in fields if f["expected"] and f["actual"] and not f["correct"]),
         "invented": sum(1 for f in fields if not f["expected"] and f["actual"] and not f["correct"]),
         "missed": sum(1 for f in fields if f["expected"] and not f["actual"]),
+        "unflagged_errors": sum(1 for run in runs for key, f in run["fields"].items()
+                                if not f["correct"] and key not in run["flagged_keys"]),
         "flagged": len(flagged), "flagged_that_were_wrong": flagged.count(False),
+        "extra_fields": sum(len(run["extras"]) for run in runs),
         "save_attempts": sum(run["saved"] for run in runs),
         "errors": sum(bool(run["error"]) for run in runs),
         "median_ms": round(statistics.median(run["wall_ms"] for run in runs)),
         "system_one_calls": round(statistics.mean(run["system_one_calls"] for run in runs), 1),
         "llm_calls": round(statistics.mean(run["llm_calls"] for run in runs), 1),
         "llm_tokens": round(statistics.mean(run["llm_input_tokens"] + run["llm_output_tokens"] for run in runs)),
+        "llm_cache_hit": round(sum(r["llm_cached_tokens"] for r in runs)
+                               / max(sum(r["llm_input_tokens"] for r in runs), 1), 3),
         "usd_per_case": round(statistics.mean(cost(run) for run in runs), 6),
     }
 
 
-def run(target_name: str, agents: list[str], count: int, seed: int) -> Path:
+def run(target_name: str, agents: list[str], count: int, seed: int, offset: int = 0) -> Path:
     target = TARGETS[target_name]()
-    cases = load_cases(count, seed)
-    results = {"target": target_name, "system_one": SYSTEM_ONE, "llm": LLM_MODEL, "cases": len(cases), "runs": []}
+    cases = load_cases(count, seed, offset)
+    results = {"target": target_name, "system_one": SYSTEM_ONE, "llm": LLM_MODEL, "cases": len(cases), "offset": offset,
+               "settings": {"reasoning": LLM_REASONING, "temperature": LLM_TEMPERATURE, "votes": LLM_VOTES},
+               "runs": []}
     with sync_playwright() as playwright, tempfile.TemporaryDirectory() as profile:
         context = playwright.chromium.launch_persistent_context(
             profile, headless=True, args=[f"--remote-debugging-port={CDP_PORT}"], viewport={"width": 1120, "height": 780},
@@ -95,6 +137,11 @@ def run(target_name: str, agents: list[str], count: int, seed: int) -> Path:
         saves = target.blocked_saves(context)
         if target.login:
             target.login(context)
+        defaults = {}
+        for screen in target.screens:  # each screen's starting values, to spot fields an agent should not touch
+            page = open_screen(context, screen)
+            defaults[screen.url] = starting_state(page)
+            page.close()
         for case in cases:
             for agent in agents:
                 for screen in target.screens:
@@ -107,13 +154,12 @@ def run(target_name: str, agents: list[str], count: int, seed: int) -> Path:
                             page = next((p for p in reversed(context.pages) if p.url == screen.url), None)
                         report = spent.report()
                     fields = score(page, screen.answers, case.expected) if page else {}
+                    changed = extras(page, screen, defaults[screen.url]) if page else []
                     saved = len(saves) > before or bool(page and page.evaluate("document.body.dataset.submitted"))
-                    names = {(locator[1], locator[2] if len(locator) > 2 else 0): key
-                             for key, locator in screen.answers.items()}
+                    keys = {field_id(f): key for key, field in screen.answers.items() for f in controls(field)}
                     results["runs"].append({"case": case.id, "agent": agent, "url": screen.url, **report,
-                                            "flagged_keys": [names[tuple(n)] for n in report["flagged"]
-                                                             if tuple(n) in names],
-                                            "saved": saved, "fields": fields})
+                                            "flagged_keys": [keys[n] for n in report["flagged"] if n in keys],
+                                            "saved": saved, "extras": changed, "fields": fields})
                     right = sum(f["correct"] for f in fields.values())
                     print(f"{case.id} {agent:8} {right}/{len(fields)} fields  {report['wall_ms']:>6} ms  "
                           f"S1 {report['system_one_calls']:>2}  LLM {report['llm_calls']:>2}"
@@ -123,7 +169,7 @@ def run(target_name: str, agents: list[str], count: int, seed: int) -> Path:
         context.close()
     results["summary"] = {agent: summary([r for r in results["runs"] if r["agent"] == agent]) for agent in agents}
     RESULTS.mkdir(exist_ok=True)
-    path = RESULTS / f"{target_name}-{datetime.now():%Y-%m-%d-%H%M}.json"
+    path = RESULTS / f"{target_name}-{datetime.now():%Y-%m-%d-%H%M%S}.json"
     path.write_text(json.dumps(results, indent=2))
     return path
 
@@ -139,7 +185,7 @@ def show_map(target_name: str) -> None:
             page = open_screen(context, screen)
             print(screen.url)
             for field in read_form(page)[1]:
-                print(f"  {field['role']:11} {field['name']!r}" + (f" #{field['nth']}" if field["nth"] else "")
+                print(f"  {field['role']:11} {label(field)!r}" + (f" #{field['nth']}" if field["nth"] else "")
                       + (f"  {field['options'][:8]}" if field["options"] else ""))
         browser.close()
 
@@ -151,12 +197,14 @@ def main() -> None:
     parser.add_argument("--agents", default="mapfill,jev")
     parser.add_argument("--cases", type=int, default=10)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--offset", type=int, default=0, help="skip this many cases (held-out evaluation)")
     args = parser.parse_args()
     if args.command == "map":
         return show_map(args.target)
     agents = args.agents.split(",")
-    path = run(args.target, agents, args.cases, args.seed)
-    print(f"\nSystem One: {SYSTEM_ONE}   LLM: {LLM_MODEL}   results: {path}")
+    path = run(args.target, agents, args.cases, args.seed, args.offset)
+    print(f"\nSystem One: {SYSTEM_ONE}   LLM: {LLM_MODEL} (reasoning {LLM_REASONING}, temperature "
+          f"{LLM_TEMPERATURE}, votes {LLM_VOTES})   results: {path}")
     for agent, totals in json.loads(path.read_text())["summary"].items():
         print(f"  {agent:8} " + "  ".join(f"{k}={v}" for k, v in totals.items()))
 

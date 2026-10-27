@@ -107,7 +107,8 @@ def note(expected: dict[str, str], rng: random.Random) -> str:
     return "\n".join(lines)
 
 
-def load_cases(limit: int = 20, seed: int = 7) -> list[Case]:
+def load_cases(limit: int = 20, seed: int = 7, offset: int = 0) -> list[Case]:
+    """limit cases after skipping offset of them, so settings tuned on the first cases can be checked on others."""
     rng = random.Random(seed)
     vitals = latest_vitals(rows("observations.csv"))
     allergies = allergies_by_patient(rows("allergies.csv"))
@@ -126,9 +127,9 @@ def load_cases(limit: int = 20, seed: int = 7) -> list[Case]:
         if expected["temperature"]:
             expected["temp_method"] = rng.choice(TEMP_METHODS)
         cases.append(Case(patient["Id"][:8], note(expected, rng), expected))
-        if len(cases) == limit:
+        if len(cases) == offset + limit:
             break
-    return cases
+    return cases[offset:]
 
 
 if __name__ == "__main__":

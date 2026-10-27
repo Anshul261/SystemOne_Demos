@@ -42,14 +42,19 @@ def test_same(key, expected, actual, right):
     assert same(key, expected, actual) is right
 
 
-def test_summary_counts_invented_and_flag_accuracy():
+def test_summary_separates_wrong_invented_missed_and_unflagged():
     run = {"fields": {"a": {"expected": "", "actual": "x", "correct": False},
-                      "b": {"expected": "1", "actual": "1", "correct": True}},
-           "flagged_keys": ["a"], "saved": False, "error": None, "wall_ms": 10, "system_one_calls": 2,
-           "llm_calls": 1, "llm_input_tokens": 100, "llm_output_tokens": 10, "system_one_tokens": 50}
+                      "b": {"expected": "1", "actual": "2", "correct": False},
+                      "c": {"expected": "3", "actual": "", "correct": False},
+                      "d": {"expected": "4", "actual": "4", "correct": True}},
+           "flagged_keys": ["a"], "extras": ["Abn = 'High'"], "saved": False, "error": None, "wall_ms": 10,
+           "system_one_calls": 2, "llm_calls": 1, "llm_input_tokens": 100, "llm_output_tokens": 10,
+           "llm_cached_tokens": 40, "system_one_tokens": 50}
     totals = summary([run])
-    assert totals["invented"] == 1 and totals["field_accuracy"] == 0.5
+    assert (totals["invented"], totals["wrong"], totals["missed"]) == (1, 1, 1)
+    assert totals["field_accuracy"] == 0.25 and totals["unflagged_errors"] == 2
     assert totals["flagged"] == 1 and totals["flagged_that_were_wrong"] == 1
+    assert totals["extra_fields"] == 1 and totals["llm_cache_hit"] == 0.4
 
 
 def test_read_form_finds_every_answer_key_field():
@@ -59,8 +64,8 @@ def test_read_form_finds_every_answer_key_field():
         page.goto(LOCAL.screens[0].url)
         _, fields = runners.read_form(page)
         browser.close()
-    found = {(f["role"], f["name"]) for f in fields}
-    assert set(LOCAL.screens[0].answers.values()) <= found
+    found = {runners.field_id(f) for f in fields}
+    assert {runners.field_id(f) for f in LOCAL.screens[0].answers.values()} <= found
     sex = next(f for f in fields if f["name"] == "Sex")
     assert sex["options"] == ["Unassigned", "Female", "Male", "Unknown"]
 
