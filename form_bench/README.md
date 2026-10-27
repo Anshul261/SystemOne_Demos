@@ -19,6 +19,26 @@ mapfill is built so that a wrong value is never entered silently. System Two (th
 - An empty field is flagged when Jev is confident the note states it (above 0.85).
 - A value that does not stick after a refill is flagged.
 
+`jevfill` turns the roles around, after TypeSafe's "select instead of generate" pattern. Code lists every
+short stretch of the note's words (numbers only, for fields with a unit); Jev picks each field's value from
+that list, so nothing is written that is not in the note. Jev must also confirm the note states each value.
+Only values Jev picked but is unsure of go to the LLM, with just those fields. Anything nobody can confirm
+is left blank and flagged. `JEV_CONTEXT=rules` adds a few rules and examples to Jev's questions.
+
+On the 57 held-out patients (114 OpenEMR screens):
+
+| | mapfill | jevfill, rules | jevfill, no context |
+|---|---|---|---|
+| Fields right | 99.8% | 97.7% | 97.4% |
+| Wrong values | 2 | 2 | 2 |
+| Errors nothing flagged | 2 | 7 | 8 |
+| Flags (real errors among them) | 24 (0) | 73 (15) | 79 (17) |
+| Unscored fields changed | 0 | 4 | 12 |
+| Median per screen | 1.9 s | 2.3 s | 2.5 s |
+| Estimated cost per screen | $0.0055 | $0.0015 | $0.0017 |
+
+jevfill is about 3.7 times cheaper but less accurate, so mapfill stays the default.
+
 System One is TypeSafe's Jev when `TYPESAFE_API_KEY` is set, and otherwise d1-3B on the local service.
 jev-ultrafast's own requests are redirected there, since d1 takes the same request shape. System Two is
 Qwen3.8-27B on Cerebras, at temperature 0 with reasoning "low" for both agents. Override with
