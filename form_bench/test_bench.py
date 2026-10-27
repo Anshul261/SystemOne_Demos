@@ -5,7 +5,8 @@ import random
 import pytest
 from playwright.sync_api import sync_playwright
 
-import runners
+import forms
+import models
 from bench import same, summary
 from cases import load_cases, note, us_units
 from targets import LOCAL
@@ -62,34 +63,34 @@ def test_read_form_finds_every_answer_key_field():
         browser = playwright.chromium.launch()
         page = browser.new_page()
         page.goto(LOCAL.screens[0].url)
-        _, fields = runners.read_form(page)
+        _, fields = forms.read_form(page)
         browser.close()
-    found = {runners.field_id(f) for f in fields}
-    assert {runners.field_id(f) for f in LOCAL.screens[0].answers.values()} <= found
+    found = {forms.field_id(f) for f in fields}
+    assert {forms.field_id(f) for f in LOCAL.screens[0].answers.values()} <= found
     sex = next(f for f in fields if f["name"] == "Sex")
     assert sex["options"] == ["Unassigned", "Female", "Male", "Unknown"]
 
 
 def test_system_one_goes_to_local_d1_without_a_key(monkeypatch):
     sent = {}
-    monkeypatch.setattr(runners, "SYSTEM_ONE", "d1")
-    monkeypatch.setattr(runners, "_post_json", lambda url, key, body: sent.update(url=url, body=body) or {})
-    runners.post_json(runners.TYPESAFE, "k", {"model": "jev-latest", "questions": {}})
-    assert sent["url"] == f"{runners.D1_URL}/system_one" and sent["body"]["model"] == runners.D1_MODEL
+    monkeypatch.setattr(models, "SYSTEM_ONE", "d1")
+    monkeypatch.setattr(models, "_post_json", lambda url, key, body: sent.update(url=url, body=body) or {})
+    models.post_json(models.TYPESAFE, "k", {"model": "jev-latest", "questions": {}})
+    assert sent["url"] == f"{models.D1_URL}/system_one" and sent["body"]["model"] == models.D1_MODEL
 
 
 def test_cerebras_requests_drop_jevs_reasoning_field(monkeypatch):
     sent = {}
-    monkeypatch.setattr(runners, "_post_json", lambda url, key, body: sent.update(body=body) or {})
-    runners.post_json("https://api.cerebras.ai/v1/chat/completions", "k", {"reasoning": {"enabled": False}})
-    assert "reasoning" not in sent["body"] and sent["body"]["reasoning_effort"] == runners.LLM_REASONING
+    monkeypatch.setattr(models, "_post_json", lambda url, key, body: sent.update(body=body) or {})
+    models.post_json("https://api.cerebras.ai/v1/chat/completions", "k", {"reasoning": {"enabled": False}})
+    assert "reasoning" not in sent["body"] and sent["body"]["reasoning_effort"] == models.LLM_REASONING
 
 
 def test_meter_counts_each_kind_of_call(monkeypatch):
-    monkeypatch.setattr(runners, "_post_json", lambda url, key, body: {
+    monkeypatch.setattr(models, "_post_json", lambda url, key, body: {
         "usage": {"prompt_tokens": 5, "completion_tokens": 2, "input_tokens": 7}})
-    with runners.metered() as spent:
-        runners.post_json("https://api.cerebras.ai/v1/chat/completions", "k", {})
-        runners.post_json(runners.TYPESAFE, "k", {})
+    with models.metered() as spent:
+        models.post_json("https://api.cerebras.ai/v1/chat/completions", "k", {})
+        models.post_json(models.TYPESAFE, "k", {})
     assert (spent.llm_calls, spent.llm_input_tokens, spent.llm_output_tokens) == (1, 5, 2)
     assert (spent.system_one_calls, spent.system_one_tokens) == (1, 7)

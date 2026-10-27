@@ -1,49 +1,52 @@
-# Form-fill bench
+# Chart entry: extraction and entry
 
-How fast, cheap and accurate can an agent type a clinician's note into an EHR form? This bench runs agents
-on the same synthetic patients and the same form, blocks every save, then reads the form back and scores
-each field.
+Two workflows turn a clinician's visit note into an EHR record, with a person between them:
+
+1. **Extraction** ([extraction.py](extraction.py)). The EHR screen's fields are read from the page itself, so
+   any screen works. One LLM call proposes a value for each field from the note; Jev checks every one.
+   - A dropdown is set only when the LLM's reading is one of its options. It is flagged unless Jev
+     confidently chose the same. A value only Jev wanted stays blank: Jev reads more into a note than is
+     written (an Abn flag of "Normal" for a plain number).
+   - A typed value is flagged unless Jev agrees the note states it.
+   - An empty field is flagged when Jev is confident the note states it (above 0.85).
+2. **Entry** ([entry.py](entry.py)). The approved values are typed into the screen field by field, each one
+   read back, then all of them read back again, since some pages change fields while their scripts run.
+   Each field produces a frame, so a person can watch the entry happen.
+
+Supporting modules: [forms.py](forms.py) reads screens and fills or reads controls, and [models.py](models.py)
+calls the models. The review console ([app.py](app.py)) runs both workflows for a person; the bench
+([bench.py](bench.py)) runs them end to end with no person and scores the result.
+
+The bench compares two agents on the same synthetic patients and screens:
 
 | Agent | How it fills a form |
 |---|---|
-| `jev` | [jev-ultrafast](https://github.com/browser-use/jev-ultrafast), unchanged, with the note as its goal. System One picks every action; a small LLM writes each typed value. |
-| `mapfill` | Reads the form once from Playwright's ARIA snapshot. One LLM call proposes every value, and System One checks it (below). Playwright fills the form with no model in the loop, reads every value back, and refills anything the page changed. |
+| `mapfill` | The two workflows above, with every value accepted as extracted. |
+| `jev` | [jev-ultrafast](https://github.com/browser-use/jev-ultrafast), unchanged, with the note as its goal, as an outside reference. System One picks every action; a small LLM writes each typed value. |
 
-mapfill is built so that a wrong value is never entered silently. System Two (the LLM) proposes; System One
-(Jev) checks, in parallel and in one more request:
+### What was tried and dropped
 
-- A dropdown is set only when the LLM's reading is one of its options. It is flagged unless Jev
-  confidently chose the same option. A value only Jev wanted stays blank, since Jev reads more into a
-  note than is written (an Abn flag of "Normal" for a plain number).
-- A typed value is flagged unless Jev agrees the note states it.
-- An empty field is flagged when Jev is confident the note states it (above 0.85).
-- A value that does not stick after a refill is flagged.
+`jevfill` had Jev pick each value from the note's own word spans, after TypeSafe's "select instead of
+generate" pattern, with the LLM only for fields Jev was unsure of. On the 57 held-out patients (114 OpenEMR
+screens):
 
-`jevfill` turns the roles around, after TypeSafe's "select instead of generate" pattern. Code lists every
-short stretch of the note's words (numbers only, for fields with a unit); Jev picks each field's value from
-that list, so nothing is written that is not in the note. Jev must also confirm the note states each value.
-Only values Jev picked but is unsure of go to the LLM, with just those fields. Anything nobody can confirm
-is left blank and flagged. `JEV_CONTEXT=rules` adds a few rules and examples to Jev's questions.
-
-On the 57 held-out patients (114 OpenEMR screens):
-
-| | mapfill | jevfill, rules | jevfill, no context |
+| | mapfill | jevfill, with rules | jevfill, no context |
 |---|---|---|---|
 | Fields right | 99.8% | 97.7% | 97.4% |
-| Wrong values | 2 | 2 | 2 |
 | Errors nothing flagged | 2 | 7 | 8 |
 | Flags (real errors among them) | 24 (0) | 73 (15) | 79 (17) |
-| Unscored fields changed | 0 | 4 | 12 |
 | Median per screen | 1.9 s | 2.3 s | 2.5 s |
 | Estimated cost per screen | $0.0055 | $0.0015 | $0.0017 |
 
-jevfill is about 3.7 times cheaper but less accurate, so mapfill stays the default.
+It was 3.7 times cheaper but less accurate, and accuracy comes first, so it was removed (see git history).
+Also measured and dropped: three LLM votes at temperature 0.7 (less accurate, three times the cost), reasoning
+"none" (less accurate) and "medium" or "high" (no better than "low"), and gpt-oss-120b (less accurate).
 
 System One is TypeSafe's Jev when `TYPESAFE_API_KEY` is set, and otherwise d1-3B on the local service.
 jev-ultrafast's own requests are redirected there, since d1 takes the same request shape. System Two is
-Qwen3.8-27B on Cerebras, at temperature 0 with reasoning "low" for both agents. Override with
-`LLM_REASONING`, `LLM_TEMPERATURE`, `TEXT_MODEL`, and `LLM_VOTES` (several extractions; disagreements are
-flagged).
+Qwen3.8-27B on Cerebras, at temperature 0 with reasoning "low" for both agents. Its prompt states the
+"Smith, Anna" name convention: without it, Qwen read "Pt Kris, Franklin" backwards every time, and with it,
+18 of 18 hard name cases were right. Override with `LLM_REASONING`, `LLM_TEMPERATURE` and `TEXT_MODEL`.
 
 ## What it reuses
 
@@ -102,14 +105,17 @@ on later ones (`--cases 57 --offset 20`) to check them fairly.
 uv run --env-file .env uvicorn app:app --port 8050     # then open http://127.0.0.1:8050
 ```
 
-The console puts mapfill in front of a person. Paste a visit note, or use a sample patient, choose an EHR
-screen and fill it. Every value it entered is listed next to the words in the note it came from, which are
-highlighted when you point at the field. Flagged fields say why. Keep the value or type a correction, which
-is entered on the page and read back. Save stays locked until every flag is reviewed, and the server
-refuses it too. Saving writes to the EHR: a new patient, or vitals on the Bench Fixture visit.
+The console runs the two workflows with a person between them. Paste a visit note, or use a sample patient,
+and choose an EHR screen.
 
-[app.py](app.py) runs the browser on one worker thread and streams each step to the page.
-[static/](static) holds the page. One browser serves the console, so it is for one reviewer at a time.
+1. **Extract values.** Each value is listed next to the words in the note it came from, highlighted when you
+   point at the field. Flagged values say why.
+2. **Review.** Keep each flagged value or type a correction.
+3. **Enter into the EHR.** Locked until every flag is resolved. The console shows the EHR screen as each value
+   is typed and read back.
+4. **Save.** Locked until entry has finished and anything the page refused is reviewed.
+
+The server enforces the same order. One browser serves the console, so it is for one reviewer at a time.
 
 ## Targets
 

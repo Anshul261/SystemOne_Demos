@@ -24,8 +24,9 @@ os.environ.setdefault("BU_CDP_URL", f"http://127.0.0.1:{CDP_PORT}")
 os.environ.setdefault("BU_NAME", "form-bench")
 
 from cases import load_cases  # noqa: E402
-from runners import (AGENTS, LLM_MODEL, LLM_REASONING, LLM_TEMPERATURE, LLM_VOTES, SYSTEM_ONE,  # noqa: E402
-                     field_id, label, metered, open_screen, read_form, read_value)
+from forms import field_id, label, open_screen, read_form, read_value  # noqa: E402
+from models import LLM_MODEL, LLM_REASONING, LLM_TEMPERATURE, SYSTEM_ONE, metered  # noqa: E402
+from runners import AGENTS  # noqa: E402
 from targets import TARGETS  # noqa: E402
 
 RESULTS = Path(__file__).parent / "results"
@@ -117,7 +118,6 @@ def summary(runs: list[dict]) -> dict:
         "median_ms": round(statistics.median(run["wall_ms"] for run in runs)),
         "system_one_calls": round(statistics.mean(run["system_one_calls"] for run in runs), 1),
         "llm_calls": round(statistics.mean(run["llm_calls"] for run in runs), 1),
-        "fields_escalated": round(statistics.mean(len(run.get("escalated", [])) for run in runs), 1),
         "llm_tokens": round(statistics.mean(run["llm_input_tokens"] + run["llm_output_tokens"] for run in runs)),
         "llm_cache_hit": round(sum(r["llm_cached_tokens"] for r in runs)
                                / max(sum(r["llm_input_tokens"] for r in runs), 1), 3),
@@ -129,7 +129,7 @@ def run(target_name: str, agents: list[str], count: int, seed: int, offset: int 
     target = TARGETS[target_name]()
     cases = load_cases(count, seed, offset)
     results = {"target": target_name, "system_one": SYSTEM_ONE, "llm": LLM_MODEL, "cases": len(cases), "offset": offset,
-               "settings": {"reasoning": LLM_REASONING, "temperature": LLM_TEMPERATURE, "votes": LLM_VOTES},
+               "settings": {"reasoning": LLM_REASONING, "temperature": LLM_TEMPERATURE},
                "runs": []}
     with sync_playwright() as playwright, tempfile.TemporaryDirectory() as profile:
         context = playwright.chromium.launch_persistent_context(
@@ -195,7 +195,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("command", choices=["run", "map"])
     parser.add_argument("--target", default="local", choices=sorted(TARGETS))
-    parser.add_argument("--agents", default="mapfill,jev")
+    parser.add_argument("--agents", default="mapfill,jev", help="mapfill (the product) and jev (jev-ultrafast)")
     parser.add_argument("--cases", type=int, default=10)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--offset", type=int, default=0, help="skip this many cases (held-out evaluation)")
@@ -205,7 +205,7 @@ def main() -> None:
     agents = args.agents.split(",")
     path = run(args.target, agents, args.cases, args.seed, args.offset)
     print(f"\nSystem One: {SYSTEM_ONE}   LLM: {LLM_MODEL} (reasoning {LLM_REASONING}, temperature "
-          f"{LLM_TEMPERATURE}, votes {LLM_VOTES})   results: {path}")
+          f"{LLM_TEMPERATURE})   results: {path}")
     for agent, totals in json.loads(path.read_text())["summary"].items():
         print(f"  {agent:8} " + "  ".join(f"{k}={v}" for k, v in totals.items()))
 

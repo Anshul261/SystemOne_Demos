@@ -26,36 +26,45 @@
     <button id="edit-note" class="quiet" type="button" hidden>Edit the note</button>
 
     <div class="target">
-      <label for="screen">Fill this EHR screen</label>
+      <label for="screen">EHR screen</label>
       <select id="screen"></select>
-      <button id="fill" class="primary" type="button">Fill the form</button>
+      <button id="extract" class="primary" type="button">Extract values</button>
     </div>
 
-    <ol id="steps" class="steps" hidden>
-      <li data-step="open">Open the screen</li>
-      <li data-step="propose">Read the note and check each value</li>
-      <li data-step="enter">Enter the values and read them back</li>
+    <ol id="stages" class="stages">
+      <li data-stage="extract">Extract values from the note</li>
+      <li data-stage="review">Review flagged values</li>
+      <li data-stage="enter">Enter them into the EHR, and watch</li>
+      <li data-stage="save">Save</li>
     </ol>
     <p id="error" class="error" role="alert" hidden></p>
   </section>
 
   <section class="pane review-pane" aria-labelledby="review-heading">
+    <figure id="live" class="live" hidden>
+      <div class="live-head">
+        <h2>Entry</h2>
+        <p id="live-caption" class="live-caption" aria-live="polite"></p>
+      </div>
+      <img id="live-frame" alt="The EHR screen as each value is entered">
+    </figure>
+
     <div class="pane-head">
-      <h2 id="review-heading">Review</h2>
+      <h2 id="review-heading">Values</h2>
       <p id="tally" class="tally" aria-live="polite"></p>
     </div>
-    <p id="empty" class="empty">Fill a screen and every value it entered appears here, next to the words in the note it came from. Nothing is saved until you have checked the flagged ones.</p>
+    <p id="empty" class="empty">Extract a note and its values appear here, each next to the words in the note it came from. Flagged values need your decision before anything is entered.</p>
     <ul id="rows" class="rows"></ul>
     <details id="shot-box" class="shot-box" hidden>
-      <summary>See the EHR screen as filled</summary>
-      <img id="shot" alt="The EHR screen with filled fields outlined in green and fields to review in magenta">
+      <summary>See the whole EHR screen after entry</summary>
+      <img id="shot" alt="The whole EHR screen after entry, with entered fields outlined">
     </details>
   </section>
 </main>
 
 <footer class="savebar">
-  <p id="save-status" aria-live="polite">No form filled yet.</p>
-  <button id="save" class="primary" type="button" disabled>Save</button>
+  <p id="status" aria-live="polite">Paste a note to begin.</p>
+  <button id="action" class="primary" type="button" disabled>Enter</button>
 </footer>
 <script src="/static/app.js"></script>
 </body>
