@@ -117,6 +117,7 @@ def summary(runs: list[dict]) -> dict:
         "median_ms": round(statistics.median(run["wall_ms"] for run in runs)),
         "system_one_calls": round(statistics.mean(run["system_one_calls"] for run in runs), 1),
         "llm_calls": round(statistics.mean(run["llm_calls"] for run in runs), 1),
+        "fields_escalated": round(statistics.mean(len(run.get("escalated", [])) for run in runs), 1),
         "llm_tokens": round(statistics.mean(run["llm_input_tokens"] + run["llm_output_tokens"] for run in runs)),
         "llm_cache_hit": round(sum(r["llm_cached_tokens"] for r in runs)
                                / max(sum(r["llm_input_tokens"] for r in runs), 1), 3),
