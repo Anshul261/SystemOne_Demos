@@ -47,11 +47,24 @@ def field_id(field: dict) -> tuple:
     return field["role"], field.get("row") or "", "" if field.get("row") else field.get("name", ""), field.get("nth", 0)
 
 
+def row_pattern(row: str) -> re.Pattern:
+    """A row's name grows with what it shows (selected options, typed text, earlier readings), so match its
+    words in order with gaps allowed, anchored at the start only."""
+    return re.compile("^" + ".*".join(re.escape(w).replace("/", r"\/") for w in row.split()))
+
+
+def same_control(a: dict, b: dict) -> bool:
+    """Whether two field descriptions, read at different times, are the same control."""
+    if a["role"] != b["role"] or a.get("nth", 0) != b.get("nth", 0) or bool(a.get("row")) != bool(b.get("row")):
+        return False
+    if a.get("row"):
+        return bool(row_pattern(a["row"]).match(b["row"]) or row_pattern(b["row"]).match(a["row"]))
+    return a["name"] == b["name"]
+
+
 def locate(page: Page, field: dict):
-    if field.get("row"):  # a row's name includes its selected options, so match its words in order, gaps allowed
-        # Anchored at the start only: text typed into a row's box becomes part of the row's name.
-        words = re.compile("^" + ".*".join(re.escape(w).replace("/", r"\/") for w in field["row"].split()))
-        return page.get_by_role("row", name=words).get_by_role(field["role"]).nth(field.get("nth", 0))
+    if field.get("row"):
+        return page.get_by_role("row", name=row_pattern(field["row"])).get_by_role(field["role"]).nth(field.get("nth", 0))
     return page.get_by_role(field["role"], name=field["name"], exact=True).nth(field.get("nth", 0))
 
 

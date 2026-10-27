@@ -24,7 +24,7 @@ os.environ.setdefault("BU_CDP_URL", f"http://127.0.0.1:{CDP_PORT}")
 os.environ.setdefault("BU_NAME", "form-bench")
 
 from cases import load_cases  # noqa: E402
-from forms import field_id, label, open_screen, read_form, read_value  # noqa: E402
+from forms import field_id, label, open_screen, read_form, read_value, same_control  # noqa: E402
 from models import LLM_MODEL, LLM_REASONING, LLM_TEMPERATURE, SYSTEM_ONE, metered  # noqa: E402
 from runners import AGENTS  # noqa: E402
 from targets import TARGETS  # noqa: E402
@@ -48,10 +48,10 @@ def starting_state(page: Page) -> list[tuple[dict, str]]:
 
 def extras(page: Page, screen, before: list[tuple[dict, str]]) -> list[str]:
     """Unscored fields the agent changed, minus those the page fills itself (unit conversions, BMI)."""
-    skip = {field_id(f) for field in [*screen.answers.values(), *screen.derived] for f in controls(field)}
+    skip = [f for field in [*screen.answers.values(), *screen.derived] for f in controls(field)]
     changed = []
     for field, value in before:
-        if field_id(field) in skip:
+        if any(same_control(field, f) for f in skip):
             continue
         try:
             now = read_value(page, field, timeout=1000)

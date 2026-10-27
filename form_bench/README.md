@@ -24,6 +24,13 @@ The bench compares two agents on the same synthetic patients and screens:
 | `mapfill` | The two workflows above, with every value accepted as extracted. |
 | `jev` | [jev-ultrafast](https://github.com/browser-use/jev-ultrafast), unchanged, with the note as its goal, as an outside reference. System One picks every action; a small LLM writes each typed value. |
 
+### Accuracy
+
+On 57 synthetic patients held out from tuning (114 OpenEMR screens: new patient and vitals), the final design
+entered every field correctly: no wrong, missed or invented values, and no unscored field changed. It flagged
+19 fields for review, all of which were in fact right. One caveat: the name-order rule came from a mistake
+seen in these same patients, so a fresh set of patients is the next fair test.
+
 ### What was tried and dropped
 
 `jevfill` had Jev pick each value from the note's own word spans, after TypeSafe's "select instead of
