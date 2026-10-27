@@ -65,8 +65,8 @@ def extract(note: str, snapshot: str, fields: list[dict]
         confidence[i] = readings[i][values[i]]
         if confidence[i] < VALUE_BELOW:
             leaning = max(readings[i], key=readings[i].get)
-            flags[i] = (f"Jev is {confidence[i]:.0%} sure of this; it leans to "
-                        f"“{fields[i]['options'][leaning] or 'blank'}”")
+            flags[i] = (f"Jev agrees, but is only {confidence[i]:.0%} sure" if leaning == values[i] else
+                        f"Jev is {confidence[i]:.0%} sure of this; it leans to “{fields[i]['options'][leaning] or 'blank'}”")
     return values, flags, confidence
 
 

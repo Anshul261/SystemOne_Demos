@@ -241,6 +241,7 @@ async function extract() {
   showError("");
   Object.assign(state, { session: null, rows: [], ehr: $("screen").selectedOptions[0].parentElement.dataset.ehr });
   state.entered.clear();
+  for (const took of $("stages").querySelectorAll(".took")) took.remove();
   $("live").hidden = true;
   $("shot-box").hidden = true;
   $("extract").disabled = true;
