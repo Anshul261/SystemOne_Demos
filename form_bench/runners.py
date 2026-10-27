@@ -13,7 +13,7 @@ from playwright.sync_api import BrowserContext, Page
 
 from entry import enter
 from extraction import extract
-from forms import field_id, open_screen, read_form
+from forms import open_screen, read_form
 from models import Meter
 
 GOAL = ("Enter this patient's details into the form exactly as the note states them. Leave any field the note "
@@ -24,11 +24,17 @@ GOAL = ("Enter this patient's details into the form exactly as the note states t
 def run_mapfill(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
     page = open_screen(context, screen)
     snapshot, fields = read_form(page)
-    values, flags = extract(note, snapshot, fields)
+    values, flags, confidence = extract(note, snapshot, fields)
     flags |= enter(page, fields, values)
     spent.actions = len(values)
-    spent.flagged = [field_id(fields[i]) for i in flags]
+    spent.flagged = [control(fields[i]) for i in flags]
+    spent.confidence = [(control(fields[i]), c) for i, c in confidence.items()]
     return page
+
+
+def control(field: dict) -> dict:
+    """Just what identifies a control, for the results file."""
+    return {k: field.get(k) for k in ("role", "name", "row", "nth")}
 
 
 class PageBrowser(browser.Browser):

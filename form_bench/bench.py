@@ -24,7 +24,7 @@ os.environ.setdefault("BU_CDP_URL", f"http://127.0.0.1:{CDP_PORT}")
 os.environ.setdefault("BU_NAME", "form-bench")
 
 from cases import load_cases  # noqa: E402
-from forms import field_id, label, open_screen, read_form, read_value, same_control  # noqa: E402
+from forms import label, open_screen, read_form, read_value, same_control  # noqa: E402
 from models import LLM_MODEL, LLM_REASONING, LLM_TEMPERATURE, SYSTEM_ONE, metered  # noqa: E402
 from runners import AGENTS  # noqa: E402
 from targets import TARGETS  # noqa: E402
@@ -94,6 +94,12 @@ def score(page: Page, answers: dict, expected: dict) -> dict:
     return fields
 
 
+def answer_keys(screen, flagged: list[dict]) -> list[str]:
+    """The answer-key fields among some controls, matched the tolerant way rows are found."""
+    return [key for key, field in screen.answers.items()
+            if any(same_control(c, f) for c in controls(field) for f in flagged)]
+
+
 def cost(spend: dict) -> float:
     return (spend["llm_input_tokens"] * PRICE["llm_input"] + spend["llm_output_tokens"] * PRICE["llm_output"]
             + spend["system_one_tokens"] * PRICE["system_one_input"]) / 1e6
@@ -157,9 +163,10 @@ def run(target_name: str, agents: list[str], count: int, seed: int, offset: int 
                     fields = score(page, screen.answers, case.expected) if page else {}
                     changed = extras(page, screen, defaults[screen.url]) if page else []
                     saved = len(saves) > before or bool(page and page.evaluate("document.body.dataset.submitted"))
-                    keys = {field_id(f): key for key, field in screen.answers.items() for f in controls(field)}
                     results["runs"].append({"case": case.id, "agent": agent, "url": screen.url, **report,
-                                            "flagged_keys": [keys[n] for n in report["flagged"] if n in keys],
+                                            "flagged_keys": answer_keys(screen, report["flagged"]),
+                                            "confidence_by_key": {key: c for f, c in report["confidence"]
+                                                                  for key in answer_keys(screen, [f])},
                                             "saved": saved, "extras": changed, "fields": fields})
                     right = sum(f["correct"] for f in fields.values())
                     print(f"{case.id} {agent:8} {right}/{len(fields)} fields  {report['wall_ms']:>6} ms  "
@@ -173,6 +180,23 @@ def run(target_name: str, agents: list[str], count: int, seed: int, offset: int 
     path = RESULTS / f"{target_name}-{datetime.now():%Y-%m-%d-%H%M%S}.json"
     path.write_text(json.dumps(results, indent=2))
     return path
+
+
+def calibrate(paths: list[str]) -> None:
+    """For each flag threshold: how many wrong fields Jev's confidence would have flagged, and how many right
+    ones it would have flagged needlessly. Run on results from patients the thresholds were not chosen on."""
+    scored = [(run["confidence_by_key"].get(key), field["correct"], bool(field["expected"]))
+              for path in paths for run in json.loads(Path(path).read_text())["runs"] if run["agent"] == "mapfill"
+              for key, field in run["fields"].items()]
+    judged = [s for s in scored if s[0] is not None]
+    wrong = sum(not right for _, right, _ in judged)
+    print(f"{len(scored)} scored fields, {len(judged)} with a confidence, {wrong} of those wrong; "
+          f"{sum(not right for c, right, _ in scored if c is None)} wrong without one")
+    print("threshold  wrong flagged  right flagged (false alarms)")
+    for threshold in (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9):
+        caught = sum(c < threshold and not right for c, right, _ in judged)
+        noise = sum(c < threshold and right for c, right, _ in judged)
+        print(f"   {threshold:.1f}      {caught:>3} of {wrong:<3}   {noise:>4}")
 
 
 def show_map(target_name: str) -> None:
@@ -193,7 +217,8 @@ def show_map(target_name: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("command", choices=["run", "map"])
+    parser.add_argument("command", choices=["run", "map", "calibrate"])
+    parser.add_argument("results", nargs="*", help="calibrate: results files to read")
     parser.add_argument("--target", default="local", choices=sorted(TARGETS))
     parser.add_argument("--agents", default="mapfill,jev", help="mapfill (the product) and jev (jev-ultrafast)")
     parser.add_argument("--cases", type=int, default=10)
@@ -202,6 +227,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.command == "map":
         return show_map(args.target)
+    if args.command == "calibrate":
+        return calibrate(args.results)
     agents = args.agents.split(",")
     path = run(args.target, agents, args.cases, args.seed, args.offset)
     print(f"\nSystem One: {SYSTEM_ONE}   LLM: {LLM_MODEL} (reasoning {LLM_REASONING}, temperature "

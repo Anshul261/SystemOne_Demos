@@ -28,8 +28,15 @@ The bench compares two agents on the same synthetic patients and screens:
 
 On 57 synthetic patients held out from tuning (114 OpenEMR screens: new patient and vitals), the final design
 entered every field correctly: no wrong, missed or invented values, and no unscored field changed. It flagged
-19 fields for review, all of which were in fact right. One caveat: the name-order rule came from a mistake
-seen in these same patients, so a fresh set of patients is the next fair test.
+16 fields for review, all of which were in fact right.
+
+Flags come from Jev's confidence in each field (see extraction.py), shown to the reviewer beside every value.
+`bench.py calibrate results/<file>.json` shows, for each threshold, how many wrong fields would be flagged and
+how many right ones would be flagged needlessly.
+
+Two caveats. The name-order rule came from a mistake seen in these same patients. And every note comes from
+three templates, so the notes no longer produce errors at all: the thresholds are set by their false-alarm cost,
+and how much they catch needs messier notes, written independently, that do produce errors.
 
 ### What was tried and dropped
 

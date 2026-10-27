@@ -41,7 +41,8 @@ class Meter:
     llm_output_tokens: int = 0
     llm_cached_tokens: int = 0
     actions: int = 0
-    flagged: list = field(default_factory=list)
+    flagged: list = field(default_factory=list)  # the controls flagged for review
+    confidence: list = field(default_factory=list)  # [(control, Jev's confidence)] for every field it judged
     error: str | None = None
 
     def report(self) -> dict:

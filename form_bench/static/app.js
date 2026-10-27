@@ -4,8 +4,9 @@
 const $ = (id) => document.getElementById(id);
 const state = { session: null, rows: [], ehr: "", stage: "start", entered: new Map(), marks: new Map() };
 
-// "Weight (LOINC:29463-7) lbs * - Decimal pounds…" reads as "Weight lbs".
-const fieldName = (label) => label.replace(/\s*\(LOINC:[^)]*\)/, "").replace(/\s*\*.*$/, "").trim();
+// "Weight (LOINC:29463-7) lbs (Value) - Decimal pounds…" reads as "Weight lbs"; "… (Abn)" keeps its column.
+const fieldName = (label) => label.replace(/\s*\(LOINC:[^)]*\)/, "").replace(/ \(Value\)/, "")
+  .replace(/ - Decimal pounds.*$/, "").replace(/\s*\*.*$/, "").trim();
 const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const openFlags = () => state.rows.filter((row) => row.flag && !row.resolved).length;
 
@@ -129,9 +130,11 @@ function rowElement(row) {
     actions.append(button("Keep this value", () => keep(row)));
   } else if (entered) {
     message.textContent = entered === "kept" ? "Entered and read back" : "The page refused this value";
+  } else if (row.resolved) {
+    message.textContent = "Reviewed by you";
   } else {
-    message.textContent = row.resolved ? "Reviewed by you" : "Checked";
-    message.title = row.resolved ? "" : "The decision model confirmed this value is stated in the note.";
+    message.textContent = row.confidence == null ? "Checked" : `Jev is ${Math.round(row.confidence * 100)}% sure`;
+    message.title = "How sure the decision model is that the note gives this value for this field.";
   }
   status.append(message);
   if (row.value && !state.marks.has(row.index) && !row.resolved) {

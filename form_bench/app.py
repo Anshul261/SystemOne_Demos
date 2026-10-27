@@ -84,7 +84,8 @@ def row(session: dict, i: int) -> dict:
     field, value = session["fields"][i], session["values"].get(i)
     return {"index": i, "label": label(field), "kind": "choice" if field["role"] == "combobox" else "text",
             "options": field["options"], "value": "" if value is None else shown(field, value),
-            "flag": session["flags"].get(i), "resolved": i in session["resolved"]}
+            "flag": session["flags"].get(i), "resolved": i in session["resolved"],
+            "confidence": session["confidence"].get(i)}
 
 
 def rows(session: dict) -> list[dict]:
@@ -154,10 +155,10 @@ def start_extraction(request: ExtractRequest):
             snapshot, fields = worker.run(lambda: read_form(page))
             yield line("read", started, fields=len(fields), title=screen.title)
             with metered() as spent:
-                values, flags = extract(request.note, snapshot, fields)
+                values, flags, confidence = extract(request.note, snapshot, fields)
             session = {"id": uuid.uuid4().hex, "target": request.target, "name": NAMES.get(request.target),
                        "screen": screen, "page": page, "fields": fields, "values": values, "flags": flags,
-                       "resolved": set(), "entered": False}
+                       "confidence": confidence, "resolved": set(), "entered": False}
             sessions[session["id"]] = session
             yield line("extract", started, values=len(values), flags=len(flags),
                        checks=spent.system_one_calls, llm_calls=spent.llm_calls)

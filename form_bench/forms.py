@@ -8,6 +8,7 @@ from playwright.sync_api import BrowserContext, Page
 FIELD = re.compile(r"""^(\s*)- '?(textbox|spinbutton|combobox|searchbox)(?: "(.*?)")?""")
 OPTION = re.compile(r'^\s*- option(?: "(.*?)")?')
 ROW = re.compile(r'^(\s*)- row "(.*?)"')
+CELL = re.compile(r'^(\s*)- (?:cell|gridcell|columnheader|rowheader)(?: "(.*?)")?')
 
 
 def open_screen(context: BrowserContext, screen) -> Page:
@@ -19,28 +20,42 @@ def open_screen(context: BrowserContext, screen) -> Page:
 
 
 def read_form(page: Page) -> tuple[str, list[dict]]:
-    """The form's ARIA snapshot and its fields, read once per screen: [{role, name, row, nth, options}].
-    A control inside a table row is found by its row, so unlabelled cells (OpenEMR's vitals) work; nth counts
-    the same role within that row. Elsewhere nth tells apart controls sharing a name, like two Middle Names."""
+    """The form's ARIA snapshot and its fields, read once per screen: [{role, name, row, nth, context, options}].
+
+    A control inside a table row is found again by its row (row, nth), so unlabelled cells such as OpenEMR's
+    vitals work. Its label comes only from what describes it: the row's cells to its left and its column's
+    header ("Value", "Abn"). Cells further right, such as an earlier reading, are left out. Outside tables,
+    nth tells apart controls sharing a name, like two Middle Names."""
     snapshot = page.locator("body").aria_snapshot()
     fields: list[dict] = []
-    row, row_indent = None, -1
+    row, row_indent, cells, headers, row_has_field = None, -1, [], [], False
     for line in snapshot.splitlines():
         if match := ROW.match(line):
-            row, row_indent = match[2], len(match[1])
+            if row and not row_has_field and cells and all(cells):
+                headers = cells  # a row of named cells and no controls heads the columns below it
+            row, row_indent, cells, row_has_field = match[2], len(match[1]), [], False
+        elif (match := CELL.match(line)) and row and len(match[1]) == row_indent + 2:
+            cells.append(match[2] or "")
         elif match := FIELD.match(line):
             if len(match[1]) <= row_indent:
-                row, row_indent = None, -1
+                row, row_indent, cells, headers = None, -1, [], []
             role, name = match[2], match[3] or ""
+            context = ""
+            if row:
+                row_has_field = True
+                column = len(cells) - 1
+                header = headers[column] if 0 <= column < len(headers) else ""
+                context = " ".join(c for c in cells[:-1] if c) + (f" ({header})" if header else "")
             nth = sum(f["role"] == role and f["row"] == row and (row or f["name"] == name) for f in fields)
-            fields.append({"role": role, "name": name, "row": row, "nth": nth, "options": []})
+            fields.append({"role": role, "name": name, "row": row, "nth": nth, "context": context, "options": []})
         elif (match := OPTION.match(line)) and fields and fields[-1]["role"] == "combobox":
             fields[-1]["options"].append(match[1] or "")
     return snapshot, [f for f in fields if f["name"] or f["row"]]
 
 
 def label(field: dict) -> str:
-    return " - ".join(part for part in (field.get("row"), field.get("name")) if part)
+    """How a field is described to the models and the reviewer."""
+    return " - ".join(part for part in (field.get("context") or field.get("row"), field.get("name")) if part)
 
 
 def field_id(field: dict) -> tuple:

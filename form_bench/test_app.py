@@ -20,7 +20,8 @@ def session(flags: dict, entered: bool) -> dict:
     screen = Screen("about:blank", {}, title="Test", save=lambda page: saved.append(page) or "Saved")
     fields = [{"role": "textbox", "name": "First Name", "row": None, "nth": 0, "options": []}]
     data = {"id": "s1", "target": "local", "name": "the local intake form", "screen": screen, "page": Page(),
-            "fields": fields, "values": {0: "Ann"}, "flags": flags, "resolved": set(), "entered": entered,
+            "fields": fields, "values": {0: "Ann"}, "flags": flags, "confidence": {0: 0.4}, "resolved": set(),
+            "entered": entered,
             "saved": saved}
     app.sessions.clear()
     app.sessions["s1"] = data
