@@ -63,12 +63,14 @@ def post_json(url: str, key: str, body: dict) -> dict:
         body = {k: v for k, v in body.items() if k != "reasoning"} | {"reasoning_effort": LLM_REASONING,
                                                                      "temperature": LLM_TEMPERATURE}
     started = time.perf_counter()
-    try:
-        result = _post_json(url, key, body)
-    except RuntimeError as error:  # one retry for a dropped connection, never for a refused request
-        if "connection failed" not in str(error):
-            raise
-        result = _post_json(url, key, body)
+    for attempt in range(3):  # a dropped connection is retried with backoff; a refused request never is
+        try:
+            result = _post_json(url, key, body)
+            break
+        except RuntimeError as error:
+            if "connection failed" not in str(error) or attempt == 2:
+                raise
+            time.sleep(1.5 * (attempt + 1))
     elapsed = (time.perf_counter() - started) * 1000
     if meter and url.endswith("/chat/completions"):
         usage = result.get("usage", {})

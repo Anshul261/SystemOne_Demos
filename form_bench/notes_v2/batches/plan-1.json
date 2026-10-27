@@ -1,0 +1,2085 @@
+[
+ {
+  "id": "242e8aeb-0",
+  "style": "handoff",
+  "features": [
+   "allergy_negation",
+   "distractor_date",
+   "distractor_previous_vitals",
+   "dob_us0",
+   "height_cm",
+   "name_last_first"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "KUPHAL, Evia R.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "06/26/1998",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "street",
+    "text": "428 Hermiston Crossroad",
+    "how": "street address"
+   },
+   {
+    "field": "city",
+    "text": "Fitchburg"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "01420"
+   },
+   {
+    "field": "bp",
+    "text": "BP 105/76",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "123/85",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "P 74"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 14"
+   },
+   {
+    "field": "height",
+    "text": "161 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "acetaminophen 300 mg; percocet; tylenol",
+    "how": "current medications"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "given": "Evia",
+   "middle": "R.",
+   "family": "Kuphal",
+   "birth_date": "1998-06-26",
+   "sex": "female",
+   "street": "428 Hermiston Crossroad",
+   "city": "Fitchburg",
+   "state": "Massachusetts",
+   "postal_code": "01420",
+   "bp_systolic": 105,
+   "bp_diastolic": 76,
+   "pulse": 74,
+   "respiration": 14,
+   "height": 63.4,
+   "allergies": [],
+   "medications": [
+    "acetaminophen",
+    "percocet",
+    "tylenol"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "242e8aeb-1",
+  "style": "dictation",
+  "features": [
+   "allergy_negation",
+   "bp_spoken",
+   "dob_us",
+   "name_last_first",
+   "sex_shorthand"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Kuphal, Evia",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "6/26/1998",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "28F",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "street",
+    "text": "428 Hermiston Crossroad",
+    "how": "street address"
+   },
+   {
+    "field": "city",
+    "text": "Fitchburg"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "01420"
+   },
+   {
+    "field": "bp",
+    "text": "105 over 76",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "heart rate 74"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 14"
+   },
+   {
+    "field": "weight",
+    "text": "162.9 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "acetaminophen 300 mg; percocet; tylenol",
+    "how": "current medications"
+   }
+  ],
+  "expected": {
+   "given": "Evia",
+   "family": "Kuphal",
+   "birth_date": "1998-06-26",
+   "sex": "female",
+   "street": "428 Hermiston Crossroad",
+   "city": "Fitchburg",
+   "state": "Massachusetts",
+   "postal_code": "01420",
+   "bp_systolic": 105,
+   "bp_diastolic": 76,
+   "pulse": 74,
+   "respiration": 14,
+   "weight": 162.9,
+   "allergies": [],
+   "medications": [
+    "acetaminophen",
+    "percocet",
+    "tylenol"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "d90eef0c-0",
+  "style": "soap",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "dob_dmy",
+   "height_cm",
+   "name_last_first",
+   "sex_shorthand"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Gusikowski, Shanel",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "1 Apr 1967",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "59F",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "city",
+    "text": "Georgetown",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "BP 99/71",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 83"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 13"
+   },
+   {
+    "field": "weight",
+    "text": "179.0 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "171 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "naproxen sodium 220 mg; albuterol; flovent",
+    "how": "current medications"
+   }
+  ],
+  "expected": {
+   "given": "Shanel",
+   "family": "Gusikowski",
+   "birth_date": "1967-04-01",
+   "sex": "female",
+   "city": "Georgetown",
+   "bp_systolic": 99,
+   "bp_diastolic": 71,
+   "pulse": 83,
+   "respiration": 13,
+   "weight": 179.0,
+   "height": 67.3,
+   "allergies": [],
+   "medications": [
+    "naproxen sodium",
+    "albuterol",
+    "flovent"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "d90eef0c-1",
+  "style": "intake",
+  "features": [
+   "allergy_negation",
+   "distractor_date",
+   "dob_absent",
+   "name_middle",
+   "sex_absent",
+   "stopped_medication"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Shanel Cristi Gusikowski"
+   },
+   {
+    "field": "age",
+    "text": "59-year-old",
+    "how": "age only; give no date of birth anywhere"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "street",
+    "text": "874 Torp Dale",
+    "how": "street address"
+   },
+   {
+    "field": "city",
+    "text": "Georgetown"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "00000"
+   },
+   {
+    "field": "bp",
+    "text": "BP 99/71",
+    "how": "blood pressure"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 13"
+   },
+   {
+    "field": "weight",
+    "text": "179.0 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "67.4 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "naproxen sodium 220 mg; albuterol; flovent",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "given": "Shanel",
+   "middle": "Cristi",
+   "family": "Gusikowski",
+   "street": "874 Torp Dale",
+   "city": "Georgetown",
+   "state": "Massachusetts",
+   "postal_code": "00000",
+   "bp_systolic": 99,
+   "bp_diastolic": 71,
+   "respiration": 13,
+   "weight": 179.0,
+   "height": 67.4,
+   "allergies": [],
+   "medications": [
+    "naproxen sodium",
+    "albuterol",
+    "flovent"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "2b6ff529-0",
+  "style": "triage",
+  "features": [
+   "address_partial",
+   "distractor_date",
+   "distractor_previous_vitals",
+   "dob_dmy",
+   "height_cm",
+   "name_last_first",
+   "sex_absent"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Harris, Art",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "23 Aug 2003",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "city",
+    "text": "Lowell",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "BP 102/79",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "120/88",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 83"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 15"
+   },
+   {
+    "field": "temperature",
+    "text": "100.2 F",
+    "how": "temperature, taken tympanic"
+   },
+   {
+    "field": "weight",
+    "text": "177.0 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "186 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "peanut",
+    "how": "the patient's allergies"
+   },
+   {
+    "field": "medications",
+    "text": "loratadine 5 mg; epinephrine; percocet",
+    "how": "current medications"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "given": "Art",
+   "family": "Harris",
+   "birth_date": "2003-08-23",
+   "city": "Lowell",
+   "bp_systolic": 102,
+   "bp_diastolic": 79,
+   "pulse": 83,
+   "respiration": 15,
+   "temperature": 100.2,
+   "temp_site": "tympanic",
+   "weight": 177.0,
+   "height": 73.2,
+   "allergies": [
+    "peanut"
+   ],
+   "medications": [
+    "loratadine",
+    "epinephrine",
+    "percocet"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "2b6ff529-1",
+  "style": "referral",
+  "features": [
+   "address_absent",
+   "bp_repeat",
+   "dob_long",
+   "name_last_first",
+   "sex_shorthand"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Harris, Art",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "August 23, 2003",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "23M",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "bp_first",
+    "text": "120/90",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "102 over 79",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 83"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 15"
+   },
+   {
+    "field": "weight",
+    "text": "177.0 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "73.1 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "peanut",
+    "how": "the patient's allergies"
+   },
+   {
+    "field": "medications",
+    "text": "loratadine 5 mg; epinephrine; percocet",
+    "how": "current medications"
+   }
+  ],
+  "expected": {
+   "given": "Art",
+   "family": "Harris",
+   "birth_date": "2003-08-23",
+   "sex": "male",
+   "bp_systolic": 102,
+   "bp_diastolic": 79,
+   "pulse": 83,
+   "respiration": 15,
+   "weight": 177.0,
+   "height": 73.1,
+   "allergies": [
+    "peanut"
+   ],
+   "medications": [
+    "loratadine",
+    "epinephrine",
+    "percocet"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "dacd76f7-0",
+  "style": "triage",
+  "features": [
+   "allergy_negation",
+   "distractor_previous_vitals",
+   "dob_us0",
+   "name_last_first",
+   "sex_absent",
+   "weight_kg"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "WALTER, Arla M.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "04/15/1994",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "street",
+    "text": "542 Fay Common",
+    "how": "street address"
+   },
+   {
+    "field": "city",
+    "text": "Methuen"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "01844"
+   },
+   {
+    "field": "bp",
+    "text": "BP 105/83",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "123/92",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "P 76"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 13"
+   },
+   {
+    "field": "weight",
+    "text": "78.8 kg",
+    "how": "body weight"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   }
+  ],
+  "expected": {
+   "given": "Arla",
+   "middle": "M.",
+   "family": "Walter",
+   "birth_date": "1994-04-15",
+   "street": "542 Fay Common",
+   "city": "Methuen",
+   "state": "Massachusetts",
+   "postal_code": "01844",
+   "bp_systolic": 105,
+   "bp_diastolic": 83,
+   "pulse": 76,
+   "respiration": 13,
+   "weight": 173.7,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "dacd76f7-1",
+  "style": "referral",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "bp_spoken",
+   "height_cm",
+   "name_last_first"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "WALTER, Arla M.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "1994-04-15",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "city",
+    "text": "Methuen",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "105 over 83",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 76"
+   },
+   {
+    "field": "height",
+    "text": "172 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   }
+  ],
+  "expected": {
+   "given": "Arla",
+   "middle": "M.",
+   "family": "Walter",
+   "birth_date": "1994-04-15",
+   "sex": "female",
+   "city": "Methuen",
+   "bp_systolic": 105,
+   "bp_diastolic": 83,
+   "pulse": 76,
+   "height": 67.7,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "492dfa32-0",
+  "style": "dictation",
+  "features": [
+   "allergy_negation",
+   "distractor_date",
+   "distractor_person",
+   "name_last_first",
+   "sex_absent",
+   "weight_kg"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Emmerich, Stephan",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "1963-07-21",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "street",
+    "text": "313 Kiehn Manor",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Suite 43",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Great Barrington"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "01230"
+   },
+   {
+    "field": "bp",
+    "text": "BP 124/86 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "heart rate 98"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 13"
+   },
+   {
+    "field": "temperature",
+    "text": "98.1 F",
+    "how": "temperature, taken temporal"
+   },
+   {
+    "field": "weight",
+    "text": "71.2 kg",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "66.7 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "clopidogrel 75 mg; simvastatin 20 mg; metoprolol succinate 100 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "relative",
+    "text": "neighbour Ruth Adler",
+    "how": "a relative who came along; mention their name"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "given": "Stephan",
+   "family": "Emmerich",
+   "birth_date": "1963-07-21",
+   "street": "313 Kiehn Manor",
+   "unit": "Suite 43",
+   "city": "Great Barrington",
+   "state": "Massachusetts",
+   "postal_code": "01230",
+   "bp_systolic": 124,
+   "bp_diastolic": 86,
+   "pulse": 98,
+   "respiration": 13,
+   "temperature": 98.1,
+   "temp_site": "temporal",
+   "weight": 157.0,
+   "height": 66.7,
+   "allergies": [],
+   "medications": [
+    "clopidogrel",
+    "simvastatin",
+    "metoprolol succinate"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "492dfa32-1",
+  "style": "referral",
+  "features": [
+   "allergy_negation",
+   "bp_repeat",
+   "name_last_first",
+   "stopped_medication",
+   "unit_variant"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Emmerich, Stephan",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "1963-07-21",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "male"
+   },
+   {
+    "field": "street",
+    "text": "313 Kiehn Manor",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "#43",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Great Barrington"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "01230"
+   },
+   {
+    "field": "bp_first",
+    "text": "138/93",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "124 over 86",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 98"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 13"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "sat 76% RA"
+   },
+   {
+    "field": "weight",
+    "text": "157.0 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "66.7 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "clopidogrel 75 mg; simvastatin 20 mg; metoprolol succinate 100 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   }
+  ],
+  "expected": {
+   "given": "Stephan",
+   "family": "Emmerich",
+   "birth_date": "1963-07-21",
+   "sex": "male",
+   "street": "313 Kiehn Manor",
+   "unit": "Suite 43",
+   "city": "Great Barrington",
+   "state": "Massachusetts",
+   "postal_code": "01230",
+   "bp_systolic": 124,
+   "bp_diastolic": 86,
+   "pulse": 98,
+   "respiration": 13,
+   "oxygen_saturation": 76,
+   "weight": 157.0,
+   "height": 66.7,
+   "allergies": [],
+   "medications": [
+    "clopidogrel",
+    "simvastatin",
+    "metoprolol succinate"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "337f0745-0",
+  "style": "dictation",
+  "features": [
+   "bp_spoken",
+   "distractor_previous_vitals",
+   "temp_celsius",
+   "unit_variant"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Lonny Beier"
+   },
+   {
+    "field": "birth_date",
+    "text": "2008-01-22",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "male"
+   },
+   {
+    "field": "street",
+    "text": "298 Russel Club",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "suite 14",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Holden"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "00000"
+   },
+   {
+    "field": "bp",
+    "text": "114 over 72",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "132/81",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 85"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 14"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "SpO2 79%"
+   },
+   {
+    "field": "temperature",
+    "text": "38.2 C",
+    "how": "temperature, taken temporal"
+   },
+   {
+    "field": "weight",
+    "text": "161.6 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "65.4 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "animal dander, grass pollen, house dust mite, mold",
+    "how": "the patient's allergies"
+   },
+   {
+    "field": "medications",
+    "text": "loratadine 5 mg; epinephrine; ventolin",
+    "how": "current medications"
+   }
+  ],
+  "expected": {
+   "given": "Lonny",
+   "family": "Beier",
+   "birth_date": "2008-01-22",
+   "sex": "male",
+   "street": "298 Russel Club",
+   "unit": "Suite 14",
+   "city": "Holden",
+   "state": "Massachusetts",
+   "postal_code": "00000",
+   "bp_systolic": 114,
+   "bp_diastolic": 72,
+   "pulse": 85,
+   "respiration": 14,
+   "oxygen_saturation": 79,
+   "temperature": 100.8,
+   "temp_site": "temporal",
+   "weight": 161.6,
+   "height": 65.4,
+   "allergies": [
+    "animal dander",
+    "grass pollen",
+    "house dust mite",
+    "mold"
+   ],
+   "medications": [
+    "loratadine",
+    "epinephrine",
+    "ventolin"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "337f0745-1",
+  "style": "intake",
+  "features": [
+   "distractor_previous_vitals",
+   "dob_dmy",
+   "name_last_first",
+   "sex_absent",
+   "stopped_medication"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "BEIER, Lonny H.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "22 Jan 2008",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "street",
+    "text": "298 Russel Club",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Suite 14",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Holden"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "00000"
+   },
+   {
+    "field": "bp",
+    "text": "BP 114/72 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "132/81",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 85"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 14"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "SpO2 79%"
+   },
+   {
+    "field": "height",
+    "text": "65.4 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "animal dander, grass pollen, house dust mite, mold",
+    "how": "the patient's allergies"
+   },
+   {
+    "field": "medications",
+    "text": "loratadine 5 mg; epinephrine; ventolin",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   }
+  ],
+  "expected": {
+   "given": "Lonny",
+   "middle": "H.",
+   "family": "Beier",
+   "birth_date": "2008-01-22",
+   "street": "298 Russel Club",
+   "unit": "Suite 14",
+   "city": "Holden",
+   "state": "Massachusetts",
+   "postal_code": "00000",
+   "bp_systolic": 114,
+   "bp_diastolic": 72,
+   "pulse": 85,
+   "respiration": 14,
+   "oxygen_saturation": 79,
+   "height": 65.4,
+   "allergies": [
+    "animal dander",
+    "grass pollen",
+    "house dust mite",
+    "mold"
+   ],
+   "medications": [
+    "loratadine",
+    "epinephrine",
+    "ventolin"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "f20d33c2-0",
+  "style": "triage",
+  "features": [
+   "dob_us0",
+   "name_last_first",
+   "sex_absent",
+   "stopped_medication"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Koelpin, Soon",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "12/29/1988",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "street",
+    "text": "986 Wilkinson Lane",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Apt 19",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Boston"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02131"
+   },
+   {
+    "field": "bp",
+    "text": "BP 112/74",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 95"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 15"
+   },
+   {
+    "field": "temperature",
+    "text": "100.4 F",
+    "how": "temperature, taken axillary"
+   },
+   {
+    "field": "weight",
+    "text": "152.1 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "60.9 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "cow's milk, ibuprofen, mold",
+    "how": "the patient's allergies"
+   },
+   {
+    "field": "medications",
+    "text": "terfenadine 60 mg; epinephrine",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   }
+  ],
+  "expected": {
+   "given": "Soon",
+   "family": "Koelpin",
+   "birth_date": "1988-12-29",
+   "street": "986 Wilkinson Lane",
+   "unit": "Apt 19",
+   "city": "Boston",
+   "state": "Massachusetts",
+   "postal_code": "02131",
+   "bp_systolic": 112,
+   "bp_diastolic": 74,
+   "pulse": 95,
+   "respiration": 15,
+   "temperature": 100.4,
+   "temp_site": "axillary",
+   "weight": 152.1,
+   "height": 60.9,
+   "allergies": [
+    "cow's milk",
+    "ibuprofen",
+    "mold"
+   ],
+   "medications": [
+    "terfenadine",
+    "epinephrine"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "f20d33c2-1",
+  "style": "handoff",
+  "features": [
+   "bp_repeat",
+   "distractor_date",
+   "distractor_previous_vitals",
+   "dob_dmy",
+   "height_cm",
+   "name_family_only",
+   "temp_celsius",
+   "unit_variant",
+   "weight_kg"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Ms. Koelpin",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "29 Dec 1988",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "street",
+    "text": "986 Wilkinson Lane",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Apt. 19",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Boston"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02131"
+   },
+   {
+    "field": "bp_first",
+    "text": "131/84",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 112/74",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "bp_previous",
+    "text": "130/83",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "heart rate 95"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 15"
+   },
+   {
+    "field": "temperature",
+    "text": "38.0 C",
+    "how": "temperature, taken axillary"
+   },
+   {
+    "field": "weight",
+    "text": "69.0 kg",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "155 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "cow's milk, ibuprofen, mold",
+    "how": "the patient's allergies"
+   },
+   {
+    "field": "medications",
+    "text": "terfenadine 60 mg; epinephrine",
+    "how": "current medications"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "family": "Koelpin",
+   "birth_date": "1988-12-29",
+   "sex": "female",
+   "street": "986 Wilkinson Lane",
+   "unit": "Apt 19",
+   "city": "Boston",
+   "state": "Massachusetts",
+   "postal_code": "02131",
+   "bp_systolic": 112,
+   "bp_diastolic": 74,
+   "pulse": 95,
+   "respiration": 15,
+   "temperature": 100.4,
+   "temp_site": "axillary",
+   "weight": 152.1,
+   "height": 61.0,
+   "allergies": [
+    "cow's milk",
+    "ibuprofen",
+    "mold"
+   ],
+   "medications": [
+    "terfenadine",
+    "epinephrine"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "96cbbb7a-0",
+  "style": "referral",
+  "features": [
+   "allergy_negation",
+   "dob_absent",
+   "height_cm"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Twyla Morar"
+   },
+   {
+    "field": "age",
+    "text": "50-year-old",
+    "how": "age only; give no date of birth anywhere"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "street",
+    "text": "550 Hand Parade",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Unit 88",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Bridgewater"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02324"
+   },
+   {
+    "field": "bp",
+    "text": "BP 129/88",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 93"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 15"
+   },
+   {
+    "field": "height",
+    "text": "169 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "albuterol; fluticasone propionate",
+    "how": "current medications"
+   }
+  ],
+  "expected": {
+   "given": "Twyla",
+   "family": "Morar",
+   "sex": "female",
+   "street": "550 Hand Parade",
+   "unit": "Unit 88",
+   "city": "Bridgewater",
+   "state": "Massachusetts",
+   "postal_code": "02324",
+   "bp_systolic": 129,
+   "bp_diastolic": 88,
+   "pulse": 93,
+   "respiration": 15,
+   "height": 66.5,
+   "allergies": [],
+   "medications": [
+    "albuterol",
+    "fluticasone propionate"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "96cbbb7a-1",
+  "style": "handoff",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "distractor_date",
+   "dob_long",
+   "name_family_only",
+   "sex_absent"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Ms. Morar",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "April 21, 1976",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "city",
+    "text": "Bridgewater",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "BP 129/88",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "heart rate 93"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 15"
+   },
+   {
+    "field": "weight",
+    "text": "190.5 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "66.7 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "albuterol; fluticasone propionate",
+    "how": "current medications"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "family": "Morar",
+   "birth_date": "1976-04-21",
+   "city": "Bridgewater",
+   "bp_systolic": 129,
+   "bp_diastolic": 88,
+   "pulse": 93,
+   "respiration": 15,
+   "weight": 190.5,
+   "height": 66.7,
+   "allergies": [],
+   "medications": [
+    "albuterol",
+    "fluticasone propionate"
+   ]
+  },
+  "acceptable": {
+   "sex": [
+    null,
+    "female"
+   ]
+  },
+  "split": "dev"
+ },
+ {
+  "id": "ea20ca42-0",
+  "style": "referral",
+  "features": [
+   "address_absent",
+   "allergy_negation",
+   "dob_us0",
+   "height_cm",
+   "name_family_only",
+   "sex_shorthand",
+   "stopped_medication",
+   "temp_celsius"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Mr. Miranda",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "03/04/1967",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "59M",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "bp",
+    "text": "BP 138/90 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "SpO2 79%"
+   },
+   {
+    "field": "temperature",
+    "text": "37.7 C",
+    "how": "temperature, taken oral"
+   },
+   {
+    "field": "weight",
+    "text": "236.1 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "188 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "aspirin 81 mg; metoprolol succinate 50 mg; simvastatin 40 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   }
+  ],
+  "expected": {
+   "family": "Miranda",
+   "birth_date": "1967-03-04",
+   "sex": "male",
+   "bp_systolic": 138,
+   "bp_diastolic": 90,
+   "oxygen_saturation": 79,
+   "temperature": 99.9,
+   "temp_site": "oral",
+   "weight": 236.1,
+   "height": 74.0,
+   "allergies": [],
+   "medications": [
+    "aspirin",
+    "metoprolol succinate",
+    "simvastatin"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "ea20ca42-1",
+  "style": "dictation",
+  "features": [
+   "address_absent",
+   "allergy_negation",
+   "bp_spoken",
+   "correction",
+   "height_cm",
+   "name_family_only",
+   "sex_absent",
+   "stopped_medication"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Mr. Miranda",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "1967-03-04",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "bp",
+    "text": "138 over 90",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 98"
+   },
+   {
+    "field": "weight_wrong",
+    "text": "206.1 lb",
+    "how": "a weight that is then corrected"
+   },
+   {
+    "field": "weight",
+    "text": "236.1 lb",
+    "how": "the corrected weight, introduced as a correction"
+   },
+   {
+    "field": "height",
+    "text": "188 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "aspirin 81 mg; metoprolol succinate 50 mg; simvastatin 40 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   }
+  ],
+  "expected": {
+   "family": "Miranda",
+   "birth_date": "1967-03-04",
+   "bp_systolic": 138,
+   "bp_diastolic": 90,
+   "pulse": 98,
+   "weight": 236.1,
+   "height": 74.0,
+   "allergies": [],
+   "medications": [
+    "aspirin",
+    "metoprolol succinate",
+    "simvastatin"
+   ]
+  },
+  "acceptable": {
+   "sex": [
+    null,
+    "male"
+   ]
+  },
+  "split": "dev"
+ },
+ {
+  "id": "b76d5c14-0",
+  "style": "triage",
+  "features": [
+   "address_absent",
+   "allergy_negation",
+   "distractor_previous_vitals",
+   "dob_absent",
+   "name_last_first",
+   "sex_shorthand",
+   "stopped_medication"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Waelchi, Kyle",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "age",
+    "text": "53-year-old",
+    "how": "age only; give no date of birth anywhere"
+   },
+   {
+    "field": "sex",
+    "text": "53M",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "bp",
+    "text": "BP 108/78 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "126/87",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "heart rate 86"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 13"
+   },
+   {
+    "field": "weight",
+    "text": "216.1 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "70.6 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "albuterol; fluticasone propionate",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   }
+  ],
+  "expected": {
+   "given": "Kyle",
+   "family": "Waelchi",
+   "sex": "male",
+   "bp_systolic": 108,
+   "bp_diastolic": 78,
+   "pulse": 86,
+   "respiration": 13,
+   "weight": 216.1,
+   "height": 70.6,
+   "allergies": [],
+   "medications": [
+    "albuterol",
+    "fluticasone propionate"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ },
+ {
+  "id": "b76d5c14-1",
+  "style": "dictation",
+  "features": [
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_date",
+   "dob_long",
+   "name_middle",
+   "stopped_medication"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Kyle Modesto Waelchi"
+   },
+   {
+    "field": "birth_date",
+    "text": "October 4, 1972",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "male"
+   },
+   {
+    "field": "street",
+    "text": "674 McDermott Club",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Suite 35",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Boston"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02127"
+   },
+   {
+    "field": "bp_first",
+    "text": "125/84",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 108/78",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 86"
+   },
+   {
+    "field": "weight",
+    "text": "216.1 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "70.6 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "albuterol; fluticasone propionate",
+    "how": "current medications"
+   },
+   {
+    "field": "stopped_medication",
+    "text": "atorvastatin 40 mg",
+    "how": "a medication the patient STOPPED last month"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "given": "Kyle",
+   "middle": "Modesto",
+   "family": "Waelchi",
+   "birth_date": "1972-10-04",
+   "sex": "male",
+   "street": "674 McDermott Club",
+   "unit": "Suite 35",
+   "city": "Boston",
+   "state": "Massachusetts",
+   "postal_code": "02127",
+   "bp_systolic": 108,
+   "bp_diastolic": 78,
+   "pulse": 86,
+   "weight": 216.1,
+   "height": 70.6,
+   "allergies": [],
+   "medications": [
+    "albuterol",
+    "fluticasone propionate"
+   ]
+  },
+  "acceptable": {},
+  "split": "dev"
+ }
+]

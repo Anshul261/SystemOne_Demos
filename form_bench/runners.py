@@ -2,6 +2,7 @@
 records what it spent.
 
 - mapfill: the product, run end to end with no person in the loop: extraction.extract, then entry.enter.
+- jevonly: the same, with extraction by Jev alone (jev_extraction.extract) and no LLM.
 - jev: jev-ultrafast unchanged, given the note as its goal, as an outside reference. System One picks every
   action; a small LLM writes each typed value.
 """
@@ -13,6 +14,7 @@ from playwright.sync_api import BrowserContext, Page
 
 from entry import enter
 from extraction import extract
+from jev_extraction import extract as jev_extract
 from forms import open_screen, read_form
 from models import Meter
 
@@ -21,10 +23,10 @@ GOAL = ("Enter this patient's details into the form exactly as the note states t
         "Note:\n{note}")
 
 
-def run_mapfill(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
+def run_mapfill(context: BrowserContext, screen, note: str, spent: Meter, extractor=extract) -> Page:
     page = open_screen(context, screen)
     snapshot, fields = read_form(page)
-    values, flags, confidence = extract(note, snapshot, fields)
+    values, flags, confidence = extractor(note, snapshot, fields)
     flags |= enter(page, fields, values)
     spent.actions = len(values)
     spent.flagged = [control(fields[i]) for i in flags]
@@ -63,4 +65,9 @@ def run_jev(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
     return page
 
 
-AGENTS = {"mapfill": run_mapfill, "jev": run_jev}
+def run_jevonly(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
+    """The product's entry, with extraction by Jev alone (jev_extraction.py) instead of the LLM."""
+    return run_mapfill(context, screen, note, spent, jev_extract)
+
+
+AGENTS = {"mapfill": run_mapfill, "jevonly": run_jevonly, "jev": run_jev}
