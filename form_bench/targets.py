@@ -1,7 +1,8 @@
 """Where the agents type: a list of screens, each with the answer key the scorer reads back.
 
 An answer key maps a case's field keys to the control's ARIA role and accessible name. Only the scorer
-uses it; the agents under test see the page and the note, nothing else.
+uses it; the agents under test see the page and the note, nothing else. Unscored fields are still open to
+the agents, so a wrong entry there is not counted.
 """
 
 import os
@@ -14,7 +15,8 @@ from playwright.sync_api import BrowserContext
 @dataclass(frozen=True)
 class Screen:
     url: str
-    answers: dict[str, tuple[str, str]]  # field key -> (role, accessible name)
+    answers: dict[str, tuple]  # field key -> (role, accessible name) or (role, name, nth) for a repeated name
+    prepare: callable = None  # prepare(page): puts the screen in its starting state, the same for every agent
 
 
 @dataclass
@@ -60,11 +62,24 @@ def openemr_login(context: BrowserContext) -> None:
     page.close()
 
 
+def open_contact(page) -> None:
+    """OpenEMR collapses every section after Who; the address is under Contact."""
+    page.get_by_role("button", name="Contact", exact=True).click()
+    page.get_by_role("textbox", name="Street and Number", exact=True).wait_for()
+
+
+OPENEMR_PATIENT = {"first_name": ("textbox", "First Name"), "last_name": ("textbox", "Last Name"),
+                   "dob": ("textbox", "Date of Birth"), "sex": ("combobox", "Birth Sex"),
+                   "street": ("textbox", "Street and Number"), "city": ("textbox", "City Name"),
+                   "state": ("combobox", "State/Locality"), "postal_code": ("textbox", "Postal Code")}
+
+
 def openemr() -> Target:
-    """OpenEMR's new-patient screen. Its answer key and the vitals screen are added once the instance is up:
-    run `bench.py map --target openemr` to list the controls, then fill the key in from that list."""
+    """OpenEMR's new-patient screen, with Contact open. The vitals screen needs a patient and an encounter
+    to exist first, so it is added once those are set up."""
     base = os.environ["OPENEMR_URL"].rstrip("/")
-    return Target("openemr", [Screen(f"{base}/interface/new/new.php", {})], login=openemr_login,
+    return Target("openemr", [Screen(f"{base}/interface/new/new.php", OPENEMR_PATIENT, open_contact)],
+                  login=openemr_login,
                   saves=[f"{base}/interface/new/new_comprehensive_save.php*", f"{base}/interface/forms/*/save.php*"])
 
 

@@ -23,7 +23,7 @@ os.environ.setdefault("BU_CDP_URL", f"http://127.0.0.1:{CDP_PORT}")
 os.environ.setdefault("BU_NAME", "form-bench")
 
 from cases import load_cases  # noqa: E402
-from runners import AGENTS, LLM_MODEL, SYSTEM_ONE, metered, read_form  # noqa: E402
+from runners import AGENTS, LLM_MODEL, SYSTEM_ONE, control, metered, open_screen, read_form  # noqa: E402
 from targets import TARGETS  # noqa: E402
 
 RESULTS = Path(__file__).parent / "results"
@@ -31,11 +31,11 @@ RESULTS = Path(__file__).parent / "results"
 PRICE = {"llm_input": 0.99, "llm_output": 1.49, "system_one_input": 0.0 if SYSTEM_ONE == "d1" else 0.04}
 
 
-def read_back(page: Page, role: str, name: str) -> str:
-    control = page.get_by_role(role, name=name, exact=True)
+def read_back(page: Page, role: str, name: str, nth: int = 0) -> str:
+    field = control(page, role, name, nth)
     if role == "combobox":
-        return control.evaluate("e => e.value ? e.selectedOptions[0].text : ''")
-    return control.input_value()
+        return field.evaluate("e => e.value ? e.selectedOptions[0].text : ''")
+    return field.input_value()
 
 
 NONE_KNOWN = {"no known allergies", "nka", "nkda", "none"}
@@ -53,8 +53,8 @@ def same(key: str, expected: str, actual: str) -> bool:
 
 def score(page: Page, answers: dict, expected: dict) -> dict:
     fields = {}
-    for key, (role, name) in answers.items():
-        actual = read_back(page, role, name)
+    for key, locator in answers.items():
+        actual = read_back(page, *locator)
         fields[key] = {"expected": expected[key], "actual": actual, "correct": same(key, expected[key], actual)}
     return fields
 
@@ -90,7 +90,8 @@ def run(target_name: str, agents: list[str], count: int, seed: int) -> Path:
     results = {"target": target_name, "system_one": SYSTEM_ONE, "llm": LLM_MODEL, "cases": len(cases), "runs": []}
     with sync_playwright() as playwright, tempfile.TemporaryDirectory() as profile:
         context = playwright.chromium.launch_persistent_context(
-            profile, headless=True, args=[f"--remote-debugging-port={CDP_PORT}"], viewport={"width": 1120, "height": 780})
+            profile, headless=True, args=[f"--remote-debugging-port={CDP_PORT}"], viewport={"width": 1120, "height": 780},
+            ignore_https_errors=True)  # local EHRs often use self-signed certificates
         saves = target.blocked_saves(context)
         if target.login:
             target.login(context)
@@ -100,16 +101,18 @@ def run(target_name: str, agents: list[str], count: int, seed: int) -> Path:
                     before = len(saves)
                     with metered() as spent:
                         try:
-                            page = AGENTS[agent](context, screen.url, case.note, spent)
+                            page = AGENTS[agent](context, screen, case.note, spent)
                         except Exception as error:  # noqa: BLE001 - record it, score what was entered, carry on
                             spent.error = f"{type(error).__name__}: {error}"
                             page = next((p for p in reversed(context.pages) if p.url == screen.url), None)
                         report = spent.report()
                     fields = score(page, screen.answers, case.expected) if page else {}
                     saved = len(saves) > before or bool(page and page.evaluate("document.body.dataset.submitted"))
-                    names = {name: key for key, (_, name) in screen.answers.items()}
+                    names = {(locator[1], locator[2] if len(locator) > 2 else 0): key
+                             for key, locator in screen.answers.items()}
                     results["runs"].append({"case": case.id, "agent": agent, "url": screen.url, **report,
-                                            "flagged_keys": [names[n] for n in report["flagged"] if n in names],
+                                            "flagged_keys": [names[tuple(n)] for n in report["flagged"]
+                                                             if tuple(n) in names],
                                             "saved": saved, "fields": fields})
                     right = sum(f["correct"] for f in fields.values())
                     print(f"{case.id} {agent:8} {right}/{len(fields)} fields  {report['wall_ms']:>6} ms  "
@@ -129,15 +132,15 @@ def show_map(target_name: str) -> None:
     target = TARGETS[target_name]()
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
-        context = browser.new_context()
+        context = browser.new_context(ignore_https_errors=True)
         if target.login:
             target.login(context)
         for screen in target.screens:
-            page = context.new_page()
-            page.goto(screen.url)
+            page = open_screen(context, screen)
             print(screen.url)
             for field in read_form(page)[1]:
-                print(f"  {field['role']:11} {field['name']!r}" + (f"  {field['options']}" if field["options"] else ""))
+                print(f"  {field['role']:11} {field['name']!r}" + (f" #{field['nth']}" if field["nth"] else "")
+                      + (f"  {field['options'][:8]}" if field["options"] else ""))
         browser.close()
 
 

@@ -118,66 +118,79 @@ def llm_json(system: str, user: dict) -> dict:
 
 
 def read_form(page: Page) -> tuple[str, list[dict]]:
-    """The form's ARIA snapshot and its fields: [{role, name, options}], read once per screen."""
+    """The form's ARIA snapshot and its fields: [{role, name, nth, options}], read once per screen.
+    nth tells apart controls that share a name, such as OpenEMR's two Middle Name boxes."""
     snapshot = page.locator("body").aria_snapshot()
     fields: list[dict] = []
     for line in snapshot.splitlines():
         if match := FIELD.match(line):
-            fields.append({"role": match[1], "name": match[2], "options": []})
+            nth = sum(f["role"] == match[1] and f["name"] == match[2] for f in fields)
+            fields.append({"role": match[1], "name": match[2], "nth": nth, "options": []})
         elif (match := OPTION.match(line)) and fields and fields[-1]["role"] == "combobox":
             fields[-1]["options"].append(match[1])
     return snapshot, fields
 
 
-def choose_options(note: str, dropdowns: list[dict]) -> tuple[dict[str, str], list[str]]:
+def control(page: Page, role: str, name: str, nth: int = 0):
+    return page.get_by_role(role, name=name, exact=True).nth(nth)
+
+
+def open_screen(context: BrowserContext, screen) -> Page:
+    page = context.new_page()
+    page.goto(screen.url)
+    if screen.prepare:
+        screen.prepare(page)
+    return page
+
+
+def choose_options(note: str, fields: list[dict], dropdowns: list[int]) -> tuple[dict[int, str], list[int]]:
     """System One sets every dropdown in one request; the first option (the form's blank) means not stated.
-    Returns the choices and the dropdowns it was unsure of."""
+    Returns the choices by field index, and the dropdowns it was unsure of."""
     if not dropdowns:
         return {}, []
-    questions = {f"f{i}": {"type": "choice", "criteria": {option: option for option in d["options"]},
-                           "instructions": f"Which option should the form field '{d['name']}' be set to, according "
-                                           f"to the note? Choose '{d['options'][0]}' if the note does not say."}
-                 for i, d in enumerate(dropdowns)}
+    questions = {f"f{i}": {"type": "choice", "criteria": {option: option for option in fields[i]["options"]},
+                           "instructions": f"Which option should the form field '{fields[i]['name']}' be set to, "
+                                           f"according to the note? Choose '{fields[i]['options'][0]}' if the note "
+                                           "does not say."}
+                 for i in dropdowns}
     answers = system_one(note, questions)
-    chosen = {d["name"]: answers[f"f{i}"]["choice"] for i, d in enumerate(dropdowns)
-              if answers[f"f{i}"]["choice"] != d["options"][0]}
-    unsure = [d["name"] for i, d in enumerate(dropdowns) if answers[f"f{i}"]["confidence"] < FLAG_BELOW]
-    return chosen, unsure
+    chosen = {i: answers[f"f{i}"]["choice"] for i in dropdowns if answers[f"f{i}"]["choice"] != fields[i]["options"][0]}
+    return chosen, [i for i in dropdowns if answers[f"f{i}"]["confidence"] < FLAG_BELOW]
 
 
-def write_values(note: str, snapshot: str, inputs: list[dict]) -> dict[str, str]:
+def write_values(note: str, snapshot: str, fields: list[dict], inputs: list[int]) -> dict[int, str]:
     """One LLM call writes every text value; nulls and unknown ids are dropped."""
-    ids = {f"f{i}": f["name"] for i, f in enumerate(inputs)}
-    output = llm_json(EXTRACT, {"form": snapshot, "fields": ids, "note": note})
+    output = llm_json(EXTRACT, {"form": snapshot, "fields": {f"f{i}": fields[i]["name"] for i in inputs},
+                                "note": note})
+    ids = {f"f{i}": i for i in inputs}
     return {ids[k]: str(v).strip() for k, v in output.items() if k in ids and v not in (None, "")}
 
 
-def confirm(note: str, values: dict[str, str]) -> list[str]:
+def confirm(note: str, fields: list[dict], values: dict[int, str]) -> list[int]:
     """System One checks each written value against the note; returns the fields it cannot confirm."""
     if not values:
         return []
-    names = list(values)
-    questions = {f"v{i}": {"type": "noul", "instructions": f"Does the note state that the patient's {name} "
-                                                            f"is {values[name]}?"} for i, name in enumerate(names)}
+    questions = {f"v{i}": {"type": "noul", "instructions": f"Does the note state that the patient's "
+                                                            f"{fields[i]['name']} is {value}?"}
+                 for i, value in values.items()}
     answers = system_one(note, questions)
-    return [name for i, name in enumerate(names) if answers[f"v{i}"]["noul"] < FLAG_BELOW]
+    return [i for i in values if answers[f"v{i}"]["noul"] < FLAG_BELOW]
 
 
-def run_mapfill(context: BrowserContext, url: str, note: str, spent: Meter) -> Page:
-    page = context.new_page()
-    page.goto(url)
+def run_mapfill(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
+    page = open_screen(context, screen)
     snapshot, fields = read_form(page)
-    dropdowns = [f for f in fields if f["role"] == "combobox" and f["options"]]
-    inputs = [f for f in fields if f not in dropdowns]
+    dropdowns = [i for i, f in enumerate(fields) if f["role"] == "combobox" and f["options"]]
+    inputs = [i for i in range(len(fields)) if i not in dropdowns]
     with ThreadPoolExecutor(2) as pool:
-        chosen = pool.submit(choose_options, note, dropdowns)
-        written = pool.submit(write_values, note, snapshot, inputs)
+        chosen = pool.submit(choose_options, note, fields, dropdowns)
+        written = pool.submit(write_values, note, snapshot, fields, inputs)
         (chosen, unsure), written = chosen.result(), written.result()
-    spent.flagged = unsure + confirm(note, written)
-    roles = {f["name"]: f["role"] for f in fields}
-    for name, value in {**written, **chosen}.items():
-        control = page.get_by_role(roles[name], name=name, exact=True)
-        control.select_option(label=value) if roles[name] == "combobox" else control.fill(value)
+    spent.flagged = [(fields[i]["name"], fields[i]["nth"]) for i in unsure + confirm(note, fields, written)]
+    for i, value in {**written, **chosen}.items():
+        f = fields[i]
+        target = control(page, f["role"], f["name"], f["nth"])
+        target.select_option(label=value) if f["role"] == "combobox" else target.fill(value)
         spent.actions += 1
     return page
 
@@ -193,13 +206,12 @@ class PageBrowser(browser.Browser):
         self.call("Emulation.setFocusEmulationEnabled", enabled=True)
 
 
-def run_jev(context: BrowserContext, url: str, note: str, spent: Meter) -> Page:
+def run_jev(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
     """jev-ultrafast as shipped, with the note as its goal."""
-    page = context.new_page()
-    page.goto(url)
+    page = open_screen(context, screen)
     target_id = context.new_cdp_session(page).send("Target.getTargetInfo")["targetInfo"]["targetId"]
     agent.Browser = lambda _url: PageBrowser(target_id)
-    jev = Agent(url, GOAL.format(note=note))
+    jev = Agent(screen.url, GOAL.format(note=note))
     try:
         for _ in jev.run():
             pass

@@ -62,9 +62,11 @@ Each run prints one line per case and agent, then a summary, and saves everythin
 `local` is [fixtures/intake.html](fixtures/intake.html), one page modelled on OpenEMR's new-patient and
 vitals screens, so the bench runs without an EHR. Its Save button only records that it was pressed.
 
-`openemr` logs in with `OPENEMR_URL`, `OPENEMR_USER` and `OPENEMR_PASSWORD` (use a non-admin clinician
-account) and blocks OpenEMR's save endpoints. To finish it, list each screen's controls with
-`bench.py map --target openemr` and fill in the screen's answer key in `targets.py`.
+`openemr` logs in with `OPENEMR_URL`, `OPENEMR_USER` and `OPENEMR_PASSWORD`, blocks OpenEMR's save
+endpoints, and accepts a self-signed certificate. It covers the new-patient screen with the Contact section
+opened, scoring name, DOB, birth sex and address. The vitals screen needs an existing patient and encounter,
+so it comes next. `bench.py map --target openemr` lists every control a screen offers, which is how the
+answer keys were written.
 
 ## Limits
 
@@ -72,4 +74,7 @@ account) and blocks OpenEMR's save endpoints. To finish it, list each screen's c
 - jev-ultrafast handles common HTML and ARIA controls, not frames or shadow roots. Screens inside
   OpenEMR's frames need their direct URL.
 - With d1-3B standing in for Jev, the `jev` baseline measures jev-ultrafast's loop with an open model.
-  Set `TYPESAFE_API_KEY` to measure it with Jev.
+  It is much weaker that way: on the local form it fell from 100% to 79% of fields, and stopped early on
+  half the cases.
+- On OpenEMR's long new-patient page, jev-ultrafast can exceed TypeSafe's request limit
+  (`max_tokens_exceeded`), because every dropdown option becomes its own action in the page state.
