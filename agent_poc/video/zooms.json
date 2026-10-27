@@ -1,0 +1,12 @@
+[
+  {"label": "System One picks support, while Qwen is still working", "start": 15.6, "end": 19.4, "x": 1690, "y": 557, "zoom": 2.0},
+  {"label": "open_ticket -> Opened INC0010008", "start": 19.8, "end": 27.4, "x": 1690, "y": 850, "zoom": 2.0},
+  {"label": "New incident in the ServiceNow panel", "start": 28.2, "end": 33.2, "x": 165, "y": 905, "zoom": 2.2},
+  {"label": "System One switches to appointments", "start": 44.8, "end": 47.9, "x": 1690, "y": 557, "zoom": 2.0},
+  {"label": "Stayed with appointments, book_call -> Booked", "start": 55.8, "end": 59.9, "x": 1690, "y": 617, "zoom": 2.0},
+  {"label": "Per-user graph stops Beth", "start": 73.4, "end": 78.8, "x": 1690, "y": 420, "zoom": 2.2},
+  {"label": "Screen flags harmful", "start": 86.3, "end": 91.8, "x": 1690, "y": 557, "zoom": 2.0},
+  {"label": "Forged token rejected in the session panel", "start": 94.0, "end": 98.8, "x": 165, "y": 790, "zoom": 2.2},
+  {"label": "Trace stops at layer 1", "start": 102.3, "end": 107.3, "x": 1690, "y": 280, "zoom": 2.2},
+  {"label": "my_tickets returns only David's own incident", "start": 120.4, "end": 129.6, "x": 1690, "y": 804, "zoom": 2.0}
+]

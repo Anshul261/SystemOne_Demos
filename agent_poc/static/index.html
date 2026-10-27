@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Routed Support Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <div class="brand">SYSTEMONE / DECISION MODULES</div>
+      <h1>Routed support agent</h1>
+      <p class="sub">System One decides in milliseconds. Code enforces identity and permissions from ServiceNow. System Two, the LLM, talks and acts only once both agree.</p>
+    </div>
+    <div class="status">
+      <div id="checks" class="checks"></div>
+      <button id="reset" class="ghost">Reset calendar</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <aside class="pane left">
+      <section>
+        <h2>Sign in as</h2>
+        <div id="personas" class="personas"></div>
+      </section>
+      <section id="session" class="session"><p class="muted">Pick someone to start a session.</p></section>
+      <section id="snow" class="session"></section>
+    </aside>
+
+    <section class="pane center">
+      <nav class="tabs">
+        <button data-tab="chat" class="tab active">Chat</button>
+        <button data-tab="scenarios" class="tab">Scenarios <span id="score" class="score"></span></button>
+      </nav>
+      <div id="chat" class="tabview">
+        <div id="transcript" class="transcript"><p class="muted empty">Sign in, then ask for help with an IT issue or a call with an engineer.</p></div>
+        <form id="composer" class="composer">
+          <input id="message" autocomplete="off" placeholder="Type a message…" disabled>
+          <button id="send" disabled>Send</button>
+        </form>
+      </div>
+      <div id="scenarios" class="tabview hidden">
+        <div class="scenario-bar">
+          <button id="run-all">Run all scenarios</button>
+          <div id="layer-tally" class="tally"></div>
+        </div>
+        <div id="scenario-list"></div>
+      </div>
+    </section>
+
+    <aside class="pane right">
+      <h2>Trace <span id="trace-label" class="muted"></span></h2>
+      <div id="trace"><p class="muted">Each turn passes through these layers. Select a message to see its trace.</p></div>
+    </aside>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
