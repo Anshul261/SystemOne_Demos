@@ -76,6 +76,21 @@ Each run prints one line per case and agent, then a summary, and saves everythin
 `--offset N` skips the first N patients. The flag thresholds were chosen on the first patients, so score
 on later ones (`--cases 57 --offset 20`) to check them fairly.
 
+## Review console
+
+```bash
+uv run --env-file .env uvicorn app:app --port 8050     # then open http://127.0.0.1:8050
+```
+
+The console puts mapfill in front of a person. Paste a visit note, or use a sample patient, choose an EHR
+screen and fill it. Every value it entered is listed next to the words in the note it came from, which are
+highlighted when you point at the field. Flagged fields say why. Keep the value or type a correction, which
+is entered on the page and read back. Save stays locked until every flag is reviewed, and the server
+refuses it too. Saving writes to the EHR: a new patient, or vitals on the Bench Fixture visit.
+
+[app.py](app.py) runs the browser on one worker thread and streams each step to the page.
+[static/](static) holds the page. One browser serves the console, so it is for one reviewer at a time.
+
 ## Targets
 
 `local` is [fixtures/intake.html](fixtures/intake.html), one page modelled on OpenEMR's new-patient and

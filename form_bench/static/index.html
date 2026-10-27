@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chart entry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="masthead">
+  <h1>Chart entry</h1>
+  <p id="engine" class="engine">Values are proposed by an LLM and checked by a decision model before you see them.</p>
+</header>
+
+<main class="desk">
+  <section class="pane note-pane" aria-labelledby="note-heading">
+    <div class="pane-head">
+      <h2 id="note-heading">Visit note</h2>
+      <button id="sample" class="quiet" type="button">Use a sample patient</button>
+    </div>
+    <textarea id="note" spellcheck="false" placeholder="Paste or type the visit note. For example: Pt Braun, Christeen, 47F, DOB 1979-09-03. BP 128/82; HR 74; weight 168.2 lb."></textarea>
+    <div id="note-view" class="note-view" hidden></div>
+    <button id="edit-note" class="quiet" type="button" hidden>Edit the note</button>
+
+    <div class="target">
+      <label for="screen">Fill this EHR screen</label>
+      <select id="screen"></select>
+      <button id="fill" class="primary" type="button">Fill the form</button>
+    </div>
+
+    <ol id="steps" class="steps" hidden>
+      <li data-step="open">Open the screen</li>
+      <li data-step="propose">Read the note and check each value</li>
+      <li data-step="enter">Enter the values and read them back</li>
+    </ol>
+    <p id="error" class="error" role="alert" hidden></p>
+  </section>
+
+  <section class="pane review-pane" aria-labelledby="review-heading">
+    <div class="pane-head">
+      <h2 id="review-heading">Review</h2>
+      <p id="tally" class="tally" aria-live="polite"></p>
+    </div>
+    <p id="empty" class="empty">Fill a screen and every value it entered appears here, next to the words in the note it came from. Nothing is saved until you have checked the flagged ones.</p>
+    <ul id="rows" class="rows"></ul>
+    <details id="shot-box" class="shot-box" hidden>
+      <summary>See the EHR screen as filled</summary>
+      <img id="shot" alt="The EHR screen with filled fields outlined in green and fields to review in magenta">
+    </details>
+  </section>
+</main>
+
+<footer class="savebar">
+  <p id="save-status" aria-live="polite">No form filled yet.</p>
+  <button id="save" class="primary" type="button" disabled>Save</button>
+</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>

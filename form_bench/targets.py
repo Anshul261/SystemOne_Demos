@@ -21,6 +21,8 @@ class Screen:
     answers: dict[str, dict | list[dict]]  # field key -> named(), in_row(), any_of(), or a list joined in order
     prepare: callable = None  # prepare(page): puts the screen in its starting state, the same for every agent
     derived: list[dict] = field(default_factory=list)  # fields the page fills itself, ignored as agent extras
+    title: str = ""  # how the review console names the screen
+    save: callable = None  # save(page) -> what was saved, used only by the review console after approval
 
 
 def named(role: str, name: str, nth: int = 0) -> dict:
@@ -67,8 +69,14 @@ VITALS = {"weight": named("spinbutton", "Weight"), "height": named("spinbutton",
           "temperature": named("spinbutton", "Temperature"), "temp_method": named("combobox", "Temp Location"),
           "oxygen_saturation": named("spinbutton", "Oxygen Saturation")}
 
+def save_local(page) -> str:
+    page.get_by_role("button", name="Save").click()
+    return "Saved on the local intake form" if page.evaluate("document.body.dataset.submitted") else ""
+
+
 LOCAL = Target("local", [Screen((Path(__file__).parent / "fixtures" / "intake.html").as_uri(),
-                                {**PATIENT, **VITALS, "allergies": named("textbox", "Allergies")})])
+                                {**PATIENT, **VITALS, "allergies": named("textbox", "Allergies")},
+                                title="Intake form (local)", save=save_local)])
 
 
 FIXTURE = Path(__file__).parent / "data" / "openemr_fixture.json"
@@ -145,12 +153,31 @@ OPENEMR_VITALS_DERIVED = [in_row("textbox", row) for row in (
     "BMI (LOINC:39156-5) kg/m^2 *", "BMI Status Type *")]
 
 
+def submit(page, form: str) -> None:
+    """Submit an OpenEMR form directly: its own submit scripts need the tabbed shell around the page."""
+    with page.expect_navigation():
+        page.evaluate(f"document.querySelector({form!r}).submit()")
+
+
+def save_patient(page) -> str:
+    submit(page, "form[action*=new_comprehensive_save]")
+    pid = parse_qs(urlparse(page.url).query).get("set_pid", [""])[0]
+    return f"Created patient {pid} in OpenEMR" if pid else ""
+
+
+def save_vitals(page) -> str:
+    submit(page, "form[name=vitals]")
+    return f"Saved vitals to the Bench Fixture visit (encounter {json.loads(FIXTURE.read_text())['encounter']})"
+
+
 def openemr() -> Target:
     """OpenEMR's new-patient screen with Contact open, and the vitals screen of the fixture encounter."""
     base = os.environ["OPENEMR_URL"].rstrip("/")
-    return Target("openemr", [Screen(f"{base}/interface/new/new.php", OPENEMR_PATIENT, open_contact),
+    return Target("openemr", [Screen(f"{base}/interface/new/new.php", OPENEMR_PATIENT, open_contact,
+                                     title="New patient", save=save_patient),
                               Screen(f"{base}/interface/forms/vitals/new.php", OPENEMR_VITALS,
-                                     derived=OPENEMR_VITALS_DERIVED)],
+                                     derived=OPENEMR_VITALS_DERIVED, title="Vitals (Bench Fixture visit)",
+                                     save=save_vitals)],
                   login=openemr_login,
                   saves=[f"{base}/interface/new/new_comprehensive_save.php*", f"{base}/interface/forms/*/save.php*"])
 

@@ -237,7 +237,7 @@ def check(note: str, fields: list[dict], written: dict[int, str], empty: list[in
     if not questions:
         return {}
     answers = ask_all(note, questions)
-    return ({i: "System One could not confirm this in the note" for i in written
+    return ({i: "The checker could not find this in the note" for i in written
              if answers[f"v{i}"]["noul"] < FLAG_BELOW}
             | {i: "The note seems to state this, but nothing was entered" for i in empty
                if answers[f"e{i}"]["noul"] >= STATED_ABOVE})
@@ -280,7 +280,7 @@ def propose(page: Page, note: str) -> tuple[list[dict], dict[int, str | int], di
         chosen = pool.submit(choose_options, note, fields, dropdowns)
         proposed = pool.submit(vote, note, snapshot, fields, inputs + dropdowns)
         chosen, (proposed, split) = chosen.result(), proposed.result()
-    flags = {i: "The LLM's readings disagreed" for i in split}
+    flags = {i: "Two readings of the note disagreed" for i in split}
     values: dict[int, str | int] = {i: proposed[i] for i in inputs if i in proposed}
     for i in dropdowns:
         mine, (theirs, confidence) = option_index(fields[i], proposed.get(i)), chosen[i]
@@ -288,9 +288,9 @@ def propose(page: Page, note: str) -> tuple[list[dict], dict[int, str | int], di
             continue
         values[i] = mine
         if mine != theirs:
-            flags[i] = f"System One chose “{fields[i]['options'][theirs] or 'blank'}”"
+            flags[i] = f"The checker read this as “{fields[i]['options'][theirs] or 'blank'}”"
         elif confidence < FLAG_BELOW:
-            flags[i] = "System One agreed, but is unsure"
+            flags[i] = "The checker agreed, but with low confidence"
     flags |= check(note, fields, {i: v for i, v in values.items() if i in inputs}, [i for i in inputs if i not in values])
     return fields, values, flags
 
