@@ -226,19 +226,21 @@ def ask_all(note: str, questions: dict) -> dict:
         return {k: v for answers in pool.map(lambda chunk: system_one(note, chunk), chunks) for k, v in answers.items()}
 
 
-def check(note: str, fields: list[dict], written: dict[int, str], empty: list[int]) -> list[int]:
+def check(note: str, fields: list[dict], written: dict[int, str], empty: list[int]) -> dict[int, str]:
     """System One checks the LLM both ways: each written value must be stated in the note, and each field
-    left empty must not be. Returns the fields that fail either check."""
+    left empty must not be. Returns the fields that fail, with the reason."""
     questions = {f"v{i}": {"type": "noul", "instructions": f"Does the note state that the patient's "
                                                             f"{label(fields[i])} is {value}?"}
                  for i, value in written.items()}
     questions |= {f"e{i}": {"type": "noul", "instructions": f"Does the note state the patient's {label(fields[i])}?"}
                   for i in empty}
     if not questions:
-        return []
+        return {}
     answers = ask_all(note, questions)
-    return ([i for i in written if answers[f"v{i}"]["noul"] < FLAG_BELOW]
-            + [i for i in empty if answers[f"e{i}"]["noul"] >= STATED_ABOVE])
+    return ({i: "System One could not confirm this in the note" for i in written
+             if answers[f"v{i}"]["noul"] < FLAG_BELOW}
+            | {i: "The note seems to state this, but nothing was entered" for i in empty
+               if answers[f"e{i}"]["noul"] >= STATED_ABOVE})
 
 
 def read_value(page: Page, field: dict, timeout: float = 5000) -> str:
@@ -263,38 +265,59 @@ def fill(page: Page, field: dict, value) -> bool:
     return False
 
 
-def run_mapfill(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
-    """System Two proposes every value; System One checks it. A dropdown is set only when the LLM's reading
-    is one of its options, and flagged unless System One confidently chose the same. Anything only System One
-    wanted is left blank: it reads more into a note (an Abn flag of "Normal" for a plain number) than is
-    written. Text values must be stated in the note, and empty text fields must not be."""
-    page = open_screen(context, screen)
+def propose(page: Page, note: str) -> tuple[list[dict], dict[int, str | int], dict[int, str]]:
+    """System Two proposes every value; System One checks it. Returns the form's fields, the values to enter
+    (option indexes for dropdowns) and the fields to review, with reasons.
+
+    A dropdown is set only when the LLM's reading is one of its options, and flagged unless System One
+    confidently chose the same. Anything only System One wanted is left blank: it reads more into a note
+    (an Abn flag of "Normal" for a plain number) than is written. Text values must be stated in the note,
+    and empty text fields must not be."""
     snapshot, fields = read_form(page)
     dropdowns = [i for i, f in enumerate(fields) if f["role"] == "combobox" and len(f["options"]) > 1]
     inputs = [i for i, f in enumerate(fields) if f["role"] != "combobox"]
     with ThreadPoolExecutor(2) as pool:
         chosen = pool.submit(choose_options, note, fields, dropdowns)
         proposed = pool.submit(vote, note, snapshot, fields, inputs + dropdowns)
-        chosen, (proposed, flagged) = chosen.result(), proposed.result()
-    values = {i: proposed[i] for i in inputs if i in proposed}
+        chosen, (proposed, split) = chosen.result(), proposed.result()
+    flags = {i: "The LLM's readings disagreed" for i in split}
+    values: dict[int, str | int] = {i: proposed[i] for i in inputs if i in proposed}
     for i in dropdowns:
         mine, (theirs, confidence) = option_index(fields[i], proposed.get(i)), chosen[i]
-        if mine is not None:
-            values[i] = mine
-        if mine is not None and (mine != theirs or confidence < FLAG_BELOW):
-            flagged.append(i)
-    flagged += check(note, fields, {i: v for i, v in values.items() if i in inputs},
-                     [i for i in inputs if i not in values])
+        if mine is None:
+            continue
+        values[i] = mine
+        if mine != theirs:
+            flags[i] = f"System One chose “{fields[i]['options'][theirs] or 'blank'}”"
+        elif confidence < FLAG_BELOW:
+            flags[i] = "System One agreed, but is unsure"
+    flags |= check(note, fields, {i: v for i, v in values.items() if i in inputs}, [i for i in inputs if i not in values])
+    return fields, values, flags
+
+
+def shown(field: dict, value: str | int) -> str:
+    """What a value looks like on the page: dropdowns hold option indexes."""
+    return field["options"][value] if field["role"] == "combobox" else value
+
+
+def enter(page: Page, fields: list[dict], values: dict[int, str | int], flags: dict[int, str]) -> int:
+    """Fill every value, then read them all back: some pages change fields while their scripts run.
+    Values the page will not keep are added to flags. Returns the number of fields entered."""
     for i, value in values.items():
-        spent.actions += 1
         if not fill(page, fields[i], value):
-            flagged.append(i)
-    # Read everything back at the end too: some pages change fields while their scripts run.
+            flags[i] = "The page did not keep this value"
     for i, value in values.items():
-        expected = fields[i]["options"][value] if fields[i]["role"] == "combobox" else value
-        if read_value(page, fields[i]).strip().casefold() != expected.strip().casefold() and not fill(page, fields[i], value):
-            flagged.append(i)
-    spent.flagged = [field_id(fields[i]) for i in dict.fromkeys(flagged)]
+        if read_value(page, fields[i]).strip().casefold() != shown(fields[i], value).strip().casefold() \
+                and not fill(page, fields[i], value):
+            flags[i] = "The page did not keep this value"
+    return len(values)
+
+
+def run_mapfill(context: BrowserContext, screen, note: str, spent: Meter) -> Page:
+    page = open_screen(context, screen)
+    fields, values, flags = propose(page, note)
+    spent.actions = enter(page, fields, values, flags)
+    spent.flagged = [field_id(fields[i]) for i in flags]
     return page
 
 
