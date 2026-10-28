@@ -5,12 +5,15 @@ shape is the same. Every call goes through jev-ultrafast's post_json (its retrie
 the bench can count what each agent spent.
 """
 
+import base64
 import json
 import os
 import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+
+import httpx
 
 from jev_ultrafast import model
 
@@ -102,6 +105,36 @@ def metered():
 def system_one(note: str, questions: dict) -> dict:
     body = {"model": os.getenv("TYPESAFE_MODEL", "jev-latest"), "state": {"note": note}, "questions": questions}
     return post_json(TYPESAFE, os.environ["TYPESAFE_API_KEY"], body)["answers"]
+
+
+def see(state: dict, images: dict[str, bytes], questions: dict) -> dict:
+    """System One questions about images. Each image (PNG bytes) is an asset whose key appears in state;
+    TypeSafe's image input needs its opt-in header, which jev-ultrafast's call cannot send."""
+    body = {"model": os.getenv("TYPESAFE_MODEL", "jev-latest"), "state": state, "questions": questions,
+            "assets": {k: {"type": "image", "format": "png", "data_base64": base64.b64encode(v).decode()}
+                       for k, v in images.items()}}
+    headers = {"Authorization": f"Bearer {os.environ['TYPESAFE_API_KEY']}", "TypeSafe-Danger-Zone-Images": "true"}
+    started = time.perf_counter()
+    for attempt in range(3):
+        try:
+            response = httpx.post(TYPESAFE, json=body, headers=headers, timeout=60)
+        except httpx.HTTPError:
+            if attempt == 2:
+                raise RuntimeError("Model connection failed; no action executed.") from None
+            time.sleep(1.5 * (attempt + 1))
+            continue
+        if response.status_code in {429, 503, 529} and attempt < 2:
+            time.sleep(1.5 * (attempt + 1))
+            continue
+        if response.is_error:
+            raise RuntimeError(f"System One returned HTTP {response.status_code}: {response.text[:300]}")
+        break
+    result = response.json()
+    if meter:
+        meter.system_one_calls += 1
+        meter.system_one_ms += (time.perf_counter() - started) * 1000
+        meter.system_one_tokens += result.get("usage", {}).get("input_tokens", 0)
+    return result["answers"]
 
 
 def ask_all(note: str, questions: dict) -> dict:
