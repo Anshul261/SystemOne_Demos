@@ -141,3 +141,17 @@ def place_order(page, base: str, panel: str) -> None:
                    "form_proc_type_desc[0]": name, "form_proc_code[0]": code, "form_procedure_type[0]": "laboratory_test"})
     with page.expect_navigation():
         page.evaluate("f => f.requestSubmit(f.querySelector('#bn_save_exit'))", page.locator("form").first.element_handle())
+
+
+def clear_orders(page, base: str) -> None:
+    """Delete the current visit's lab orders, so the results screen shows only those placed for this note."""
+    page.goto(f"{base}/interface/patient_file/encounter/forms.php")
+    for link in re.findall(r"delete_form\.php\?formname=procedure_order(?:&amp;|&)[^'\"]+", page.content()):
+        page.goto(f"{base}/interface/patient_file/encounter/{link.replace('&amp;', '&')}")
+        with page.expect_navigation():
+            page.evaluate("document.forms.my_form.submit()")
+
+
+def panels_in(record: dict) -> list[str]:
+    """The panels with at least one result in a record."""
+    return [key for key, (_, _, parts) in PANELS.items() if any(code in record for code, *_ in parts)]

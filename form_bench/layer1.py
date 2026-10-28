@@ -18,6 +18,7 @@ from datetime import date
 
 import usaddress
 
+from labs import PANELS
 from models import ask_all
 
 # Flag a value, or a blank, Jev gives less than this. Set on the development notes (notes_v2 dev and notes_v3):
@@ -29,7 +30,10 @@ MONTHS = {m: i + 1 for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "ju
 DATES = re.compile(r"\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}/\d{1,2}/\d{4}\b|\b[A-Z][a-z]{2,8}\.? \d{1,2},? \d{4}\b"
                    r"|\b\d{1,2} [A-Z][a-z]{2,8}\.? \d{4}\b")
 PAIR = re.compile(r"\b(\d{2,3})\s*/\s*(\d{2,3})\b|\b(\d{2,3}) over (\d{2,3})\b")
-QUANTITY = re.compile(r"(?<![\w./-])(\d{1,3}(?:\.\d)?)\s*(kg|lbs?|cm|in(?:ches)?|°?\s?[CF]\b|%|bpm|/min)?(?![\w/])", re.I)
+LAB_UNIT = r"mg/dL|g/dL|mmol/L|mEq/L|mL/min(?:/1\.73\s?m2)?|(?:10\^?\*?[36]|[KM])/u?L|fL|pg"
+QUANTITY = re.compile(rf"(?<![\w./-])(\d{{1,4}}(?:\.\d{{1,2}})?)\s*({LAB_UNIT}|kg|lbs?|cm|in(?:ches)?|°?\s?[CF]\b|%|bpm|/min)?"
+                      r"(?![\w/])", re.I)
+DOSE = re.compile(r"\d+(?:\.\d+)?\s*(?:mg|mcg|ml)\b(?!/)", re.I)
 WORD = r"[A-Z][a-z'-]+(?:[A-Z][a-z'-]+)?"  # a capitalised name word, also "McClure" and "DeShawn"
 NAMES = [  # matched at every start, so "Dictation, Ullrich, Noriko" also gives "Ullrich, Noriko"
     re.compile(rf"(?=\b((?:Mr|Ms|Mrs|Miss|Dr)\.? (?:{WORD}|[A-Z]+)\b))"),  # title and family name
@@ -39,6 +43,8 @@ NAMES = [  # matched at every start, so "Dictation, Ullrich, Noriko" also gives 
 KINDS = {"weight": "the patient's body weight", "height": "the patient's height",
          "temperature": "the patient's body temperature", "pulse": "the patient's heart rate or pulse",
          "respiration": "the patient's respiratory rate", "oxygen_saturation": "the patient's oxygen saturation",
+         "lab": "the result of a laboratory test on blood or urine, such as sodium, glucose, cholesterol, "
+                "hemoglobin or A1c",
          "other": "anything else: an age, a dose, a duration, a count, part of an address or date, or a value "
                   "that is not about the patient"}
 SITES = {"oral": "by mouth", "tympanic": "in the ear", "axillary": "under the arm", "temporal": "on the forehead",
@@ -56,8 +62,42 @@ STATES = {k.replace("~", " "): v for k, v in STATES.items()}
 READING = ("Which of these is {what} measured at this visit? If it was measured or stated more than once for "
            "this visit, the latest or corrected value is the one to chart.")
 NOT_TODAY = "None of these was measured at this visit."
+LAB_READING = ("Which of these is {what} to chart from the most recent lab results? Earlier results, from a "
+               "previous draw, are not.")
+# Lab tests by code, with the unit and reference range their results are charted in.
+TESTS = {code: (name, unit, rng) for _, _, parts in PANELS.values() for code, name, unit, rng, _ in parts}
+SAME_UNIT = {"meq/l": "mmol/L", "k/ul": "10*3/uL", "10^3/ul": "10*3/uL", "m/ul": "10*6/uL", "10^6/ul": "10*6/uL"}
 TO_EHR = {"kg": ("weight", lambda v: v * 2.20462), "cm": ("height", lambda v: v / 2.54),
           "c": ("temperature", lambda v: v * 9 / 5 + 32)}
+
+
+# A result's flag as an answer to the record's question, whether the result is abnormal, so any EMR's
+# wording of it (No, Normal, N, H) can be matched.
+INTERPRETATION = {"normal": "not abnormal: within the reference range",
+                  "high": "abnormal, high: above the reference range",
+                  "low": "abnormal, low: below the reference range"}
+
+
+def lab_flag(value: float, rng: str) -> str:
+    """High, low or normal against a reference range written "70-99", "<200" or ">40"."""
+    if m := re.fullmatch(r"([\d.]+)-([\d.]+)", rng):
+        return "low" if value < float(m[1]) else "high" if value > float(m[2]) else "normal"
+    if m := re.fullmatch(r"<([\d.]+)", rng):
+        return "high" if value >= float(m[1]) else "normal"
+    if m := re.fullmatch(r">([\d.]+)", rng):
+        return "low" if value <= float(m[1]) else "normal"
+    return ""
+
+
+def lab_result(code: str, number: str, unit: str | None) -> dict:
+    """A test's record keys: the value as written, its unit (the test's own unless the note gives another),
+    and whether it is out of the test's reference range."""
+    name, usual, rng = TESTS[code]
+    unit = SAME_UNIT.get((unit or "").casefold(), unit) or usual
+    result = {code: number, f"{code}.unit": unit}
+    if unit.casefold() == usual.casefold() and (flag := lab_flag(float(number), rng)):
+        result[f"{code}.abnormal"] = INTERPRETATION[flag]
+    return result
 
 
 def context(note: str, start: int, end: int, width: int = 45) -> str:
@@ -161,6 +201,8 @@ def record(note: str) -> tuple[dict, dict, dict]:
     if dates:
         pick(questions, "dob", "Which of these is the patient's date of birth?", dates,
              "The note does not give a date of birth.")
+        pick(questions, "lab_date", "Which of these is the date the lab samples were collected, or else the date "
+             "of the lab results?", dates, "The note gives no date for lab results.")
     pick(questions, "sex", "What does the note state as the patient's sex?", {"male": None, "female": None},
          "The note does not state the patient's sex.")
     questions["site"] = {"type": "choice", "instructions": "Where was the patient's temperature taken?",
@@ -182,11 +224,15 @@ def record(note: str) -> tuple[dict, dict, dict]:
         pick(questions, "bp", READING.format(what="the patient's blood pressure"), bps, NOT_TODAY)
     taken = [(m.start(), m.end()) for m in pairs] + [(m.start(), m.end()) for m in DATES.finditer(note)]
     quantities = [m for m in QUANTITY.finditer(note)
-                  if not any(a <= m.start() < b for a, b in taken) and not re.match(r"\d+\s*(mg|mcg|ml)", note[m.start():], re.I)]
+                  if not any(a <= m.start() < b for a, b in taken) and not DOSE.match(note, m.start())]
     for k, m in enumerate(quantities):
         questions[f"q{k}"] = {"type": "choice", "criteria": KINDS, "instructions": {
             "task": "What does this number in the note measure?", "number": m[0],
             "context": context(note, m.start(), m.end())}}
+        questions[f"t{k}"] = {"type": "choice",  # asked alongside, used only when the number is a lab result
+                              "criteria": {c: t[0] for c, t in TESTS.items()} | {"none": "not a laboratory test result"},
+                              "instructions": {"task": "If this number is a laboratory test result, which test is it?",
+                                               "number": m[0], "context": context(note, m.start(), m.end())}}
     answers = ask_all(note, questions)
 
     out, conf, flags = {}, {}, {}
@@ -216,6 +262,7 @@ def record(note: str) -> tuple[dict, dict, dict]:
         take({"birth_date": iso}, p)
     elif dates and dob == "none":
         blank(["birth_date"], p)
+    lab_date, p_lab_date = picked("lab_date")
     sex, p = picked("sex")
     if sex != "none":
         take({"sex": sex}, p)
@@ -250,16 +297,22 @@ def record(note: str) -> tuple[dict, dict, dict]:
 
     # Quantities: what each number measures, then, per kind, which reading was taken at this visit. A lone
     # reading is asked about too: it may be from home, the last visit, or a goal.
+    # Lab results are kinds too, one per test.
     by_kind: dict[str, list] = {}
     for k, m in enumerate(quantities):
         kind, p = picked(f"q{k}")
+        if kind == "lab":
+            test, p_test = picked(f"t{k}")
+            kind, p = (test, min(p, p_test)) if test != "none" else ("other", p)
         if kind != "other":
             by_kind.setdefault(kind, []).append((m, p))
     readings = {kind: {f"{m[0]} ({i + 1})": {"context": context(note, m.start(), m.end())}
                        for i, (m, _) in enumerate(found)} for kind, found in by_kind.items()}
     second: dict[str, dict] = {}
     for kind, candidates in readings.items():
-        pick(second, f"cur_{kind}", READING.format(what=KINDS[kind]), candidates, NOT_TODAY)
+        what = f"the patient's {TESTS[kind][0]} result" if kind in TESTS else KINDS[kind]
+        pick(second, f"cur_{kind}", (LAB_READING if kind in TESTS else READING).format(what=what), candidates,
+             NOT_TODAY if kind not in TESTS else "None of these is a current result for this patient.")
     current = ask_all(note, second) if second else {}
     for kind, found in by_kind.items():
         label, p = picked(f"cur_{kind}", current)
@@ -268,10 +321,15 @@ def record(note: str) -> tuple[dict, dict, dict]:
             continue
         m, p0 = found[int(label.rsplit("(", 1)[1].rstrip(")")) - 1]
         p = min(p0, p)
+        if kind in TESTS:
+            take(lab_result(kind, m[1], m[2]), p)
+            continue
         value, unit = float(m[1]), (m[2] or "").lower().replace("°", "").strip()
         if unit in TO_EHR and TO_EHR[unit][0] == kind:
             value = TO_EHR[unit][1](value)
         take({kind: round(value, 1) if kind in ("weight", "height", "temperature") else round(value)}, p)
+    if any(k in TESTS for k in out) and lab_date != "none" and (iso := iso_date(lab_date)):
+        take({"collection_date": iso}, p_lab_date)
     if "temperature" in out:
         site, p = picked("site")
         if site != "none":

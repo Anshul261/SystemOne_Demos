@@ -8,11 +8,14 @@ the agents, so a wrong entry there is not counted.
 import json
 import os
 import re
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import BrowserContext
+
+import labs
 
 
 @dataclass(frozen=True)
@@ -23,6 +26,7 @@ class Screen:
     derived: list[dict] = field(default_factory=list)  # fields the page fills itself, ignored as agent extras
     title: str = ""  # how the review console names the screen
     save: callable = None  # save(page) -> what was saved, used only by the review console after approval
+    setup: callable = None  # setup(page, record): EMR-side preparation a record needs, such as placing lab orders
 
 
 def named(role: str, name: str, nth: int = 0) -> dict:
@@ -170,6 +174,28 @@ def save_vitals(page) -> str:
     return f"Saved vitals to the Bench Fixture visit (encounter {json.loads(FIXTURE.read_text())['encounter']})"
 
 
+def setup_labs(page, record: dict) -> None:
+    """Order the panels the record has results for, on the fixture visit, after clearing earlier orders."""
+    base = os.environ["OPENEMR_URL"].rstrip("/")
+    labs.setup(page, base)
+    labs.clear_orders(page, base)
+    for panel in labs.panels_in(record):
+        labs.place_order(page, base, panel)
+    page.goto(f"{base}/interface/orders/orders_results.php?review=1")
+
+
+def save_labs(page) -> str:
+    """OpenEMR keeps results only under a report with a date: an empty report date takes the collection date."""
+    report = page.get_by_role("textbox", name="Date and time of this report").first
+    if not report.input_value():
+        report.fill(page.get_by_role("textbox", name="Date and time of sample collection").first.input_value()
+                    or time.strftime("%Y-%m-%d"))
+    with page.expect_navigation():
+        page.evaluate("f => f.requestSubmit(f.querySelector('[name=form_submit]'))",
+                      page.locator("form:has([name=form_submit])").element_handle())
+    return "Saved lab results to the Bench Fixture visit"
+
+
 def openemr() -> Target:
     """OpenEMR's new-patient screen with Contact open, and the vitals screen of the fixture encounter."""
     base = os.environ["OPENEMR_URL"].rstrip("/")
@@ -177,7 +203,9 @@ def openemr() -> Target:
                                      title="New patient", save=save_patient),
                               Screen(f"{base}/interface/forms/vitals/new.php", OPENEMR_VITALS,
                                      derived=OPENEMR_VITALS_DERIVED, title="Vitals (Bench Fixture visit)",
-                                     save=save_vitals)],
+                                     save=save_vitals),
+                              Screen(f"{base}/interface/orders/orders_results.php?review=1", {},
+                                     title="Lab results (Bench Fixture visit)", save=save_labs, setup=setup_labs)],
                   login=openemr_login,
                   saves=[f"{base}/interface/new/new_comprehensive_save.php*", f"{base}/interface/forms/*/save.php*"])
 

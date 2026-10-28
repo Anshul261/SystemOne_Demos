@@ -122,8 +122,8 @@ def key(mapped: dict) -> str | None:
     return f"{text}@{mapped['unit']}" if mapped["unit"] else text
 
 
-def map_screen(page, fields: list[dict], workers: int = 8) -> dict:
-    """The screen's section and, per field (same order), what it holds."""
+def map_screen(page, fields: list[dict], section: str | None = None, workers: int = 8) -> dict:
+    """The screen's section (asked unless known) and, per field (same order), what it holds."""
     shot = Image.open(io.BytesIO(page.screenshot(full_page=True))).convert("RGB")
     scroll_x, scroll_y = page.evaluate("[scrollX, scrollY]")
     shifted = lambda b: b and b | {"x": b["x"] + scroll_x, "y": b["y"] + scroll_y}  # noqa: E731
@@ -133,7 +133,7 @@ def map_screen(page, fields: list[dict], workers: int = 8) -> dict:
         visible = control.count() and control.is_visible()
         boxes.append(shifted(control.bounding_box(timeout=2000)) if visible else None)
         headers.append(shifted(control.evaluate(HEADER)) if visible else None)
-    section, confidence = section_of(shot, page.title())
+    section, confidence = (section, None) if section else section_of(shot, page.title())
     questions = field_questions(section)
     with ThreadPoolExecutor(workers) as pool:
         mapped = list(pool.map(lambda args: map_field(shot, *args, section, questions), zip(fields, boxes, headers)))

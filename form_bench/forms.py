@@ -4,6 +4,7 @@ fill or read it back. No models here."""
 import re
 
 from playwright.sync_api import BrowserContext, Page
+from playwright.sync_api import Error as PlaywrightError
 
 FIELD = re.compile(r"""^(\s*)- '?(textbox|spinbutton|combobox|searchbox)(?: "(.*?)")?""")
 OPTION = re.compile(r'^\s*- option(?: "(.*?)")?')
@@ -88,7 +89,20 @@ def same_control(a: dict, b: dict) -> bool:
     return a["name"] == b["name"]
 
 
+def pin(page: Page, fields: list[dict]) -> None:
+    """Mark each control on the page once, right after the screen is read, so entry finds it again even when
+    typing changes what describes it (a table row's name includes its inputs' values)."""
+    for k, field in enumerate(fields):
+        try:
+            locate(page, field).evaluate("(e, k) => e.setAttribute('data-entry-pin', k)", k, timeout=2000)
+            field["pin"] = k
+        except PlaywrightError:  # not found as read: left to the usual lookup
+            pass
+
+
 def locate(page: Page, field: dict):
+    if "pin" in field:
+        return page.locator(f'[data-entry-pin="{field["pin"]}"]')
     if field.get("row"):
         return page.get_by_role("row", name=row_pattern(field["row"])).get_by_role(field["role"]).nth(field.get("nth", 0))
     return page.get_by_role(field["role"], name=field["name"], exact=True).nth(field.get("nth", 0))
