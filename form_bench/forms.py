@@ -25,12 +25,24 @@ def read_form(page: Page) -> tuple[str, list[dict]]:
     A control inside a table row is found again by its row (row, nth), so unlabelled cells such as OpenEMR's
     vitals work. Its label comes only from what describes it: the row's cells to its left and its column's
     header ("Value", "Abn"). Cells further right, such as an earlier reading, are left out. Outside tables,
-    nth tells apart controls sharing a name, like two Middle Names."""
+    nth tells apart controls sharing a name, like two Middle Names. A row with fewer cells than the header
+    (its first cells are shared with the row above, as in OpenEMR's lab results) is aligned to the header from
+    the right."""
     snapshot = page.locator("body").aria_snapshot()
     fields: list[dict] = []
     row, row_indent, cells, headers, row_has_field = None, -1, [], [], False
+    in_row: list[tuple[dict, int]] = []  # this row's fields and the cell each sits in
+
+    def close_row():
+        shift = max(len(headers) - len(cells), 0)
+        for field, column in in_row:
+            header = headers[column + shift] if 0 <= column + shift < len(headers) else ""
+            field["context"] = " ".join(c for c in cells[:column] if c) + (f" ({header})" if header else "")
+        in_row.clear()
+
     for line in snapshot.splitlines():
         if match := ROW.match(line):
+            close_row()
             if row and not row_has_field and cells and all(cells):
                 headers = cells  # a row of named cells and no controls heads the columns below it
             row, row_indent, cells, row_has_field = match[2], len(match[1]), [], False
@@ -38,18 +50,17 @@ def read_form(page: Page) -> tuple[str, list[dict]]:
             cells.append(match[2] or "")
         elif match := FIELD.match(line):
             if len(match[1]) <= row_indent:
+                close_row()
                 row, row_indent, cells, headers = None, -1, [], []
             role, name = match[2], match[3] or ""
-            context = ""
+            nth = sum(f["role"] == role and f["row"] == row and (bool(row) or f["name"] == name) for f in fields)
+            fields.append({"role": role, "name": name, "row": row, "nth": nth, "context": "", "options": []})
             if row:
                 row_has_field = True
-                column = len(cells) - 1
-                header = headers[column] if 0 <= column < len(headers) else ""
-                context = " ".join(c for c in cells[:-1] if c) + (f" ({header})" if header else "")
-            nth = sum(f["role"] == role and f["row"] == row and (row or f["name"] == name) for f in fields)
-            fields.append({"role": role, "name": name, "row": row, "nth": nth, "context": context, "options": []})
+                in_row.append((fields[-1], len(cells) - 1))
         elif (match := OPTION.match(line)) and fields and fields[-1]["role"] == "combobox":
             fields[-1]["options"].append(match[1] or "")
+    close_row()
     return snapshot, [f for f in fields if f["name"] or f["row"]]
 
 
