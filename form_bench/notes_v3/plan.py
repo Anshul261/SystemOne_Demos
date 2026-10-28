@@ -1,6 +1,7 @@
 """Plans for a harder messy note set: the notes_v2 plans, plus distractors that compete with the real values.
 
-    uv run python notes_v3/plan.py        # writes notes_v3/plans.jsonl and notes_v3/batches/plan-*.json
+    uv run python notes_v3/plan.py                  # writes notes_v3/plans.jsonl and notes_v3/batches/plan-*.json
+    uv run python notes_v3/plan.py notes_v4 2028    # another set like it, drawn with another seed
 
 The development notes of notes_v2 no longer separate extractors (they get every field right), so this set adds,
 per note and at random: other people's full names (the signing clinician, a relative or interpreter, taken from
@@ -17,13 +18,15 @@ import sys
 from datetime import date, timedelta
 from pathlib import Path
 
-HERE = Path(__file__).parent
-sys.path.insert(0, str(HERE.parent))
-sys.path.insert(0, str(HERE.parent / "notes_v2"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "notes_v2"))
 from cases import age, allergies_by_patient, latest_vitals, rows  # noqa: E402
 from plan import STYLES, medications_by_patient, plan, record, us_date  # noqa: E402
 
-SEED = 2027
+HERE = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "notes_v3")
+SEED = int(sys.argv[2]) if len(sys.argv) > 2 else 2027
+TAG = "h" if HERE.name == "notes_v3" else HERE.name.rsplit("_v", 1)[-1]  # note ids: <patient>-h0, <patient>-40, ...
 RELATIONS = ["daughter", "son", "wife", "husband", "neighbour", "interpreter", "friend"]
 
 
@@ -94,7 +97,7 @@ def main():
     for patient, r in records:
         others = [o for _, o in records if o is not r]
         for k, style in enumerate(rng.sample(list(STYLES), 2)):
-            p = plan(r, rng, f"{patient['Id'][:8]}-h{k}", patient["BIRTHDATE"])
+            p = plan(r, rng, f"{patient['Id'][:8]}-{TAG}{k}", patient["BIRTHDATE"])
             harden(p, r, rng, others)
             p["style"], p["split"] = style, "fresh"
             plans.append(p)

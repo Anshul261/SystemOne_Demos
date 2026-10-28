@@ -13,7 +13,6 @@ person should review. Keys: given, middle, family, birth_date, sex, street, unit
 bp_systolic, bp_diastolic, pulse, respiration, temperature, temp_site, oxygen_saturation, weight, height.
 """
 
-import os
 import re
 from datetime import date
 
@@ -21,25 +20,21 @@ import usaddress
 
 from models import ask_all
 
-# Flag a value Jev gives less than this: the highest threshold with no false alarm on the development notes
-# (lowest right value 0.70). On the test notes it flagged all 5 inferred values and 6 of 1,442 right ones.
-FLAG_BELOW = float(os.getenv("LAYER1_FLAG_BELOW", "0.7"))
-# How Jev picks one mention from several (a name, a date, an address, a reading): "choice" lists them in one
-# question, "reversed" lists them last first (to measure order bias), "noul" asks one yes/no per mention
-# ("noul-top": the same, with confidence from the top yes alone, not lowered by a second yes), and
-# "find" lists them in a Choice with no "none" option and asks one Noul whether the note states the value at all
-# (TypeSafe's semantic-find pattern: a Choice always ranks something first, a Noul can fall near zero).
-PICK = os.getenv("LAYER1_PICK", "choice")
+# Flag a value, or a blank, Jev gives less than this. Set on the development notes (notes_v2 dev and notes_v3):
+# 0.6 catches every error a threshold can (3 of 7; the others had 0.85 or more) with 6 false alarms in 2,679
+# right fields; 0.7 adds 14 false alarms and catches no more.
+FLAG_BELOW = 0.6
 MONTHS = {m: i + 1 for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct",
                                           "nov", "dec"])}
 DATES = re.compile(r"\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}/\d{1,2}/\d{4}\b|\b[A-Z][a-z]{2,8}\.? \d{1,2},? \d{4}\b"
                    r"|\b\d{1,2} [A-Z][a-z]{2,8}\.? \d{4}\b")
 PAIR = re.compile(r"\b(\d{2,3})\s*/\s*(\d{2,3})\b|\b(\d{2,3}) over (\d{2,3})\b")
 QUANTITY = re.compile(r"(?<![\w./-])(\d{1,3}(?:\.\d)?)\s*(kg|lbs?|cm|in(?:ches)?|°?\s?[CF]\b|%|bpm|/min)?(?![\w/])", re.I)
-NAMES = [
-    re.compile(r"\b(?:Mr|Ms|Mrs|Miss|Dr)\.? [A-Z][A-Za-z'-]+\b"),  # title and family name
-    re.compile(r"\b[A-Z][A-Za-z'-]+, [A-Z][a-z'-]+(?: [A-Z]\.)?"),  # family name first, with a comma
-    re.compile(r"\b[A-Z][a-z'-]+(?: [A-Z][a-z'-]+){1,2}\b"),  # given (middle) family
+WORD = r"[A-Z][a-z'-]+(?:[A-Z][a-z'-]+)?"  # a capitalised name word, also "McClure" and "DeShawn"
+NAMES = [  # matched at every start, so "Dictation, Ullrich, Noriko" also gives "Ullrich, Noriko"
+    re.compile(rf"(?=\b((?:Mr|Ms|Mrs|Miss|Dr)\.? (?:{WORD}|[A-Z]+)\b))"),  # title and family name
+    re.compile(rf"(?=\b((?:{WORD}|[A-Z]{{2,}}), {WORD}(?: [A-Z]\.)?))"),  # family name first, with a comma
+    re.compile(rf"(?=\b({WORD}(?: {WORD}){{1,2}}\b))"),  # given (middle) family
 ]
 KINDS = {"weight": "the patient's body weight", "height": "the patient's height",
          "temperature": "the patient's body temperature", "pulse": "the patient's heart rate or pulse",
@@ -57,6 +52,10 @@ STATES = dict(zip(
     "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA "
     "RI SC SD TN TX UT VT VA WA WV WI WY".split()))
 STATES = {k.replace("~", " "): v for k, v in STATES.items()}
+# The charting rule for readings, from what a reading is, not from any one note's wording.
+READING = ("Which of these is {what} measured at this visit? If it was measured or stated more than once for "
+           "this visit, the latest or corrected value is the one to chart.")
+NOT_TODAY = "None of these was measured at this visit."
 TO_EHR = {"kg": ("weight", lambda v: v * 2.20462), "cm": ("height", lambda v: v / 2.54),
           "c": ("temperature", lambda v: v * 9 / 5 + 32)}
 
@@ -102,7 +101,8 @@ def parse_name(text: str) -> dict:
 
 
 def addresses(note: str) -> list[tuple[str, dict]]:
-    """Address-shaped text: from any house number to the end of its sentence ("Apt. 18" does not end it),
+    """Address-shaped text: from any house number to its ZIP code, or else the end of its sentence or a
+    bracket ("Apt. 18" does not end it),
     parsed into parts by usaddress, trimmed at commas to the longest part that parses as a street address (so
     "..., Massachusetts 02131, in with cough" still parses). Every start is tried, so a date just before an
     address cannot hide it."""
@@ -111,7 +111,7 @@ def addresses(note: str) -> list[tuple[str, dict]]:
     for start in re.finditer(r"(?<![\w/.-])(?=\d{1,6} [A-Z])", note):
         if any(a <= start.start() < b for a, b in dates):  # "21 Mar 1985" is a date, not a house number
             continue
-        end = re.search(r"\.\s+(?=[A-Z][a-z])|[;\n]|$", note[start.start():])
+        end = re.search(r"\.\s+(?=[A-Z])|[;\n()]|(?<=\b\d{5})(?![\d-])|$", note[start.start():])
         pieces = note[start.start():start.start() + end.start()].strip(" ,.")[:160].split(",")
         for k in range(len(pieces), 0, -1):  # the longest run of comma-separated pieces that is an address
             text = ",".join(pieces[:k]).strip(" ,.")
@@ -136,75 +136,50 @@ def state_name(text: str) -> str | None:
     return None
 
 
-def ask_pick(questions: dict, qid: str, what: str, candidates: dict, none: str | None) -> None:
-    """Questions that pick which candidate is `what`. candidates maps each label to its context (or None);
-    none, when given, is what it means that no candidate is."""
-    if PICK.startswith("noul"):
-        for i, (label, around) in enumerate(candidates.items()):
-            questions[f"{qid}_{i}"] = {"type": "noul", "instructions": {
-                "task": f"Is this {what}?", "mention": label} | ({"context": around["context"]} if around else {})}
-        return
-    labels = list(candidates)[::-1] if PICK == "reversed" else list(candidates)
-    if PICK == "find" and none:
-        questions[f"{qid}_exists"] = {"type": "noul", "instructions": f"Does the note state {what}?",
-                                      "criteria": {"true": f"The note states {what}.", "false": none}}
-        none = None
-    questions[qid] = {"type": "choice", "instructions": f"Which of these is {what}?",
-                      "criteria": {c: candidates[c] for c in labels} | ({"none": none} if none else {})}
+def mentions(note: str, matches) -> dict:
+    """Each distinct mention, in note order, with the words around its first appearance."""
+    found = {}
+    for text, a, b in matches:
+        found.setdefault(text, {"context": context(note, a, b)})
+    return found
 
 
-def resolve(answers: dict, qid: str, candidates: dict) -> tuple[str, float]:
-    """The picked candidate's label, or "none", and Jev's confidence in it. With nouls, a candidate is picked
-    when Jev says yes to it, and the confidence also falls when Jev says yes to a second one."""
-    if PICK.startswith("noul"):
-        yes = sorted(((answers[f"{qid}_{i}"]["noul"], label) for i, label in enumerate(candidates)
-                      if f"{qid}_{i}" in answers), reverse=True)
-        if not yes or yes[0][0] < 0.5:
-            return "none", 1 - yes[0][0] if yes else 1.0
-        if PICK == "noul-top" or len(yes) == 1:
-            return yes[0][1], yes[0][0]
-        return yes[0][1], min(yes[0][0], 1 - yes[1][0])
-    a = answers.get(qid)
-    if not a:
-        return "none", 1.0
-    if f"{qid}_exists" in answers:
-        exists = answers[f"{qid}_exists"]["noul"]
-        return ("none", 1 - exists) if exists < 0.5 else (a["choice"], min(a["probabilities"][a["choice"]], exists))
-    return a["choice"], a["probabilities"][a["choice"]]
+def pick(questions: dict, qid: str, instructions: str, candidates: dict, none: str) -> None:
+    """One Choice: which mention is the one asked for, or none of them. A Choice, not a Noul per mention: judged
+    alone, a mention like "Patient" can look like a town (notes_v3/README.md)."""
+    questions[qid] = {"type": "choice", "instructions": instructions, "criteria": candidates | {"none": none}}
 
 
 def record(note: str) -> tuple[dict, dict, dict]:
     """The note's patient record in EHR units, Jev's confidence per key, and the keys to review (with why)."""
     questions: dict[str, dict] = {}
-    names = {n: None for n in sorted({m[0] for p in NAMES for m in p.finditer(note)}, key=note.index)}
+    names = mentions(note, sorted(((m[1], m.start(1), m.end(1)) for p in NAMES for m in p.finditer(note)),
+                                  key=lambda t: t[1]))
     if names:
-        ask_pick(questions, "name", "the patient's own name", names, "None of these is the patient's name.")
-    dates = {m[0]: None for m in DATES.finditer(note)}
+        pick(questions, "name", "Which of these is the patient's own name?", names, "None of these is the patient's name.")
+    dates = mentions(note, ((m[0], m.start(), m.end()) for m in DATES.finditer(note)))
     if dates:
-        ask_pick(questions, "dob", "the patient's date of birth", dates, "The note does not give a date of birth.")
-    questions["sex"] = {"type": "choice", "instructions": "What does the note state as the patient's sex?",
-                        "criteria": {"male": None, "female": None}
-                        | ({} if PICK == "find" else {"none": "The note does not state the patient's sex."})}
-    if PICK == "find":
-        questions["sex_exists"] = {"type": "noul", "instructions": "Does the note state the patient's sex?",
-                                   "criteria": {"true": "The note states the patient's sex.",
-                                                "false": "The note does not state the patient's sex."}}
+        pick(questions, "dob", "Which of these is the patient's date of birth?", dates,
+             "The note does not give a date of birth.")
+    pick(questions, "sex", "What does the note state as the patient's sex?", {"male": None, "female": None},
+         "The note does not state the patient's sex.")
     questions["site"] = {"type": "choice", "instructions": "Where was the patient's temperature taken?",
                          "criteria": SITES}
     places = addresses(note)
     if places:
-        ask_pick(questions, "address", "the patient's home address", {t: None for t, _ in places},
-                 "None is the patient's home address.")
-    towns = {t: None for t in sorted({m[0] for m in re.finditer(r"\b[A-Z][a-z]+(?: [A-Z][a-z]+)?\b", note)} - set(STATES),
-                                     key=note.index)}
+        pick(questions, "address", "Which of these is the patient's home address now?",
+             mentions(note, ((t, note.index(t), note.index(t) + len(t)) for t, _ in places)),
+             "None is the patient's home address now.")
+    towns = {t: c for t, c in mentions(note, ((m[0], m.start(), m.end())
+                                              for m in re.finditer(r"\b[A-Z][a-z]+(?: [A-Z][a-z]+)?\b", note))).items()
+             if t not in STATES}
     if towns:  # used only when the note gives no full address
-        ask_pick(questions, "town", "the town or city the patient lives in", towns,
-                 "The note does not say where the patient lives.")
+        pick(questions, "town", "Which of these is the town or city the patient lives in now?", towns,
+             "The note does not say where the patient lives now.")
     pairs = list(PAIR.finditer(note))
-    bps = {m[0]: {"context": context(note, m.start(), m.end())} for m in pairs}
+    bps = mentions(note, ((m[0], m.start(), m.end()) for m in pairs))
     if pairs:
-        ask_pick(questions, "bp", "the blood pressure to chart as the patient's blood pressure today", bps,
-                 "None of these is today's blood pressure.")
+        pick(questions, "bp", READING.format(what="the patient's blood pressure"), bps, NOT_TODAY)
     taken = [(m.start(), m.end()) for m in pairs] + [(m.start(), m.end()) for m in DATES.finditer(note)]
     quantities = [m for m in QUANTITY.finditer(note)
                   if not any(a <= m.start() < b for a, b in taken) and not re.match(r"\d+\s*(mg|mcg|ml)", note[m.start():], re.I)]
@@ -227,26 +202,26 @@ def record(note: str) -> tuple[dict, dict, dict]:
         if confidence < FLAG_BELOW:
             flags.update({k: f"Jev is {confidence:.0%} sure the note does not give this" for k in keys})
 
-    def picked(qid):
-        a = answers.get(qid)
+    def picked(qid, replies=answers):
+        a = replies.get(qid)
         return (a["choice"], a["probabilities"][a["choice"]]) if a else ("none", 1.0)
 
-    name, p = resolve(answers, "name", names)
+    name, p = picked("name")
     if name != "none":
         take(parse_name(name), p)
     elif names:
         blank(["given", "family"], p)
-    dob, p = resolve(answers, "dob", dates)
+    dob, p = picked("dob")
     if dob != "none" and (iso := iso_date(dob)):
         take({"birth_date": iso}, p)
     elif dates and dob == "none":
         blank(["birth_date"], p)
-    sex, p = resolve(answers, "sex", {"male": None, "female": None}) if PICK == "find" else picked("sex")
+    sex, p = picked("sex")
     if sex != "none":
         take({"sex": sex}, p)
     else:
         blank(["sex"], p)
-    address, p = resolve(answers, "address", {t: None for t, _ in places})
+    address, p = picked("address")
     if address != "none":
         tags = dict(places)[address]
         street = " ".join(tags.get(k, "") for k in ("AddressNumber", "StreetNamePreDirectional", "StreetName",
@@ -261,40 +236,38 @@ def record(note: str) -> tuple[dict, dict, dict]:
     else:
         if places:
             blank(["street"], p)
-        town, p = resolve(answers, "town", towns)
+        town, p = picked("town")
         if town != "none":
             take({"city": town}, p)
         elif towns:
             blank(["city"], p)
-    bp, p = resolve(answers, "bp", bps)
+    bp, p = picked("bp")
     if bp != "none":
         s_, d_ = [int(x) for x in re.findall(r"\d{2,3}", bp)]
         take({"bp_systolic": s_, "bp_diastolic": d_}, p)
     elif pairs:
         blank(["bp_systolic", "bp_diastolic"], p)
 
-    # Quantities: one value per kind. Several of one kind (a weight, then its correction; this visit and the
-    # last) go to a second request that asks which is current.
+    # Quantities: what each number measures, then, per kind, which reading was taken at this visit. A lone
+    # reading is asked about too: it may be from home, the last visit, or a goal.
     by_kind: dict[str, list] = {}
     for k, m in enumerate(quantities):
         kind, p = picked(f"q{k}")
         if kind != "other":
             by_kind.setdefault(kind, []).append((m, p))
     readings = {kind: {f"{m[0]} ({i + 1})": {"context": context(note, m.start(), m.end())}
-                       for i, (m, _) in enumerate(found)} for kind, found in by_kind.items() if len(found) > 1}
+                       for i, (m, _) in enumerate(found)} for kind, found in by_kind.items()}
     second: dict[str, dict] = {}
     for kind, candidates in readings.items():
-        ask_pick(second, f"cur_{kind}", f"{KINDS[kind]} to chart today", candidates, None)
+        pick(second, f"cur_{kind}", READING.format(what=KINDS[kind]), candidates, NOT_TODAY)
     current = ask_all(note, second) if second else {}
     for kind, found in by_kind.items():
-        if len(found) > 1:
-            label, p = resolve(current, f"cur_{kind}", readings[kind])
-            if label == "none":  # with nouls, Jev may say no to every reading: chart none
-                continue
-            index = int(label.rsplit("(", 1)[1].rstrip(")")) - 1
-            m, p = found[index][0], min(found[index][1], p)
-        else:
-            m, p = found[0]
+        label, p = picked(f"cur_{kind}", current)
+        if label == "none":
+            blank([kind], p)
+            continue
+        m, p0 = found[int(label.rsplit("(", 1)[1].rstrip(")")) - 1]
+        p = min(p0, p)
         value, unit = float(m[1]), (m[2] or "").lower().replace("°", "").strip()
         if unit in TO_EHR and TO_EHR[unit][0] == kind:
             value = TO_EHR[unit][1](value)

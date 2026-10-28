@@ -206,9 +206,6 @@ def run(extractor_name: str, split: str, limit: int | None, workers: int, note_s
     jobs = [(note, screen) for note in notes for screen in SCREENS]
     with ThreadPoolExecutor(workers) as pool:
         rows = list(pool.map(one, jobs))
-    if extractor_name == "layer1":
-        import layer1
-        extractor_name = f"layer1-{layer1.PICK}"
     result = {"extractor": extractor_name, "set": note_set, "split": split, "summary": summarize(rows), "rows": rows}
     path = ROOT / "results" / f"{note_set.replace('_', '-')}-{extractor_name}-{split}-{datetime.now():%Y-%m-%d-%H%M%S}.json"
     path.parent.mkdir(exist_ok=True)

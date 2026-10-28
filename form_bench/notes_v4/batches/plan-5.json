@@ -1,0 +1,2279 @@
+[
+ {
+  "id": "35888667-40",
+  "style": "soap",
+  "features": [
+   "allergy_negation",
+   "bp_spoken",
+   "distractor_clinician",
+   "distractor_onset_date",
+   "distractor_previous_weight",
+   "dob_dmy",
+   "name_family_only",
+   "sex_shorthand"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Ms. Paucek",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "31 Mar 2001",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "25F",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "street",
+    "text": "120 Wisozk Wynd",
+    "how": "street address"
+   },
+   {
+    "field": "city",
+    "text": "Boston"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02129"
+   },
+   {
+    "field": "bp",
+    "text": "113 over 82",
+    "how": "blood pressure"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 14"
+   },
+   {
+    "field": "weight",
+    "text": "213.6 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Astrid Ward",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "onset_date",
+    "text": "10/12/2026",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "previous_weight",
+    "text": "224.6 lb at the last visit",
+    "how": "the weight at the previous visit, clearly labelled so"
+   }
+  ],
+  "expected": {
+   "family": "Paucek",
+   "birth_date": "2001-03-31",
+   "sex": "female",
+   "street": "120 Wisozk Wynd",
+   "city": "Boston",
+   "state": "Massachusetts",
+   "postal_code": "02129",
+   "bp_systolic": 113,
+   "bp_diastolic": 82,
+   "respiration": 14,
+   "weight": 213.6,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "35888667-41",
+  "style": "dictation",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "bp_spoken",
+   "distractor_date",
+   "distractor_person",
+   "distractor_previous_address",
+   "distractor_previous_weight",
+   "distractor_without_value",
+   "height_cm",
+   "name_last_first",
+   "sex_shorthand"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Paucek, Cleo",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "2001-03-31",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "25F",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "city",
+    "text": "Boston",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "113 over 82",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "P 96"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 14"
+   },
+   {
+    "field": "weight",
+    "text": "213.6 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "169 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "relative",
+    "text": "husband Omar Haddad",
+    "how": "a relative who came along; mention their name"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   },
+   {
+    "field": "previous_address",
+    "text": "994 Welch Bay, Lynnfield",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "previous_weight",
+    "text": "219.6 lb at the last visit",
+    "how": "the weight at the previous visit, clearly labelled so"
+   }
+  ],
+  "expected": {
+   "given": "Cleo",
+   "family": "Paucek",
+   "birth_date": "2001-03-31",
+   "sex": "female",
+   "city": "Boston",
+   "bp_systolic": 113,
+   "bp_diastolic": 82,
+   "pulse": 96,
+   "respiration": 14,
+   "weight": 213.6,
+   "height": 66.5,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "007a32fb-40",
+  "style": "intake",
+  "features": [
+   "address_absent",
+   "allergy_negation",
+   "bp_spoken",
+   "distractor_clinician",
+   "distractor_date",
+   "distractor_goal_weight",
+   "distractor_onset_date",
+   "distractor_pain_score",
+   "distractor_person",
+   "distractor_previous_address",
+   "distractor_without_value",
+   "dob_long",
+   "name_last_first",
+   "sex_shorthand"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Oberbrunner, Kendrick",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "August 28, 1931",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "95M",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "bp",
+    "text": "79 over 56",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 94"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 16"
+   },
+   {
+    "field": "weight",
+    "text": "172.8 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "65.8 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "ferrous sulfate 325 mg; clopidogrel 75 mg; simvastatin 20 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "relative",
+    "text": "son David Chen",
+    "how": "a relative who came along; mention their name"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Kyle Waelchi",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "previous_address",
+    "text": "428 Hermiston Crossroad, Fitchburg",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "onset_date",
+    "text": "2026-10-16",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "goal_weight",
+    "text": "goal weight 150 lb",
+    "how": "the weight the patient is aiming for"
+   },
+   {
+    "field": "pain",
+    "text": "pain 4/10",
+    "how": "a pain score out of ten"
+   }
+  ],
+  "expected": {
+   "given": "Kendrick",
+   "family": "Oberbrunner",
+   "birth_date": "1931-08-28",
+   "sex": "male",
+   "bp_systolic": 79,
+   "bp_diastolic": 56,
+   "pulse": 94,
+   "respiration": 16,
+   "weight": 172.8,
+   "height": 65.8,
+   "allergies": [],
+   "medications": [
+    "ferrous sulfate",
+    "clopidogrel",
+    "simvastatin"
+   ]
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "007a32fb-41",
+  "style": "dictation",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "distractor_clinician",
+   "distractor_date",
+   "distractor_full_name",
+   "distractor_last_visit",
+   "distractor_person",
+   "distractor_previous_address",
+   "distractor_without_value",
+   "dob_long",
+   "name_family_only"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Mr. Oberbrunner",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "August 28, 1931",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "male"
+   },
+   {
+    "field": "city",
+    "text": "Franklin",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "BP 79/56 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 94"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 16"
+   },
+   {
+    "field": "weight",
+    "text": "172.8 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "65.8 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "ferrous sulfate 325 mg; clopidogrel 75 mg; simvastatin 20 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "relative",
+    "text": "wife Linda Park",
+    "how": "a relative who came along; mention their name"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Franklin Kris",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "companion",
+    "text": "son Kyle Waelchi",
+    "how": "someone who came with the patient; give their full name"
+   },
+   {
+    "field": "previous_address",
+    "text": "805 Sporer Track, Haverhill",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "last_visit",
+    "text": "05/09/2026",
+    "how": "the date of the patient's last visit"
+   }
+  ],
+  "expected": {
+   "family": "Oberbrunner",
+   "birth_date": "1931-08-28",
+   "sex": "male",
+   "city": "Franklin",
+   "bp_systolic": 79,
+   "bp_diastolic": 56,
+   "pulse": 94,
+   "respiration": 16,
+   "weight": 172.8,
+   "height": 65.8,
+   "allergies": [],
+   "medications": [
+    "ferrous sulfate",
+    "clopidogrel",
+    "simvastatin"
+   ]
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "d8bb1b82-40",
+  "style": "soap",
+  "features": [
+   "address_absent",
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_clinician",
+   "distractor_date",
+   "distractor_pain_score",
+   "distractor_previous_vitals",
+   "dob_absent",
+   "sex_absent"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Jed Kilback"
+   },
+   {
+    "field": "age",
+    "text": "35-year-old",
+    "how": "age only; give no date of birth anywhere"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "bp_first",
+    "text": "141/78",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 123/70",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "bp_previous",
+    "text": "141/79",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 15"
+   },
+   {
+    "field": "weight",
+    "text": "209.0 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "71.1 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Birgit Shanahan",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "pain",
+    "text": "pain 7/10",
+    "how": "a pain score out of ten"
+   }
+  ],
+  "expected": {
+   "given": "Jed",
+   "family": "Kilback",
+   "bp_systolic": 123,
+   "bp_diastolic": 70,
+   "respiration": 15,
+   "weight": 209.0,
+   "height": 71.1,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "d8bb1b82-41",
+  "style": "triage",
+  "features": [
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_clinician",
+   "distractor_full_name",
+   "distractor_last_visit",
+   "distractor_onset_date",
+   "distractor_pain_score",
+   "distractor_previous_address",
+   "dob_long",
+   "name_last_first",
+   "sex_absent"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "KILBACK, Jed N.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "November 7, 1990",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "street",
+    "text": "440 Senger Mission",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Unit 24",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Tewksbury"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "00000"
+   },
+   {
+    "field": "bp_first",
+    "text": "145/80",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 123/70 mmHg",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 73"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 15"
+   },
+   {
+    "field": "height",
+    "text": "71.1 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Daniell Swift",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "companion",
+    "text": "daughter Daniell Swift",
+    "how": "someone who came with the patient; give their full name"
+   },
+   {
+    "field": "previous_address",
+    "text": "761 Bayer Station, Monson",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "onset_date",
+    "text": "09/10/2026",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "last_visit",
+    "text": "02/15/2026",
+    "how": "the date of the patient's last visit"
+   },
+   {
+    "field": "pain",
+    "text": "pain 6/10",
+    "how": "a pain score out of ten"
+   }
+  ],
+  "expected": {
+   "given": "Jed",
+   "middle": "N.",
+   "family": "Kilback",
+   "birth_date": "1990-11-07",
+   "street": "440 Senger Mission",
+   "unit": "Unit 24",
+   "city": "Tewksbury",
+   "state": "Massachusetts",
+   "postal_code": "00000",
+   "bp_systolic": 123,
+   "bp_diastolic": 70,
+   "pulse": 73,
+   "respiration": 15,
+   "height": 71.1,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "b11899dd-40",
+  "style": "triage",
+  "features": [
+   "allergy_negation",
+   "distractor_clinician",
+   "distractor_full_name",
+   "distractor_last_visit",
+   "distractor_onset_date",
+   "distractor_previous_address",
+   "distractor_previous_vitals",
+   "dob_long",
+   "name_last_first",
+   "pulse_repeat",
+   "sex_shorthand"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "SANFORD, Chandra M.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "November 27, 2006",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "19F",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "street",
+    "text": "569 Oberbrunner Mission",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Suite 37",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Watertown"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02472"
+   },
+   {
+    "field": "bp",
+    "text": "BP 104/86 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "122/95",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 94",
+    "how": "the repeat pulse after resting; this is the one charted"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 14"
+   },
+   {
+    "field": "weight",
+    "text": "172.4 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "66.9 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Arla Walter",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "companion",
+    "text": "husband Eilene Block",
+    "how": "someone who came with the patient; give their full name"
+   },
+   {
+    "field": "previous_address",
+    "text": "188 Ledner View, Ludlow",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "onset_date",
+    "text": "October 1, 2026",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "last_visit",
+    "text": "June 11, 2026",
+    "how": "the date of the patient's last visit"
+   },
+   {
+    "field": "pulse_first",
+    "text": "HR 116 on arrival",
+    "how": "the pulse on arrival, before resting"
+   }
+  ],
+  "expected": {
+   "given": "Chandra",
+   "middle": "M.",
+   "family": "Sanford",
+   "birth_date": "2006-11-27",
+   "sex": "female",
+   "street": "569 Oberbrunner Mission",
+   "unit": "Suite 37",
+   "city": "Watertown",
+   "state": "Massachusetts",
+   "postal_code": "02472",
+   "bp_systolic": 104,
+   "bp_diastolic": 86,
+   "pulse": 94,
+   "respiration": 14,
+   "weight": 172.4,
+   "height": 66.9,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "b11899dd-41",
+  "style": "soap",
+  "features": [
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_clinician",
+   "distractor_last_visit",
+   "distractor_onset_date",
+   "dob_us",
+   "name_last_first"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Sanford, Chandra",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "11/27/2006",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "street",
+    "text": "569 Oberbrunner Mission",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Suite 37",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Watertown"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02472"
+   },
+   {
+    "field": "bp_first",
+    "text": "123/98",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 104/86 mmHg",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 94"
+   },
+   {
+    "field": "weight",
+    "text": "172.4 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Abram Brekke",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "onset_date",
+    "text": "10/12/2026",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "last_visit",
+    "text": "12/17/2025",
+    "how": "the date of the patient's last visit"
+   }
+  ],
+  "expected": {
+   "given": "Chandra",
+   "family": "Sanford",
+   "birth_date": "2006-11-27",
+   "sex": "female",
+   "street": "569 Oberbrunner Mission",
+   "unit": "Suite 37",
+   "city": "Watertown",
+   "state": "Massachusetts",
+   "postal_code": "02472",
+   "bp_systolic": 104,
+   "bp_diastolic": 86,
+   "pulse": 94,
+   "weight": 172.4,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "4ecd0e49-40",
+  "style": "intake",
+  "features": [
+   "allergy_negation",
+   "distractor_full_name",
+   "distractor_previous_weight",
+   "distractor_without_value",
+   "name_last_first"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Waelchi, Danyell",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "1971-07-13",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "street",
+    "text": "835 Zemlak Branch",
+    "how": "street address"
+   },
+   {
+    "field": "city",
+    "text": "Weymouth"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02191"
+   },
+   {
+    "field": "bp",
+    "text": "BP 100/72",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 84"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "O2 sat 94% on room air"
+   },
+   {
+    "field": "height",
+    "text": "68.3 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "vitamin b12; clopidogrel 75 mg; simvastatin 20 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "companion",
+    "text": "daughter Alexander Hegmann",
+    "how": "someone who came with the patient; give their full name"
+   },
+   {
+    "field": "previous_weight",
+    "text": "188.9 lb at the last visit",
+    "how": "the weight at the previous visit, clearly labelled so"
+   }
+  ],
+  "expected": {
+   "given": "Danyell",
+   "family": "Waelchi",
+   "birth_date": "1971-07-13",
+   "sex": "female",
+   "street": "835 Zemlak Branch",
+   "city": "Weymouth",
+   "state": "Massachusetts",
+   "postal_code": "02191",
+   "bp_systolic": 100,
+   "bp_diastolic": 72,
+   "pulse": 84,
+   "oxygen_saturation": 94,
+   "height": 68.3,
+   "allergies": [],
+   "medications": [
+    "vitamin b12",
+    "clopidogrel",
+    "simvastatin"
+   ]
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "4ecd0e49-41",
+  "style": "handoff",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_clinician",
+   "distractor_full_name",
+   "distractor_last_visit",
+   "distractor_person",
+   "distractor_previous_address",
+   "distractor_previous_vitals",
+   "distractor_without_value",
+   "dob_dmy",
+   "name_middle"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Danyell Siu Waelchi"
+   },
+   {
+    "field": "birth_date",
+    "text": "13 Jul 1971",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "city",
+    "text": "Weymouth",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp_first",
+    "text": "117/78",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "100 over 72",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "bp_previous",
+    "text": "118/81",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 84"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 14"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "sat 94% RA"
+   },
+   {
+    "field": "weight",
+    "text": "179.9 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "vitamin b12; clopidogrel 75 mg; simvastatin 20 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "relative",
+    "text": "son David Chen",
+    "how": "a relative who came along; mention their name"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Cornell Parker",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "companion",
+    "text": "husband Gregoria Marquardt",
+    "how": "someone who came with the patient; give their full name"
+   },
+   {
+    "field": "previous_address",
+    "text": "361 Leuschke Path, Cambridge",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "last_visit",
+    "text": "12/18/2025",
+    "how": "the date of the patient's last visit"
+   }
+  ],
+  "expected": {
+   "given": "Danyell",
+   "middle": "Siu",
+   "family": "Waelchi",
+   "birth_date": "1971-07-13",
+   "sex": "female",
+   "city": "Weymouth",
+   "bp_systolic": 100,
+   "bp_diastolic": 72,
+   "pulse": 84,
+   "respiration": 14,
+   "oxygen_saturation": 94,
+   "weight": 179.9,
+   "allergies": [],
+   "medications": [
+    "vitamin b12",
+    "clopidogrel",
+    "simvastatin"
+   ]
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "34c7949d-40",
+  "style": "handoff",
+  "features": [
+   "allergy_negation",
+   "distractor_clinician",
+   "dob_dmy",
+   "name_last_first",
+   "sex_shorthand",
+   "temp_celsius"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Kling, Lashay",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "23 Jun 1996",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "30F",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "street",
+    "text": "1055 Feeney Flat",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Unit 79",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Medfield"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02052"
+   },
+   {
+    "field": "bp",
+    "text": "BP 144/78",
+    "how": "blood pressure"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 14"
+   },
+   {
+    "field": "temperature",
+    "text": "36.5 C",
+    "how": "temperature, taken tympanic"
+   },
+   {
+    "field": "weight",
+    "text": "155.0 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "65.7 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Asia Prosacco",
+    "how": "the clinician who wrote and signed the note"
+   }
+  ],
+  "expected": {
+   "given": "Lashay",
+   "family": "Kling",
+   "birth_date": "1996-06-23",
+   "sex": "female",
+   "street": "1055 Feeney Flat",
+   "unit": "Unit 79",
+   "city": "Medfield",
+   "state": "Massachusetts",
+   "postal_code": "02052",
+   "bp_systolic": 144,
+   "bp_diastolic": 78,
+   "respiration": 14,
+   "temperature": 97.7,
+   "temp_site": "tympanic",
+   "weight": 155.0,
+   "height": 65.7,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "34c7949d-41",
+  "style": "dictation",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "distractor_clinician",
+   "distractor_full_name",
+   "distractor_goal_weight",
+   "distractor_home_temp",
+   "distractor_last_visit",
+   "distractor_onset_date",
+   "distractor_without_value",
+   "dob_absent",
+   "name_family_only"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Ms. Kling",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "age",
+    "text": "30-year-old",
+    "how": "age only; give no date of birth anywhere"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "city",
+    "text": "Medfield",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "BP 144/78 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 64"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 14"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "sat 99% RA"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Fredericka Cummings",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "companion",
+    "text": "interpreter Lelah Hyatt",
+    "how": "someone who came with the patient; give their full name"
+   },
+   {
+    "field": "onset_date",
+    "text": "9/26/2026",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "last_visit",
+    "text": "7/29/2026",
+    "how": "the date of the patient's last visit"
+   },
+   {
+    "field": "home_temperature",
+    "text": "100.5 F at home",
+    "how": "the highest temperature the patient measured at home yesterday; not taken at this visit"
+   },
+   {
+    "field": "goal_weight",
+    "text": "goal weight 124 lb",
+    "how": "the weight the patient is aiming for"
+   }
+  ],
+  "expected": {
+   "family": "Kling",
+   "sex": "female",
+   "city": "Medfield",
+   "bp_systolic": 144,
+   "bp_diastolic": 78,
+   "pulse": 64,
+   "respiration": 14,
+   "oxygen_saturation": 99,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "279ca2a4-40",
+  "style": "intake",
+  "features": [
+   "address_partial",
+   "allergy_negation",
+   "correction",
+   "distractor_clinician",
+   "distractor_home_temp",
+   "distractor_previous_address",
+   "distractor_without_value",
+   "dob_us",
+   "name_family_only"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Ms. Hyatt",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "7/2/1999",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "city",
+    "text": "Newton",
+    "how": "only the town the patient lives in; no street, state or ZIP"
+   },
+   {
+    "field": "bp",
+    "text": "BP 118/70",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 60"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 13"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "SpO2 76%"
+   },
+   {
+    "field": "temperature",
+    "text": "99.9 F",
+    "how": "temperature, taken axillary"
+   },
+   {
+    "field": "weight_wrong",
+    "text": "219.6 lb",
+    "how": "a weight that is then corrected"
+   },
+   {
+    "field": "weight",
+    "text": "275.6 lb",
+    "how": "the corrected weight, introduced as a correction"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Asia Prosacco",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "previous_address",
+    "text": "396 Macejkovic Course, Barnstable",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "home_temperature",
+    "text": "101.3 F at home",
+    "how": "the highest temperature the patient measured at home yesterday; not taken at this visit"
+   }
+  ],
+  "expected": {
+   "family": "Hyatt",
+   "birth_date": "1999-07-02",
+   "sex": "female",
+   "city": "Newton",
+   "bp_systolic": 118,
+   "bp_diastolic": 70,
+   "pulse": 60,
+   "respiration": 13,
+   "oxygen_saturation": 76,
+   "temperature": 99.9,
+   "temp_site": "axillary",
+   "weight": 275.6,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "279ca2a4-41",
+  "style": "handoff",
+  "features": [
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_clinician",
+   "distractor_date",
+   "distractor_pain_score",
+   "distractor_previous_address",
+   "dob_us0",
+   "name_family_only",
+   "sex_shorthand",
+   "temp_celsius"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Ms. Hyatt",
+    "how": "the only time the patient is named"
+   },
+   {
+    "field": "birth_date",
+    "text": "07/02/1999",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "27F",
+    "how": "age and sex shorthand"
+   },
+   {
+    "field": "street",
+    "text": "601 Lehner Boulevard",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Apt 79",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Newton"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02461"
+   },
+   {
+    "field": "bp_first",
+    "text": "137/78",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 118/70",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 60"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 13"
+   },
+   {
+    "field": "oxygen_saturation",
+    "text": "SpO2 76%"
+   },
+   {
+    "field": "temperature",
+    "text": "37.7 C",
+    "how": "temperature, taken oral"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Soon Koelpin",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "previous_address",
+    "text": "185 Maggio Neck, Boston",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "pain",
+    "text": "pain 2/10",
+    "how": "a pain score out of ten"
+   }
+  ],
+  "expected": {
+   "family": "Hyatt",
+   "birth_date": "1999-07-02",
+   "sex": "female",
+   "street": "601 Lehner Boulevard",
+   "unit": "Apt 79",
+   "city": "Newton",
+   "state": "Massachusetts",
+   "postal_code": "02461",
+   "bp_systolic": 118,
+   "bp_diastolic": 70,
+   "pulse": 60,
+   "respiration": 13,
+   "oxygen_saturation": 76,
+   "temperature": 99.9,
+   "temp_site": "oral",
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "ae3546fc-40",
+  "style": "dictation",
+  "features": [
+   "allergy_negation",
+   "distractor_date",
+   "distractor_home_temp",
+   "distractor_last_visit",
+   "distractor_onset_date",
+   "distractor_person",
+   "distractor_previous_vitals",
+   "dob_dmy",
+   "name_last_first",
+   "sex_absent",
+   "weight_kg"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Windler, Reginald",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "8 Apr 2004",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "street",
+    "text": "997 Beahan Promenade",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Unit 45",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Milton"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02186"
+   },
+   {
+    "field": "bp",
+    "text": "BP 136/90 mmHg",
+    "how": "blood pressure"
+   },
+   {
+    "field": "bp_previous",
+    "text": "154/99",
+    "how": "the blood pressure at the PREVIOUS visit, clearly labelled so"
+   },
+   {
+    "field": "pulse",
+    "text": "pulse 70"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 15"
+   },
+   {
+    "field": "temperature",
+    "text": "99.0 F",
+    "how": "temperature, taken tympanic"
+   },
+   {
+    "field": "weight",
+    "text": "72.3 kg",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "65.8 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "relative",
+    "text": "daughter Maria Lopez",
+    "how": "a relative who came along; mention their name"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   },
+   {
+    "field": "onset_date",
+    "text": "2026-10-12",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "last_visit",
+    "text": "2025-12-10",
+    "how": "the date of the patient's last visit"
+   },
+   {
+    "field": "home_temperature",
+    "text": "100.4 F at home",
+    "how": "the highest temperature the patient measured at home yesterday; not taken at this visit"
+   }
+  ],
+  "expected": {
+   "given": "Reginald",
+   "family": "Windler",
+   "birth_date": "2004-04-08",
+   "street": "997 Beahan Promenade",
+   "unit": "Unit 45",
+   "city": "Milton",
+   "state": "Massachusetts",
+   "postal_code": "02186",
+   "bp_systolic": 136,
+   "bp_diastolic": 90,
+   "pulse": 70,
+   "respiration": 15,
+   "temperature": 99.0,
+   "temp_site": "tympanic",
+   "weight": 159.4,
+   "height": 65.8,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "ae3546fc-41",
+  "style": "referral",
+  "features": [
+   "allergy_negation",
+   "distractor_date",
+   "dob_dmy",
+   "name_last_first"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "WINDLER, Reginald R.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "8 Apr 2004",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "male"
+   },
+   {
+    "field": "street",
+    "text": "997 Beahan Promenade",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Unit 45",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Milton"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02186"
+   },
+   {
+    "field": "bp",
+    "text": "BP 136/90",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "P 70"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 15"
+   },
+   {
+    "field": "weight",
+    "text": "159.4 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "65.8 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "no known allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "visit_date",
+    "text": "10/20/2026",
+    "how": "the date of the visit"
+   }
+  ],
+  "expected": {
+   "given": "Reginald",
+   "middle": "R.",
+   "family": "Windler",
+   "birth_date": "2004-04-08",
+   "sex": "male",
+   "street": "997 Beahan Promenade",
+   "unit": "Unit 45",
+   "city": "Milton",
+   "state": "Massachusetts",
+   "postal_code": "02186",
+   "bp_systolic": 136,
+   "bp_diastolic": 90,
+   "pulse": 70,
+   "respiration": 15,
+   "weight": 159.4,
+   "height": 65.8,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "068177c1-40",
+  "style": "dictation",
+  "features": [
+   "allergy_negation",
+   "correction",
+   "distractor_clinician",
+   "distractor_goal_weight",
+   "distractor_onset_date",
+   "distractor_previous_address",
+   "dob_absent",
+   "name_last_first",
+   "pulse_repeat"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Villanueva, Berta",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "age",
+    "text": "52-year-old",
+    "how": "age only; give no date of birth anywhere"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "street",
+    "text": "757 Dibbert Alley",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Unit 40",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Boston"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02152"
+   },
+   {
+    "field": "bp",
+    "text": "BP 128/74",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "HR 99",
+    "how": "the repeat pulse after resting; this is the one charted"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 14"
+   },
+   {
+    "field": "weight_wrong",
+    "text": "126.1 lb",
+    "how": "a weight that is then corrected"
+   },
+   {
+    "field": "weight",
+    "text": "169.1 lb",
+    "how": "the corrected weight, introduced as a correction"
+   },
+   {
+    "field": "height",
+    "text": "65.3 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Kendrick Oberbrunner",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "previous_address",
+    "text": "761 Bayer Station, Monson",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "onset_date",
+    "text": "October 9, 2026",
+    "how": "the date the symptoms began"
+   },
+   {
+    "field": "pulse_first",
+    "text": "HR 116 on arrival",
+    "how": "the pulse on arrival, before resting"
+   },
+   {
+    "field": "goal_weight",
+    "text": "goal weight 139 lb",
+    "how": "the weight the patient is aiming for"
+   }
+  ],
+  "expected": {
+   "given": "Berta",
+   "family": "Villanueva",
+   "sex": "female",
+   "street": "757 Dibbert Alley",
+   "unit": "Unit 40",
+   "city": "Boston",
+   "state": "Massachusetts",
+   "postal_code": "02152",
+   "bp_systolic": 128,
+   "bp_diastolic": 74,
+   "pulse": 99,
+   "respiration": 14,
+   "weight": 169.1,
+   "height": 65.3,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "068177c1-41",
+  "style": "handoff",
+  "features": [
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_clinician",
+   "distractor_onset_date",
+   "dob_us",
+   "height_cm",
+   "name_last_first"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "VILLANUEVA, Berta V.",
+    "how": "as written, capitals and all"
+   },
+   {
+    "field": "birth_date",
+    "text": "4/2/1974",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "female"
+   },
+   {
+    "field": "street",
+    "text": "757 Dibbert Alley",
+    "how": "street address"
+   },
+   {
+    "field": "unit",
+    "text": "Unit 40",
+    "how": "the apartment or unit, right after the street"
+   },
+   {
+    "field": "city",
+    "text": "Boston"
+   },
+   {
+    "field": "state",
+    "text": "Massachusetts"
+   },
+   {
+    "field": "postal_code",
+    "text": "02152"
+   },
+   {
+    "field": "bp_first",
+    "text": "147/86",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 128/74",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "P 99"
+   },
+   {
+    "field": "respiration",
+    "text": "respirations 14"
+   },
+   {
+    "field": "height",
+    "text": "166 cm",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "NKDA",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Crystle Hartmann",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "onset_date",
+    "text": "October 16, 2026",
+    "how": "the date the symptoms began"
+   }
+  ],
+  "expected": {
+   "given": "Berta",
+   "middle": "V.",
+   "family": "Villanueva",
+   "birth_date": "1974-04-02",
+   "sex": "female",
+   "street": "757 Dibbert Alley",
+   "unit": "Unit 40",
+   "city": "Boston",
+   "state": "Massachusetts",
+   "postal_code": "02152",
+   "bp_systolic": 128,
+   "bp_diastolic": 74,
+   "pulse": 99,
+   "respiration": 14,
+   "height": 65.4,
+   "allergies": []
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "4bfbd4ee-40",
+  "style": "triage",
+  "features": [
+   "address_absent",
+   "allergy_negation",
+   "bp_repeat",
+   "distractor_clinician",
+   "distractor_last_visit",
+   "distractor_previous_address",
+   "distractor_without_value",
+   "dob_us",
+   "name_last_first",
+   "sex_absent",
+   "weight_kg"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Bosco, Peter",
+    "how": "family name first, then a comma"
+   },
+   {
+    "field": "birth_date",
+    "text": "6/14/1959",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "bp_first",
+    "text": "141/95",
+    "how": "the first blood pressure reading, taken on arrival"
+   },
+   {
+    "field": "bp",
+    "text": "BP 119/85 mmHg",
+    "how": "the repeat blood pressure after rest; this is the one charted"
+   },
+   {
+    "field": "pulse",
+    "text": "heart rate 75"
+   },
+   {
+    "field": "respiration",
+    "text": "RR 13"
+   },
+   {
+    "field": "temperature",
+    "text": "99.3 F",
+    "how": "temperature, taken tympanic"
+   },
+   {
+    "field": "weight",
+    "text": "85.5 kg",
+    "how": "body weight"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "simvastatin 10 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "clinician",
+    "text": "Dr. Noriko Ullrich",
+    "how": "the clinician who wrote and signed the note"
+   },
+   {
+    "field": "previous_address",
+    "text": "755 Hilll Haven, Medford",
+    "how": "where the patient lived BEFORE moving last year; not their address now"
+   },
+   {
+    "field": "last_visit",
+    "text": "8/11/2026",
+    "how": "the date of the patient's last visit"
+   }
+  ],
+  "expected": {
+   "given": "Peter",
+   "family": "Bosco",
+   "birth_date": "1959-06-14",
+   "bp_systolic": 119,
+   "bp_diastolic": 85,
+   "pulse": 75,
+   "respiration": 13,
+   "temperature": 99.3,
+   "temp_site": "tympanic",
+   "weight": 188.5,
+   "allergies": [],
+   "medications": [
+    "simvastatin"
+   ]
+  },
+  "acceptable": {},
+  "split": "fresh"
+ },
+ {
+  "id": "4bfbd4ee-41",
+  "style": "dictation",
+  "features": [
+   "address_absent",
+   "allergy_negation",
+   "distractor_goal_weight",
+   "distractor_last_visit",
+   "name_middle",
+   "sex_absent"
+  ],
+  "facts": [
+   {
+    "field": "name",
+    "text": "Peter Horacio Bosco"
+   },
+   {
+    "field": "birth_date",
+    "text": "1959-06-14",
+    "how": "as the date of birth"
+   },
+   {
+    "field": "sex",
+    "text": "",
+    "how": "do not state sex, and use no gendered words or pronouns"
+   },
+   {
+    "field": "bp",
+    "text": "BP 119/85",
+    "how": "blood pressure"
+   },
+   {
+    "field": "pulse",
+    "text": "heart rate 75"
+   },
+   {
+    "field": "respiration",
+    "text": "resp 13"
+   },
+   {
+    "field": "temperature",
+    "text": "99.3 F",
+    "how": "temperature, taken tympanic"
+   },
+   {
+    "field": "weight",
+    "text": "188.5 lb",
+    "how": "body weight"
+   },
+   {
+    "field": "height",
+    "text": "69.7 in",
+    "how": "height"
+   },
+   {
+    "field": "allergies",
+    "text": "denies any allergies",
+    "how": "the patient has no allergies"
+   },
+   {
+    "field": "medications",
+    "text": "simvastatin 10 mg",
+    "how": "current medications"
+   },
+   {
+    "field": "last_visit",
+    "text": "7/12/2026",
+    "how": "the date of the patient's last visit"
+   },
+   {
+    "field": "goal_weight",
+    "text": "goal weight 168 lb",
+    "how": "the weight the patient is aiming for"
+   }
+  ],
+  "expected": {
+   "given": "Peter",
+   "middle": "Horacio",
+   "family": "Bosco",
+   "birth_date": "1959-06-14",
+   "bp_systolic": 119,
+   "bp_diastolic": 85,
+   "pulse": 75,
+   "respiration": 13,
+   "temperature": 99.3,
+   "temp_site": "tympanic",
+   "weight": 188.5,
+   "height": 69.7,
+   "allergies": [],
+   "medications": [
+    "simvastatin"
+   ]
+  },
+  "acceptable": {},
+  "split": "fresh"
+ }
+]
