@@ -3,6 +3,7 @@
     uv run --env-file .env python notes_v2/evaluate.py cache                     # read OpenEMR's screens once
     uv run --env-file .env python notes_v2/evaluate.py run --extractor llm --split dev
     uv run --env-file .env python notes_v2/evaluate.py run --extractor jev --split test
+    uv run --env-file .env python notes_v2/evaluate.py run --extractor layer1 --set notes_v3 --split fresh
 
 `cache` saves each OpenEMR screen's snapshot and fields to notes_v2/forms/. `run` replays them: for every note
 and screen, the extractor returns values and flags for the screen's fields; those are mapped to the note's
@@ -163,11 +164,13 @@ def summarize(rows: list[dict]) -> dict:
         "flags": len(flagged), "flags_that_were_errors": sum(c["verdict"] != "right" for c in flagged),
         "service_failures": sum(bool(r["error"]) for r in rows),
         "median_ms": round(statistics.median(r["ms"] for r in rows)) if rows else 0,
+        "system_one_tokens_per_screen": round(statistics.mean(r["system_one_tokens"] for r in rows)) if rows else 0,
+        "system_one_calls_per_screen": round(statistics.mean(r["system_one_calls"] for r in rows), 1) if rows else 0,
         "by_key": by_key, "by_feature": dict(sorted(by_feature.items(), key=lambda kv: -kv[1]["errors"])),
     }
 
 
-def run(extractor_name: str, split: str, limit: int | None, workers: int) -> Path:
+def run(extractor_name: str, split: str, limit: int | None, workers: int, note_set: str = "notes_v2") -> Path:
     if extractor_name == "llm":
         from extraction import extract
     elif extractor_name == "jev":
@@ -177,7 +180,7 @@ def run(extractor_name: str, split: str, limit: int | None, workers: int) -> Pat
     else:
         raise SystemExit(f"unknown extractor {extractor_name}")
     forms = {name: json.loads((FORMS / f"{name}.json").read_text()) for name in SCREENS}
-    notes = [n for n in map(json.loads, (HERE / "notes.jsonl").read_text().splitlines()) if n["split"] == split]
+    notes = [n for n in map(json.loads, (ROOT / note_set / "notes.jsonl").read_text().splitlines()) if n["split"] == split]
     notes = notes[:limit] if limit else notes
 
     def one(job):
@@ -203,8 +206,11 @@ def run(extractor_name: str, split: str, limit: int | None, workers: int) -> Pat
     jobs = [(note, screen) for note in notes for screen in SCREENS]
     with ThreadPoolExecutor(workers) as pool:
         rows = list(pool.map(one, jobs))
-    result = {"extractor": extractor_name, "split": split, "summary": summarize(rows), "rows": rows}
-    path = ROOT / "results" / f"notes-v2-{extractor_name}-{split}-{datetime.now():%Y-%m-%d-%H%M%S}.json"
+    if extractor_name == "layer1":
+        import layer1
+        extractor_name = f"layer1-{layer1.PICK}"
+    result = {"extractor": extractor_name, "set": note_set, "split": split, "summary": summarize(rows), "rows": rows}
+    path = ROOT / "results" / f"{note_set.replace('_', '-')}-{extractor_name}-{split}-{datetime.now():%Y-%m-%d-%H%M%S}.json"
     path.parent.mkdir(exist_ok=True)
     path.write_text(json.dumps(result, indent=1))
     return path
@@ -215,7 +221,8 @@ def report(path: Path) -> None:
     print(f"{s['notes']} notes, {s['fields']} fields: {s['field_accuracy']:.1%} right, wrong {s['wrong']}, "
           f"missed {s['missed']}, invented {s['invented']}, unflagged errors {s['unflagged_errors']}, "
           f"flags {s['flags']} ({s['flags_that_were_errors']} real), median {s['median_ms']} ms per screen, "
-          f"service failures {s.get('service_failures', 0)}")
+          f"service failures {s.get('service_failures', 0)}, "
+          f"{s.get('system_one_tokens_per_screen', '?')} Jev tokens in {s.get('system_one_calls_per_screen', '?')} calls per screen")
     print("by field (errors / unflagged):", {k: f"{v['n'] - v['right']}/{v['unflagged']}" for k, v in s["by_key"].items()
                                               if v["n"] - v["right"]})
     print("by feature (errors / unflagged of fields):", {k: f"{v['errors']}/{v['unflagged']} of {v['fields']}"
@@ -226,7 +233,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("command", choices=["cache", "run", "report"])
     parser.add_argument("--extractor", default="llm")
-    parser.add_argument("--split", default="dev", choices=["dev", "test"])
+    parser.add_argument("--split", default="dev", choices=["dev", "test", "fresh"])
+    parser.add_argument("--set", default="notes_v2", help="the note set's directory: notes_v2 or notes_v3")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("results", nargs="?")
@@ -235,7 +243,7 @@ def main():
         return cache()
     if args.command == "report":
         return report(Path(args.results))
-    path = run(args.extractor, args.split, args.limit, args.workers)
+    path = run(args.extractor, args.split, args.limit, args.workers, args.set)
     print(path)
     report(path)
 

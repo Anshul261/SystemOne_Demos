@@ -1,6 +1,6 @@
 """Check written notes against their plans, and assemble the note set.
 
-    uv run python notes_v2/check.py
+    uv run python notes_v2/check.py            # or: notes_v2/check.py notes_v3
 
 Every non-empty planned text must appear verbatim in its note. Notes are also scanned for stray values a
 writer may have added (another blood pressure, date or weight), which would make the answer key wrong. Notes
@@ -9,9 +9,10 @@ that pass go to notes_v2/notes.jsonl with their plan; failures are listed for re
 
 import json
 import re
+import sys
 from pathlib import Path
 
-HERE = Path(__file__).parent
+HERE = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).parent
 BP = re.compile(r"\b\d{2,3}\s*/\s*\d{2,3}\b|\b\d{2,3} over \d{2,3}\b")
 DATE = re.compile(r"\b\d{1,2}/\d{1,2}/\d{4}\b|\b\d{4}-\d{2}-\d{2}\b")
 
