@@ -12,29 +12,29 @@
 <body>
 <header class="masthead">
   <h1>Chart entry</h1>
-  <p id="engine" class="engine">Values are proposed by an LLM and checked by a decision model before you see them.</p>
+  <p id="engine" class="engine">Jev reads the note, works out which screens and fields it needs, and fills them for your review.</p>
 </header>
 
 <main class="desk">
   <section class="pane note-pane" aria-labelledby="note-heading">
     <div class="pane-head">
-      <h2 id="note-heading">Visit note</h2>
+      <h2 id="note-heading">What happened</h2>
       <button id="sample" class="quiet" type="button">Use a sample patient</button>
     </div>
-    <textarea id="note" spellcheck="false" placeholder="Paste or type the visit note. For example: Pt Braun, Christeen, 47F, DOB 1979-09-03. BP 128/82; HR 74; weight 168.2 lb."></textarea>
+    <textarea id="note" spellcheck="false" placeholder="Write it the way you would say it. For example: Pt Braun, Christeen, 47F, DOB 1979-09-03. BP 128/82, HR 74, weight 76 kg. Labs today: Na 139, K 4.2, glucose 104, A1c 6.1%."></textarea>
     <div id="note-view" class="note-view" hidden></div>
     <button id="edit-note" class="quiet" type="button" hidden>Edit the note</button>
 
     <div class="target">
-      <label for="screen">EHR screen</label>
-      <select id="screen"></select>
-      <button id="extract" class="primary" type="button">Extract values</button>
+      <label for="target">EMR</label>
+      <select id="target"></select>
+      <button id="extract" class="primary" type="button">Read the note</button>
     </div>
 
     <ol id="stages" class="stages">
-      <li data-stage="extract">Extract values from the note</li>
+      <li data-stage="extract">Read the note and find the screens it needs</li>
       <li data-stage="review">Review flagged values</li>
-      <li data-stage="enter">Enter them into the EHR, and watch</li>
+      <li data-stage="enter">Enter them into the EMR, and watch</li>
       <li data-stage="save">Save</li>
     </ol>
     <p id="error" class="error" role="alert" hidden></p>
@@ -50,14 +50,15 @@
     </figure>
 
     <div class="pane-head">
-      <h2 id="review-heading">Values</h2>
+      <h2 id="review-heading">Screens</h2>
       <p id="tally" class="tally" aria-live="polite"></p>
     </div>
-    <p id="empty" class="empty">Extract a note and its values appear here, each next to the words in the note it came from. Flagged values need your decision before anything is entered.</p>
-    <ul id="rows" class="rows"></ul>
+    <p id="read-log" class="read-log" aria-live="polite" hidden></p>
+    <p id="empty" class="empty">Read a note and the screens it needs appear here, each value next to the words in the note it came from. Flagged values need your decision before anything is entered.</p>
+    <div id="screens"></div>
     <details id="shot-box" class="shot-box" hidden>
-      <summary>See the whole EHR screen after entry</summary>
-      <img id="shot" alt="The whole EHR screen after entry, with entered fields outlined">
+      <summary>See the last screen after entry</summary>
+      <img id="shot" alt="The last EMR screen after entry, with entered fields outlined">
     </details>
   </section>
 </main>

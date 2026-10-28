@@ -1,17 +1,22 @@
-# Chart entry: extraction and entry
+# Chart entry: from a doctor's note to the EMR
 
-Two workflows turn a clinician's visit note into an EHR record, with a person between them:
+A doctor writes what happened, the way they would say it. Jev makes every judgment from there; code and
+scripts do the rest ([pipeline.py](pipeline.py)):
 
-1. **Extraction** ([extraction.py](extraction.py)). The EHR screen's fields are read from the page itself, so
-   any screen works. One LLM call proposes a value for each field from the note; Jev checks every one.
-   - A dropdown is set only when the LLM's reading is one of its options. It is flagged unless Jev
-     confidently chose the same. A value only Jev wanted stays blank: Jev reads more into a note than is
-     written (an Abn flag of "Normal" for a plain number).
-   - A typed value is flagged unless Jev agrees the note states it.
-   - An empty field is flagged when Jev is confident the note states it (above 0.85).
-2. **Entry** ([entry.py](entry.py)). The approved values are typed into the screen field by field, each one
-   read back, then all of them read back again, since some pages change fields while their scripts run.
-   Each field produces a frame, so a person can watch the entry happen.
+1. **Read** ([layer1.py](layer1.py)). Code finds candidate mentions (names, dates, addresses, numbers with
+   their units); Jev picks among them and says what each number measures, including which lab test a result
+   belongs to and which reading is current. Code converts units and flags results against reference ranges.
+   The result is one patient record ([schema.py](schema.py)), the same for any EMR.
+2. **Plan** ([mapping.py](mapping.py)). Each EMR screen is mapped once by looking at it: Jev sees a picture
+   of the screen and, per field, a crop with the field outlined, and says which record value it holds (item,
+   attribute, unit). The mapping is saved; a screen is needed when the record has something for it.
+3. **Review.** Every value, with how sure Jev is of it and of the field; flagged values must be kept or
+   corrected, and a screen can be left out.
+4. **Enter** ([entry.py](entry.py)). The kept values are typed in field by field and read back, with a live
+   frame per field. Dropdowns take the option Jev matches to the value (checked by a Noul per option).
+
+An EMR's own quirks stay in its target ([targets.py](targets.py), [labs.py](labs.py)): logging in, placing
+lab orders before results can be entered, and saving.
 
 Supporting modules: [forms.py](forms.py) reads screens and fills or reads controls, and [models.py](models.py)
 calls the models. The review console ([app.py](app.py)) runs both workflows for a person; the bench
@@ -119,17 +124,18 @@ on later ones (`--cases 57 --offset 20`) to check them fairly.
 uv run --env-file .env uvicorn app:app --port 8050     # then open http://127.0.0.1:8050
 ```
 
-The console runs the two workflows with a person between them. Paste a visit note, or use a sample patient,
-and choose an EHR screen.
+Write or paste a note, or use a sample patient, and choose the EMR.
 
-1. **Extract values.** Each value is listed next to the words in the note it came from, highlighted when you
-   point at the field. Flagged values say why.
-2. **Review.** Keep each flagged value or type a correction.
-3. **Enter into the EHR.** Locked until every flag is resolved. The console shows the EHR screen as each value
+1. **Read the note.** Jev reads the note and opens the screens it needs (for OpenEMR: new patient, vitals,
+   lab results), each with the value for every field it fills, next to the words in the note it came from.
+2. **Review.** Keep each flagged value or type a correction; leave out a screen that is not wanted.
+3. **Enter into the EMR.** Locked until every flag is resolved. The console shows each screen as every value
    is typed and read back.
 4. **Save.** Locked until entry has finished and anything the page refused is reviewed.
 
-The server enforces the same order. One browser serves the console, so it is for one reviewer at a time.
+One note with demographics, vitals and three lab panels reads in about 12 s (19 Jev requests) and enters 65
+values in about 12 s. The server enforces the same order. One browser serves the console, so it is for one
+reviewer at a time.
 
 ## Targets
 

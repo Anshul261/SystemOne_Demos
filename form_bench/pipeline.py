@@ -56,8 +56,12 @@ def needs(record: dict, flags: dict, section: str | None) -> bool:
     return any(key.split(".")[0] in items for key in [*record, *flags])
 
 
-def in_unit(value, item: str, unit: str | None):
-    """A record value (kept in the record's units) in the unit a field expects."""
+def in_unit(record: dict, item: str, unit: str | None):
+    """A record value in the unit a field expects: as the note wrote it when the note used that unit, else
+    converted from the record's unit."""
+    value = record[item]
+    if unit and f"{item}@{unit}" in record:
+        return record[f"{item}@{unit}"]
     usual = RECORD_UNITS.get(item)
     if unit and usual and unit != usual and (usual, unit) in CONVERT:
         return round(CONVERT[(usual, unit)](float(value)), 1)
@@ -106,7 +110,7 @@ def fill_values(record: dict, confidence: dict, flags: dict, fields: list[dict],
         if key in flags:
             why[i] = flags[key]
         if key in record:
-            value = in_unit(record[key], m["item"], m.get("unit"))
+            value = in_unit(record, key, m.get("unit")) if key == m["item"] else record[key]
             if field["role"] == "combobox":
                 option, p, doubt = option_for(field, value)
                 if doubt:
@@ -142,18 +146,20 @@ def screen_for(context, target, k: int, reading: dict):
     return page, fields, mapping, (values, sure, why)
 
 
+def plan_screen(context, target, k: int, reading: dict) -> dict | None:
+    """Screen k opened and filled for review, or None if the record has nothing for it."""
+    path = MAPS / f"{target.name}-{k}.json"
+    if path.exists() and not needs(reading["record"], reading["flags"], json.loads(path.read_text())["section"]):
+        return None
+    page, fields, mapping, (values, sure, why) = screen_for(context, target, k, reading)
+    if not needs(reading["record"], reading["flags"], mapping["section"]):
+        page.close()
+        return None
+    return {"k": k, "title": target.screens[k].title or mapping["section"], "section": mapping["section"],
+            "page": page, "fields": fields, "mapping": mapping["fields"], "values": values, "confidence": sure,
+            "flags": why, "save": target.screens[k].save}
+
+
 def plan(context, target, reading: dict) -> list[dict]:
     """The target's screens this record needs, each opened and filled for review."""
-    planned = []
-    for k, screen in enumerate(target.screens):
-        path = MAPS / f"{target.name}-{k}.json"
-        if path.exists() and not needs(reading["record"], reading["flags"], json.loads(path.read_text())["section"]):
-            continue
-        page, fields, mapping, (values, sure, why) = screen_for(context, target, k, reading)
-        if not needs(reading["record"], reading["flags"], mapping["section"]):
-            page.close()
-            continue
-        planned.append({"screen": k, "title": screen.title or mapping["section"], "section": mapping["section"],
-                        "page": page, "fields": fields, "mapping": mapping["fields"], "values": values,
-                        "confidence": sure, "flags": why})
-    return planned
+    return [s for k in range(len(target.screens)) if (s := plan_screen(context, target, k, reading))]

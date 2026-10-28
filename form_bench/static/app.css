@@ -108,3 +108,11 @@ select { padding: 0.5rem 0.625rem; border: 1px solid var(--rule); border-radius:
 .live img { display: block; width: 100%; border: 1px solid var(--rule); border-radius: 4px; background: var(--sheet); }
 .rows li.entered .status { color: var(--verified); }
 .rows li.refused { border-left-color: var(--correction); }
+
+.read-log { margin: 0 0 1rem; color: var(--graphite); }
+.screen { margin-bottom: 2rem; }
+.screen-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.screen-head h3 { margin: 0; font-size: 1.0625rem; }
+.screen-tally { margin: 0; color: var(--graphite); flex: 1; }
+.screen.skipped .screen-head h3 { color: var(--graphite); text-decoration: line-through; }
+.screen.skipped .rows { border-top: 0; }

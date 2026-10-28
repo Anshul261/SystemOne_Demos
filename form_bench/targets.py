@@ -169,7 +169,17 @@ def save_patient(page) -> str:
     return f"Created patient {pid} in OpenEMR" if pid else ""
 
 
+def use_fixture_visit(page) -> None:
+    """OpenEMR saves an encounter form to its current patient and visit, which saving a new patient changes:
+    make the fixture's current again first (through the page's own session)."""
+    base = os.environ["OPENEMR_URL"].rstrip("/")
+    ids = json.loads(FIXTURE.read_text())
+    page.request.get(f"{base}/interface/patient_file/summary/demographics.php?set_pid={ids['pid']}")
+    page.request.get(f"{base}/interface/patient_file/encounter/encounter_top.php?set_encounter={ids['encounter']}")
+
+
 def save_vitals(page) -> str:
+    use_fixture_visit(page)
     submit(page, "form[name=vitals]")
     return f"Saved vitals to the Bench Fixture visit (encounter {json.loads(FIXTURE.read_text())['encounter']})"
 
@@ -185,11 +195,13 @@ def setup_labs(page, record: dict) -> None:
 
 
 def save_labs(page) -> str:
-    """OpenEMR keeps results only under a report with a date: an empty report date takes the collection date."""
-    report = page.get_by_role("textbox", name="Date and time of this report").first
-    if not report.input_value():
-        report.fill(page.get_by_role("textbox", name="Date and time of sample collection").first.input_value()
-                    or time.strftime("%Y-%m-%d"))
+    """OpenEMR keeps results only under a report with a date: each empty report date takes its collection date."""
+    use_fixture_visit(page)
+    reports = page.get_by_role("textbox", name="Date and time of this report")
+    collected = page.get_by_role("textbox", name="Date and time of sample collection")
+    for k in range(reports.count()):
+        if not reports.nth(k).input_value():
+            reports.nth(k).fill(collected.nth(k).input_value() or time.strftime("%Y-%m-%d"))
     with page.expect_navigation():
         page.evaluate("f => f.requestSubmit(f.querySelector('[name=form_submit]'))",
                       page.locator("form:has([name=form_submit])").element_handle())

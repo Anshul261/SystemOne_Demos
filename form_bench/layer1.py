@@ -325,9 +325,11 @@ def record(note: str) -> tuple[dict, dict, dict]:
             take(lab_result(kind, m[1], m[2]), p)
             continue
         value, unit = float(m[1]), (m[2] or "").lower().replace("°", "").strip()
+        written = {}
         if unit in TO_EHR and TO_EHR[unit][0] == kind:
             value = TO_EHR[unit][1](value)
-        take({kind: round(value, 1) if kind in ("weight", "height", "temperature") else round(value)}, p)
+            written = {f"{kind}@{unit.upper() if unit == 'c' else unit}": m[1]}  # as the note wrote it, for a field in that unit
+        take({kind: round(value, 1) if kind in ("weight", "height", "temperature") else round(value)} | written, p)
     if any(k in TESTS for k in out) and lab_date != "none" and (iso := iso_date(lab_date)):
         take({"collection_date": iso}, p_lab_date)
     if "temperature" in out:
