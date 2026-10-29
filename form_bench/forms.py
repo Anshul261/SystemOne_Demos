@@ -125,6 +125,14 @@ def read_value(page: Page, field: dict, timeout: float = 5000) -> str:
         " 'value' in e ? e.value : e.innerText.trim()", timeout=timeout)
 
 
+def same(shown: str, typed: str) -> bool:
+    """Whether the page shows what was typed: the same text, or a date typed without a time that the page
+    shows at midnight (a date-time picker's way of writing it)."""
+    shown, typed = shown.strip().casefold(), typed.strip().casefold()
+    return shown == typed or (bool(re.fullmatch(r"\d{4}-\d\d-\d\d", typed))
+                              and bool(re.fullmatch(re.escape(typed) + r"[ t]00:00(:00)?", shown)))
+
+
 def fill(page: Page, field: dict, value: str | int) -> bool:
     """Enter a value, read it back, and retry once; False if the page still shows something else."""
     control = locate(page, field)
@@ -135,6 +143,7 @@ def fill(page: Page, field: dict, value: str | int) -> bool:
                 return True
         else:
             control.fill(value)
-            if control.input_value().strip().casefold() == value.strip().casefold():
+            control.evaluate("e => e.blur()")  # leave the field, closing any picker it opened
+            if same(control.input_value(), value):
                 return True
     return False

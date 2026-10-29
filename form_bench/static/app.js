@@ -1,5 +1,5 @@
-// Chart entry console: read a doctor's note, review the screens Jev fills from it, watch them being entered
-// into the EMR, then save. Each step stays locked until the one before it is finished.
+// Chart entry console: read a doctor's note, review the screens Jev fills from it, then watch Jev find its way
+// through the EMR to enter and save each one. Entry stays locked until every flag is reviewed.
 
 const $ = (id) => document.getElementById(id);
 const state = { session: null, screens: [], ehr: "", stage: "start", entered: new Map(), marks: new Map() };
@@ -120,7 +120,8 @@ function rowElement(row, screen) {
   }
   control.id = `field-${row.screen}-${row.index}`;
   control.value = row.value;
-  control.disabled = screen.skip || screen.saved || state.stage === "entering" || state.stage === "saved";
+  control.disabled = screen.skip || screen.saved || state.stage === "entering" || state.stage === "saved"
+    || (state.stage === "stopped" && !screen.entered);
 
   const status = document.createElement("div");
   status.className = "status";
@@ -190,8 +191,8 @@ function screenElement(screen) {
 
 function setStage(stage) {
   state.stage = stage;
-  const order = ["extract", "review", "enter", "save"];
-  const current = { start: -1, extracting: 0, review: 1, entering: 2, entered: 3, saved: 4 }[stage];
+  const order = ["extract", "review", "enter"];
+  const current = { start: -1, extracting: 0, review: 1, stopped: 2, entering: 2, saved: 3 }[stage];
   for (const item of $("stages").children) {
     const at = order.indexOf(item.dataset.stage);
     item.classList.toggle("done", at < current);
@@ -219,21 +220,19 @@ function render() {
     : `${count} screen${count === 1 ? "" : "s"}, ${kept.length} values` + (open ? `, <strong>${open} to review</strong>` : ", all checked");
   const action = $("action");
   const ehr = state.ehr || "the EMR";
-  if (state.stage === "review") {
-    action.textContent = `Enter into ${ehr}`;
+  if (state.stage === "review" || state.stage === "stopped") {
+    const again = state.stage === "stopped";
+    action.textContent = again ? `Carry on in ${ehr}` : `Enter and save in ${ehr}`;
     action.disabled = open > 0 || count === 0;
-    $("status").textContent = !count ? "Every screen is left out." : open ? `Review the ${open} flagged value${open === 1 ? "" : "s"} to unlock entry.`
-      : `Every value is checked. Entering types them into ${ehr}; nothing is saved yet.`;
-  } else if (state.stage === "entered") {
-    action.textContent = `Save to ${ehr}`;
-    action.disabled = open > 0;
-    $("status").textContent = open ? `The page refused ${open} value${open === 1 ? "" : "s"}. Fix or keep them to unlock saving.`
-      : `Check the entry above, then save it to ${ehr}.`;
+    $("status").textContent = !count ? "Every screen is left out."
+      : open ? `${again ? "The page refused" : "Review"} ${open} flagged value${open === 1 ? "" : "s"} to ${again ? "carry on" : "unlock entry"}.`
+      : again ? `Fixed. Carrying on saves this screen and enters the rest.`
+      : `Every value is checked. Jev will open each screen in ${ehr}, enter the values, and save them.`;
   } else if (state.stage === "entering") {
     action.disabled = true;
-    $("status").textContent = `Entering into ${ehr}…`;
+    $("status").textContent = `Working in ${ehr}…`;
   } else if (state.stage !== "saved") {
-    action.textContent = "Enter";
+    action.textContent = "Enter and save";
     action.disabled = true;
     $("status").textContent = state.stage === "extracting" ? "Reading the note…" : "Write or paste a note to begin.";
   }
@@ -285,6 +284,7 @@ async function readNote() {
   if (!note.trim()) return showError("Write or paste a note first.");
   showError("");
   Object.assign(state, { session: null, screens: [], ehr: $("target").selectedOptions[0].dataset.ehr });
+  $("status").className = "";
   state.entered.clear();
   for (const element of $("stages").querySelectorAll(".took")) element.remove();
   $("live").hidden = true;
@@ -299,7 +299,7 @@ async function readNote() {
       if (event.step === "screen") found.push(`${event.title} (${event.values})`);
       if (event.step === "done") {
         took("extract", event.ms);
-        log(`${found.length ? `Needs ${found.join(", ")}.` : "No screen needs anything from this note."} `
+        log(`${event.patient ? `Patient: ${event.patient}. ` : ""}${found.length ? `Needs ${found.join(", ")}.` : "No screen needs anything from this note."} `
           + `${event.checks} Jev requests, ${(event.ms / 1000).toFixed(1)} s.`);
         Object.assign(state, { session: event.session, screens: event.screens });
         showNoteView(true);
@@ -317,59 +317,86 @@ async function readNote() {
   }
 }
 
+function journey(where, what, how = "", kind = "") {
+  const li = document.createElement("li");
+  li.className = kind;
+  for (const [name, text] of [["where", where], ["what", what], ["how", how]]) {
+    const span = document.createElement("span");
+    span.className = name;
+    span.textContent = text;
+    li.append(span);
+  }
+  $("journey").append(li);
+  li.scrollIntoView({ block: "nearest" });
+}
+
 async function enterValues() {
+  const resuming = state.stage === "stopped";
   setStage("entering");
   $("live").hidden = false;
   $("extract").disabled = true;
+  if (!resuming) $("journey").replaceChildren();
   render();
   $("live").scrollIntoView({ behavior: "smooth", block: "start" });
   let title = "";
+  const caption = (text, refused = false) => {
+    $("live-caption").className = `live-caption ${refused ? "refused" : ""}`;
+    $("live-caption").textContent = text;
+  };
   try {
     await stream("/api/enter", { session: state.session }, (event) => {
+      if (event.frame) $("live-frame").src = `data:image/jpeg;base64,${event.frame}`;
       if (event.step === "screen") title = event.title;
+      if (event.step === "moving") {
+        caption(title ? `${title}: ${event.text}` : event.text);
+        journey(title || state.ehr, event.text, event.by_jev === undefined ? "" : event.by_jev ? "Jev chose" : "saved route");
+      }
       if (event.step === "field") {
-        $("live-frame").src = `data:image/jpeg;base64,${event.frame}`;
         const name = fieldName(event.label);
-        const caption = $("live-caption");
-        caption.className = `live-caption ${event.status === "refused" ? "refused" : ""}`;
-        caption.textContent = `${title}: ` + (event.status === "typing" ? `entering ${name}: ${event.value}`
-          : event.status === "kept" ? `${name}: ${event.value}, read back` : `${name}: the page refused ${event.value}`);
+        caption(`${title}: ` + (event.status === "typing" ? `entering ${name}: ${event.value}`
+          : event.status === "kept" ? `${name}: ${event.value}, read back` : `${name}: the page refused ${event.value}`),
+        event.status === "refused");
         if (event.status !== "typing") {
           state.entered.set(`${event.screen}:${event.index}`, event.status);
           render();
         }
       }
-      if (event.step === "entered") replaceScreen(event.screen);
+      if (event.step === "entered") {
+        const kept = event.screen.rows.filter((row) => state.entered.get(id(row)) === "kept").length;
+        journey(title, `Entered ${kept} value${kept === 1 ? "" : "s"}, each read back`);
+        replaceScreen(event.screen);
+      }
+      if (event.step === "saved") {
+        caption(`${event.result}.`);
+        journey(title, event.result, "", "saved");
+        replaceScreen(event.screen);
+      }
+      if (event.step === "stopped") {
+        replaceScreen(event.screen);
+        caption(`${title}: not saved. The page refused a value; fix or keep it to carry on.`, true);
+        journey(title, "Stopped before saving: the page refused a value", "", "stopped");
+        setStage("stopped");
+        render();
+      }
       if (event.step === "done") {
         took("enter", event.ms);
         state.screens = event.screens;
-        $("live-caption").textContent = `${state.entered.size} values entered. Nothing is saved yet.`;
-        setStage("entered");
+        state.session = null;
+        const saved = state.screens.filter((screen) => screen.saved).map((screen) => screen.title);
+        caption(`Saved ${saved.join(", ")} in ${state.ehr}.`);
+        setStage("saved");
+        $("status").textContent = `Saved ${saved.join(", ")} in ${state.ehr}, in ${(event.ms / 1000).toFixed(0)} s.`;
+        $("status").className = "saved";
         render();
       }
     });
   } catch (error) {
     showError(`Entry stopped. ${error.message}`);
-    setStage("review");
+    journey(title || state.ehr, `Stopped: ${error.message}`, "", "stopped");
+    setStage("stopped");
     render();
   } finally {
     $("extract").disabled = false;
-  }
-}
-
-async function save() {
-  $("action").disabled = true;
-  try {
-    const { saved } = await api("/api/save", { session: state.session });
-    state.session = null;
-    for (const screen of state.screens) if (!screen.skip) screen.saved = true;
-    setStage("saved");
-    $("status").textContent = saved.join(". ");
-    $("status").className = "saved";
-    render();
-  } catch (error) {
-    showError(error.message);
-    render();
   }
 }
 
@@ -385,7 +412,7 @@ $("edit-note").addEventListener("click", () => {
   $("note").focus();
 });
 $("extract").addEventListener("click", readNote);
-$("action").addEventListener("click", () => (state.stage === "review" ? enterValues() : save()));
+$("action").addEventListener("click", enterValues);
 loadTargets().catch((error) => showError(`Could not load the EMRs. ${error.message}`));
 setStage("start");
 render();

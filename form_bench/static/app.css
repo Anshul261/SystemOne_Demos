@@ -116,3 +116,13 @@ select { padding: 0.5rem 0.625rem; border: 1px solid var(--rule); border-radius:
 .screen-tally { margin: 0; color: var(--graphite); flex: 1; }
 .screen.skipped .screen-head h3 { color: var(--graphite); text-decoration: line-through; }
 .screen.skipped .rows { border-top: 0; }
+
+/* The steps taken in the EMR: where Jev went, and whether a saved route or Jev chose each step. */
+.journey { margin: 0.75rem 0 0; padding: 0; list-style: none; max-height: 13rem; overflow-y: auto;
+  border-top: 1px solid var(--rule); font-size: 0.875rem; }
+.journey li { display: flex; gap: 0.75rem; padding: 0.3125rem 0; border-bottom: 1px solid var(--rule); }
+.journey .where { flex: 0 0 7.5rem; color: var(--graphite); }
+.journey .what { flex: 1; }
+.journey .how { color: var(--graphite); white-space: nowrap; }
+.journey li.saved .what { color: var(--verified); font-weight: 600; }
+.journey li.stopped .what { color: var(--correction); font-weight: 600; }

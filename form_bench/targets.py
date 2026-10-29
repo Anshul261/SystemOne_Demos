@@ -27,6 +27,13 @@ class Screen:
     title: str = ""  # how the review console names the screen
     save: callable = None  # save(page) -> what was saved, used only by the review console after approval
     setup: callable = None  # setup(page, record): EMR-side preparation a record needs, such as placing lab orders
+    # The console's way in: goals Jev reaches through the EMR's own screens (steps.py), and setup(page, record)
+    # calls between them; the goal that saves the screen; whether the screen is in a patient's chart (checked
+    # before saving) and needs the patient's visit for this note.
+    open: tuple = ()
+    save_goal: str = ""
+    patient: bool = False
+    visit: bool = False
 
 
 def named(role: str, name: str, nth: int = 0) -> dict:
@@ -50,6 +57,9 @@ class Target:
     screens: list[Screen]
     login: callable = None  # login(context) before the first case
     saves: list[str] = field(default_factory=list)  # URL globs that save; requests to them are blocked and counted
+    home: callable = None  # home(page): sign in on this page and wait at the EMR's first screen (the console)
+    visit: str = ""  # the goal that creates a patient's visit for this note
+    fixture: dict = field(default_factory=dict)  # a test patient's details, to look at a screen before any note
 
     def blocked_saves(self, context: BrowserContext) -> list[str]:
         """Block every save request and return the list they are recorded in, so no run writes data."""
@@ -208,18 +218,64 @@ def save_labs(page) -> str:
     return "Saved lab results to the Bench Fixture visit"
 
 
-def openemr() -> Target:
-    """OpenEMR's new-patient screen with Contact open, and the vitals screen of the fixture encounter."""
+def openemr_home(page) -> None:
+    """Sign in, and wait at OpenEMR's first screen. Credentials come from .env and never go to a model."""
+    page.goto(f"{os.environ['OPENEMR_URL'].rstrip('/')}/interface/login/login.php?site=default",
+              wait_until="domcontentloaded")
+    if page.locator("#authUser").count():
+        page.fill("#authUser", os.environ["OPENEMR_USER"])
+        page.fill("#clearPass", os.environ["OPENEMR_PASSWORD"])
+        page.click("#login-button")
+    page.wait_for_url("**/interface/main/**")
+    page.wait_for_load_state("load")
+
+
+def order_panels(page, record: dict) -> None:
+    """Test setup, not entry: results arrive for orders, so order the panels the note has results for at the
+    visit open in the EMR. Done in a second tab of the same session."""
     base = os.environ["OPENEMR_URL"].rstrip("/")
-    return Target("openemr", [Screen(f"{base}/interface/new/new.php", OPENEMR_PATIENT, open_contact,
-                                     title="New patient", save=save_patient),
-                              Screen(f"{base}/interface/forms/vitals/new.php", OPENEMR_VITALS,
-                                     derived=OPENEMR_VITALS_DERIVED, title="Vitals (Bench Fixture visit)",
-                                     save=save_vitals),
-                              Screen(f"{base}/interface/orders/orders_results.php?review=1", {},
-                                     title="Lab results (Bench Fixture visit)", save=save_labs, setup=setup_labs)],
-                  login=openemr_login,
-                  saves=[f"{base}/interface/new/new_comprehensive_save.php*", f"{base}/interface/forms/*/save.php*"])
+    tab = page.context.new_page()
+    try:
+        labs.setup(tab, base)
+        labs.clear_orders(tab, base)
+        for panel in labs.panels_in(record):
+            labs.place_order(tab, base, panel)
+    finally:
+        tab.close()
+
+
+PATIENT_GOAL = "the patient {first name} {last name} (born {birth date})"
+
+
+def openemr() -> Target:
+    """OpenEMR's new-patient screen, the vitals form and the lab results screen. The bench opens them by URL;
+    the console reaches them through OpenEMR's own menus and saves with its own buttons."""
+    base = os.environ["OPENEMR_URL"].rstrip("/")
+    return Target("openemr", [
+        Screen(f"{base}/interface/new/new.php", OPENEMR_PATIENT, open_contact, title="New patient", save=save_patient,
+               open=("Open the blank Search or Add Patient form, where a new patient is registered (Patient menu, "
+                     "New/Search). Only open it: press no button on the form itself.",
+                     "On the new patient form, open the collapsed section that holds the patient's address, so its "
+                     "fields show. Type nothing."),
+               save_goal="Create the new patient from the filled-in registration form, confirming if the EMR asks, "
+                         "and stop once the new patient's chart is shown."),
+        Screen(f"{base}/interface/forms/vitals/new.php", OPENEMR_VITALS, derived=OPENEMR_VITALS_DERIVED,
+               title="Vitals", save=save_vitals, patient=True, visit=True,
+               open=(f"Open the Vitals form, ready to record vital signs, inside today's visit ({{today}}) of "
+                     f"{PATIENT_GOAL}. Do not create a new visit.",),
+               save_goal="Save the vital signs filled in on the Vitals form, and stop once the EMR shows them saved."),
+        Screen(f"{base}/interface/orders/orders_results.php?review=1", {}, title="Lab results", save=save_labs,
+               setup=setup_labs, patient=True, visit=True,
+               open=(f"Open today's visit ({{today}}) of {PATIENT_GOAL}. Do not create a new visit.", order_panels,
+                     "From the Procedures menu, open Pending Review: the screen where results of the patient's "
+                     "pending lab orders are entered."),
+               save_goal="Save the lab results filled in on the screen with its Sign Results button. They are saved "
+                         "once the screen no longer lists them for review; stop then.")],
+        login=openemr_login, home=openemr_home,
+        saves=[f"{base}/interface/new/new_comprehensive_save.php*", f"{base}/interface/forms/*/save.php*"],
+        visit=f"Create a new office visit (encounter) for {PATIENT_GOAL} and save it. Keep every other field as "
+              "it is. Stop once the visit is saved.",
+        fixture={"first name": "Bench", "last name": "Fixture", "birth date": "1970-01-01"})
 
 
 TARGETS = {"local": lambda: LOCAL, "openemr": openemr}

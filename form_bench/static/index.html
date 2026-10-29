@@ -12,7 +12,7 @@
 <body>
 <header class="masthead">
   <h1>Chart entry</h1>
-  <p id="engine" class="engine">Jev reads the note, works out which screens and fields it needs, and fills them for your review.</p>
+  <p id="engine" class="engine">Jev reads the note, works out which screens and fields it needs, fills them for your review, then finds its own way through the EMR to enter and save them.</p>
 </header>
 
 <main class="desk">
@@ -34,8 +34,7 @@
     <ol id="stages" class="stages">
       <li data-stage="extract">Read the note and find the screens it needs</li>
       <li data-stage="review">Review flagged values</li>
-      <li data-stage="enter">Enter them into the EMR, and watch</li>
-      <li data-stage="save">Save</li>
+      <li data-stage="enter">Enter and save each screen in the EMR, and watch</li>
     </ol>
     <p id="error" class="error" role="alert" hidden></p>
   </section>
@@ -46,7 +45,8 @@
         <h2>Entry</h2>
         <p id="live-caption" class="live-caption" aria-live="polite"></p>
       </div>
-      <img id="live-frame" alt="The EHR screen as each value is entered">
+      <img id="live-frame" alt="The EMR screen as each step is taken and each value is entered">
+      <ol id="journey" class="journey" aria-label="Steps taken in the EMR"></ol>
     </figure>
 
     <div class="pane-head">

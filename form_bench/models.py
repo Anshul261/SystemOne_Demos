@@ -71,6 +71,9 @@ def post_json(url: str, key: str, body: dict) -> dict:
             result = _post_json(url, key, body)
             break
         except RuntimeError as error:
+            if "HTTP 4" in str(error) and url == TYPESAFE:  # say why the request was refused
+                response = httpx.post(url, json=body, headers={"Authorization": f"Bearer {key}"}, timeout=60)
+                raise RuntimeError(f"System One refused the request ({response.status_code}): {response.text[:300]}") from None
             if "connection failed" not in str(error) or attempt == 2:
                 raise
             time.sleep(1.5 * (attempt + 1))

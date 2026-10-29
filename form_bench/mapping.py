@@ -9,6 +9,7 @@ the ones that apply. The mapping is made once per screen and checked by a person
 
 import io
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 
 from PIL import Image, ImageDraw
 
@@ -122,18 +123,42 @@ def key(mapped: dict) -> str | None:
     return f"{text}@{mapped['unit']}" if mapped["unit"] else text
 
 
+@contextmanager
+def whole(frame):
+    """A picture of the whole screen and where its frame sits in it. A form in an inner frame (an EMR's tabbed
+    shell) is shown whole by making the window tall enough, as a person would scroll, and put back after."""
+    page = getattr(frame, "page", frame)
+    if frame == page.main_frame or frame is page:
+        yield Image.open(io.BytesIO(page.screenshot(full_page=True))).convert("RGB"), page.evaluate("[scrollX, scrollY]")
+        return
+    size = page.viewport_size
+    frame.evaluate("window.scrollTo(0, 0)")
+    top = frame.frame_element().bounding_box()["y"]
+    height = frame.evaluate("document.documentElement.scrollHeight")
+    page.set_viewport_size({"width": size["width"], "height": min(int(top + height + 40), 6000)})
+    try:
+        page.wait_for_timeout(400)
+        yield Image.open(io.BytesIO(page.screenshot())).convert("RGB"), (0, 0)
+    finally:
+        page.set_viewport_size(size)
+
+
 def map_screen(page, fields: list[dict], section: str | None = None, workers: int = 8) -> dict:
-    """The screen's section (asked unless known) and, per field (same order), what it holds."""
-    shot = Image.open(io.BytesIO(page.screenshot(full_page=True))).convert("RGB")
-    scroll_x, scroll_y = page.evaluate("[scrollX, scrollY]")
-    shifted = lambda b: b and b | {"x": b["x"] + scroll_x, "y": b["y"] + scroll_y}  # noqa: E731
-    boxes, headers = [], []
-    for field in fields:
-        control = locate(page, field)
-        visible = control.count() and control.is_visible()
-        boxes.append(shifted(control.bounding_box(timeout=2000)) if visible else None)
-        headers.append(shifted(control.evaluate(HEADER)) if visible else None)
-    section, confidence = (section, None) if section else section_of(shot, page.title())
+    """The screen's section (asked unless known) and, per field (same order), what it holds. page may be an
+    inner frame holding the form."""
+    inner = getattr(page, "page", None) and page != page.page.main_frame
+    with whole(page) as (shot, (scroll_x, scroll_y)):
+        at = page.frame_element().bounding_box() if inner else {"x": 0, "y": 0}  # where the frame's own boxes start
+        shifted = lambda b: b and b | {"x": b["x"] + scroll_x, "y": b["y"] + scroll_y}  # noqa: E731
+        placed = lambda b: b and b | {"x": b["x"] + at["x"] + scroll_x, "y": b["y"] + at["y"] + scroll_y}  # noqa: E731
+        boxes, headers = [], []
+        for field in fields:
+            control = locate(page, field)
+            visible = control.count() and control.is_visible()
+            boxes.append(shifted(control.bounding_box(timeout=2000)) if visible else None)
+            headers.append(placed(control.evaluate(HEADER)) if visible else None)
+        title = page.title()
+    section, confidence = (section, None) if section else section_of(shot, title)
     questions = field_questions(section)
     with ThreadPoolExecutor(workers) as pool:
         mapped = list(pool.map(lambda args: map_field(shot, *args, section, questions), zip(fields, boxes, headers)))

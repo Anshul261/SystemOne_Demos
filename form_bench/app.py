@@ -1,18 +1,19 @@
-"""Chart entry console: a doctor's free text in, reviewed entries in the EMR out.
+"""Chart entry console: a doctor's free text in, reviewed entries saved in the EMR out.
 
     uv run --env-file .env uvicorn app:app --port 8050
 
 1. Read: Jev turns the note into the patient record (layer1.py).
-2. Plan: the EMR screens the record needs, each mapped by Jev from what it looks like (pipeline.py), with the
-   value for every field it fills.
+2. Plan: the EMR screens the record needs, from each screen's layout (looked at once by Jev and kept), with the
+   value for every field (pipeline.py).
 3. Review: every value with how sure Jev is; flagged ones must be kept or corrected; a screen can be left out.
-4. Enter: the kept screens are typed in, one live frame per field, and read back. 5. Save.
+4. Enter and save, screen by screen: Jev reaches each screen through the EMR's own menus (steps.py), the
+   values are typed and read back, Jev checks the screen is the patient's, and the EMR's own button saves it.
+   A value the page refuses stops the run before that screen is saved, for the reviewer to fix.
 
-The server enforces the order: no entry with an open flag, no save before entry. One browser serves the
-console, so it is meant for one reviewer at a time.
+The server enforces the order: no entry with an open flag. One browser serves the console, so it is meant for
+one reviewer at a time.
 """
 
-import base64
 import json
 import queue
 import random
@@ -63,12 +64,10 @@ class Worker:
         return done.result()
 
     def context(self, target):
-        """One logged-in browser context per EHR, made on first use."""
+        """One browser context per EMR, made on first use. Each review signs in on its own tab."""
         if target.name not in self.contexts:
-            context = self.browser.new_context(ignore_https_errors=True, viewport={"width": 1120, "height": 780})
-            if target.login:
-                target.login(context)
-            self.contexts[target.name] = context
+            self.contexts[target.name] = self.browser.new_context(ignore_https_errors=True,
+                                                                  viewport={"width": 1280, "height": 860})
         return self.contexts[target.name]
 
 
@@ -152,38 +151,53 @@ class ReadRequest(BaseModel):
 
 @app.post("/api/read")
 def read(request: ReadRequest):
-    """Read the note, then open, map and fill each screen it needs. Nothing is typed into the EMR yet."""
+    """Read the note, then fill each screen it needs from that screen's layout. Nothing is opened in the EMR
+    for this patient yet; a screen never looked at before is looked at once, with the EMR's test patient."""
     if request.target not in TARGETS or not request.note.strip():
         raise HTTPException(422, "Choose an EMR and write or paste a note first.")
     target = TARGETS[request.target]()
+
+    def learn(k):
+        page = worker.context(target).new_page()
+        try:
+            return pipeline.layout(page, target, k)
+        finally:
+            page.close()
 
     def events():
         started = time.perf_counter()
         try:
             for old in [s for s in sessions.values() if s["target"] == request.target]:
-                for screen in old["screens"]:
-                    worker.run(screen["page"].close)
-                sessions.pop(old["id"], None)
+                end(old)
             with metered() as spent:
                 reading = pipeline.read(request.note)
                 yield line("read", started, values=len(reading["record"]), flags=len(reading["flags"]))
                 screens = []
-                for k, screen in enumerate(target.screens):
-                    yield line("looking", started, title=screen.title)
-                    planned = worker.run(lambda: pipeline.plan_screen(worker.context(target), target, k, reading))
+                for k, spec in enumerate(target.screens):
+                    yield line("looking", started, title=spec.title)
+                    planned = pipeline.review(target, k, worker.run(lambda: learn(k)), reading)
                     if planned:
                         screens.append(planned | {"resolved": set(), "skip": False, "entered": False, "saved": False})
                         yield line("screen", started, title=planned["title"], values=len(planned["values"]),
                                    flags=len(planned["flags"]))
+            patient = pipeline.patient_of(reading["record"], target)
             session = {"id": uuid.uuid4().hex, "target": request.target, "name": NAMES.get(request.target),
-                       "screens": screens, "spent": spent.report()}
+                       "screens": screens, "record": reading["record"], "patient": patient, "page": None,
+                       "visit": False, "spent": spent.report()}
             sessions[session["id"]] = session
             yield line("done", started, session=session["id"], screens=[view(s) for s in screens],
-                       checks=spent.system_one_calls, tokens=spent.system_one_tokens)
+                       checks=spent.system_one_calls, tokens=spent.system_one_tokens,
+                       patient=f"{patient.get('first name', '')} {patient.get('last name', '')}".strip())
         except Exception as error:  # noqa: BLE001 - shown in the console instead of a broken stream
             yield line("error", started, message=f"{type(error).__name__}: {error}")
 
     return StreamingResponse(events(), media_type="application/x-ndjson")
+
+
+def end(session: dict) -> None:
+    if session.get("page"):
+        worker.run(session["page"].close)
+    sessions.pop(session["id"], None)
 
 
 class EditRequest(BaseModel):
@@ -195,9 +209,12 @@ class EditRequest(BaseModel):
 
 @app.post("/api/edit")
 def edit(request: EditRequest):
-    """The reviewer's own value. Before entry it only changes what will be entered; after entry it is typed in
-    and read back straight away."""
-    screen = screen_of(session_for(request.session), request.screen)
+    """The reviewer's own value. Before entry it only changes what will be entered; on a screen entered but
+    not saved it is typed in and read back straight away."""
+    session = session_for(request.session)
+    screen = screen_of(session, request.screen)
+    if screen["saved"]:
+        raise HTTPException(409, "This screen is already saved.")
     field = screen["fields"][request.index]
     if field["role"] == "combobox":
         if request.value not in field["options"]:
@@ -205,14 +222,20 @@ def edit(request: EditRequest):
         value = field["options"].index(request.value)
     else:
         value = request.value.strip()
-    if screen["entered"]:
-        if not worker.run(lambda: fill(screen["page"], field, value)):
+    if screen["entered"] and request.index in screen.get("live", {}):
+        live = screen["live"][request.index]
+        typed = live["options"].index(request.value) if field["role"] == "combobox" else value
+        if not worker.run(lambda: fill(screen["frame"], live, typed)):
             raise HTTPException(409, "The page did not keep that value. Check the live screen and try again.")
     if value in ("", 0):
         screen["values"].pop(request.index, None)
     else:
         screen["values"][request.index] = value
     screen["resolved"].add(request.index)
+    names = {v: k for k, v in pipeline.NAMES.items()}  # a corrected name or birth date is the patient's too
+    held = pipeline.record_key(screen["mapping"][request.index]) if screen.get("mapping") else None
+    if held in names and isinstance(value, str) and value:
+        session["patient"][names[held]] = value
     return {"row": row(screen, request.index)}
 
 
@@ -238,7 +261,7 @@ class SkipRequest(BaseModel):
 
 @app.post("/api/skip")
 def skip(request: SkipRequest):
-    """Leave a screen out of entry, or put it back."""
+    """Leave a screen out, or put it back."""
     screen = screen_of(session_for(request.session), request.screen)
     if screen["entered"]:
         raise HTTPException(409, "This screen is already entered.")
@@ -250,27 +273,66 @@ class SessionRequest(BaseModel):
     session: str
 
 
+def picture(page) -> str:
+    return entry.frame(page)
+
+
 @app.post("/api/enter")
 def start_entry(request: SessionRequest):
-    """Types the approved values of every kept screen, one frame per field, then reads each screen back."""
+    """Enter and save every kept screen in order, streaming each step. Stops before saving a screen whose
+    page refused a value; calling again carries on from there once the reviewer has dealt with it."""
     session = session_for(request.session)
     waiting = sum(len(open_flags(s)) for s in kept(session))
     if waiting:
         raise HTTPException(409, f"Review {waiting} more field{'s' * (waiting != 1)} before entering.")
-    todo = [s for s in kept(session) if not s["entered"]]
+    todo = [s for s in kept(session) if not s["saved"]]
     if not todo:
         raise HTTPException(409, "Nothing is left to enter.")
+    target = TARGETS[session["target"]]()
+    patient = session["patient"]
     steps: queue.Queue = queue.Queue()
+
+    def say(event: str, **details):
+        steps.put((event, details))
 
     def run():
         try:
+            page = session["page"]
+            if page is None:
+                page = session["page"] = worker.context(target).new_page()
+                if target.home:
+                    say("moving", text=f"Signing in to {session['name']}")
+                    target.home(page)
             for screen in todo:
-                steps.put(("start", screen))
-                steps.put(("problems", screen, entry.enter(screen["page"], screen["fields"], screen["values"],
-                                                           lambda step, k=screen["k"]: steps.put(step | {"screen": k}))))
-            steps.put(("finished",))
+                spec = target.screens[screen["k"]]
+                say("screen", screen=screen["k"], title=screen["title"])
+                move = lambda step, k=screen["k"]: say("moving", screen=k, frame=picture(page), text=(  # noqa: E731
+                    f"{'Scrolled' if step['kind'] == 'scroll' else 'Chose' if step['kind'] == 'select' else 'Typed in' if step['kind'] == 'fill' else 'Clicked'} "
+                    f"{step['label']}"), by_jev=step["probability"] is not None)
+                if not screen["entered"]:
+                    if spec.visit and target.visit and not session["visit"]:
+                        say("moving", screen=screen["k"], text=f"Creating today's visit for {patient['first name']} {patient['last name']}")
+                        pipeline.make_visit(page, target, patient, move)
+                        session["visit"] = True
+                    problems = pipeline.enter(page, target, screen, session["record"], patient, move,
+                                              lambda step, k=screen["k"]: steps.put(step | {"screen": k}))
+                    screen["entered"] = True
+                    screen["flags"] |= problems
+                    screen["resolved"] -= set(problems)
+                    say("entered", screen=view(screen))
+                if open_flags(screen):
+                    say("stopped", screen=view(screen))
+                    return
+                say("moving", screen=screen["k"], frame=picture(page),
+                    text=f"Checking {screen['title']} is {patient['first name']} {patient['last name']}'s, then saving")
+                saved = pipeline.save(page, target, screen, patient, move)
+                values = [shown(f, screen["values"][i]) for i, f in screen.get("live", {}).items()]
+                screen["saved"] = True
+                say("saved", screen=view(screen), result=saved, frame=picture(page),
+                    shown=pipeline.shown_after(page, values), entered=len(values))
+            say("finished")
         except Exception as error:  # noqa: BLE001
-            steps.put(("error", f"{type(error).__name__}: {error}"))
+            say("error", message=f"{type(error).__name__}: {error}")
 
     def events():
         started = time.perf_counter()
@@ -279,47 +341,14 @@ def start_entry(request: SessionRequest):
             step = steps.get()
             if isinstance(step, dict):
                 yield line("field", started, **step)
-            elif step[0] == "start":
-                yield line("screen", started, screen=step[1]["k"], title=step[1]["title"])
-            elif step[0] == "problems":
-                screen, problems = step[1], step[2]
-                screen["entered"] = True
-                screen["flags"] |= problems
-                screen["resolved"] -= set(problems)
-                yield line("entered", started, screen=view(screen))
-            elif step[0] == "error":
-                yield line("error", started, message=step[1])
-                return
-            else:
+                continue
+            event, details = step
+            if event == "finished":
                 yield line("done", started, screens=[view(s) for s in session["screens"]])
+                end(session)
+                return
+            yield line(event, started, **details)
+            if event in ("error", "stopped"):
                 return
 
     return StreamingResponse(events(), media_type="application/x-ndjson")
-
-
-@app.post("/api/save")
-def save(request: SessionRequest):
-    """Save every entered screen, in order. Stops at the first one the EMR does not confirm."""
-    session = session_for(request.session)
-    screens = kept(session)
-    if not screens or not all(s["entered"] for s in screens):
-        raise HTTPException(409, "Enter every kept screen before saving.")
-    waiting = sum(len(open_flags(s)) for s in screens)
-    if waiting:
-        raise HTTPException(409, f"Review {waiting} more field{'s' * (waiting != 1)} before saving.")
-    saved = []
-    for screen in screens:
-        if screen["saved"]:
-            continue
-        save_screen = screen["save"]
-        if not save_screen:
-            raise HTTPException(422, f"{screen['title']} cannot be saved from the console.")
-        result = worker.run(lambda: save_screen(screen["page"]))
-        if not result:
-            raise HTTPException(502, f"The EMR did not confirm saving {screen['title']}. Check it before trying again.")
-        screen["saved"] = True
-        saved.append(result)
-    for screen in session["screens"]:
-        worker.run(screen["page"].close)
-    sessions.pop(request.session)
-    return {"saved": saved}

@@ -9,14 +9,15 @@ import base64
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page
 
-from forms import fill, label, locate, read_value, shown
+from forms import fill, label, locate, read_value, same, shown
 
 HIGHLIGHT = "e => { e.style.outline = '3px solid #e0a800'; e.style.outlineOffset = '2px' }"
 DONE = {True: "e => { e.style.outline = '3px solid #13756B' }", False: "e => { e.style.outline = '3px solid #B0245C' }"}
 
 
 def frame(page: Page) -> str:
-    return base64.b64encode(page.screenshot(type="jpeg", quality=70)).decode()
+    """A picture of the whole window, also when the form sits in one of its frames."""
+    return base64.b64encode(getattr(page, "page", page).screenshot(type="jpeg", quality=70)).decode()
 
 
 def enter(page: Page, fields: list[dict], values: dict[int, str | int], on_step=None) -> dict[int, str]:
@@ -42,7 +43,7 @@ def enter(page: Page, fields: list[dict], values: dict[int, str | int], on_step=
             on_step({"index": i, "label": label(field), "value": shown(field, value),
                      "status": "kept" if kept else "refused", "frame": frame(page)})
     for i, value in values.items():
-        if i not in problems and read_value(page, fields[i]).strip().casefold() != shown(fields[i], value).strip().casefold():
+        if i not in problems and not same(read_value(page, fields[i]), shown(fields[i], value)):
             if not fill(page, fields[i], value):
                 problems[i] = "The page changed this value after it was entered"
     return problems

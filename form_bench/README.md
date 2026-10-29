@@ -12,11 +12,24 @@ scripts do the rest ([pipeline.py](pipeline.py)):
    attribute, unit). The mapping is saved; a screen is needed when the record has something for it.
 3. **Review.** Every value, with how sure Jev is of it and of the field; flagged values must be kept or
    corrected, and a screen can be left out.
-4. **Enter** ([entry.py](entry.py)). The kept values are typed in field by field and read back, with a live
-   frame per field. Dropdowns take the option Jev matches to the value (checked by a Noul per option).
+4. **Enter and save, screen by screen** ([steps.py](steps.py), [entry.py](entry.py)). Jev reaches each screen
+   through the EMR's own menus, the way a person would. The kept values are typed in field by field and read
+   back (dropdowns take the option Jev matches to the value, checked by a Noul per option). Jev checks that the
+   screen shows the right patient, then the EMR's own button saves. Later screens need earlier saves (vitals
+   need a visit, a visit needs the registered patient), so each screen is opened only when its turn comes.
 
-An EMR's own quirks stay in its target ([targets.py](targets.py), [labs.py](labs.py)): logging in, placing
-lab orders before results can be entered, and saving.
+How Jev gets around ([steps.py](steps.py)) is pieced together from jev-ultrafast and Browser Harness.
+jev-ultrafast's page snapshot and its Jev questions ("which operation, on which control") run over every
+frame of the page, and each action is taken only on the element that was observed. A route that reached a
+goal is kept as data, the way Browser Harness keeps domain skills, and replayed without Jev while its
+controls still match. Jev picks any step that no longer matches, such as a different patient's row, and a
+separate Jev question confirms the goal is reached. Popups are answered by Jev against the goal, never
+blindly. Jev never writes text: when it types, it picks which of the given values goes in the field.
+
+An EMR's specifics live in its target ([targets.py](targets.py)), as plain-language goals rather than
+scripts: "From the Procedures menu, open Pending Review". Two things there are not entry. Signing in uses
+credentials from `.env`, which never go to a model. Lab orders are placed by a setup script, because results
+only arrive for orders and ordering is test setup, not part of entering a note.
 
 Supporting modules: [forms.py](forms.py) reads screens and fills or reads controls, and [models.py](models.py)
 calls the models. The review console ([app.py](app.py)) runs both workflows for a person; the bench
@@ -126,16 +139,38 @@ uv run --env-file .env uvicorn app:app --port 8050     # then open http://127.0.
 
 Write or paste a note, or use a sample patient, and choose the EMR.
 
-1. **Read the note.** Jev reads the note and opens the screens it needs (for OpenEMR: new patient, vitals,
-   lab results), each with the value for every field it fills, next to the words in the note it came from.
+1. **Read the note.** Jev reads the note and fills the screens it needs from each screen's saved layout
+   (for OpenEMR: new patient, vitals, lab results), each value next to the words in the note it came from.
+   A screen never seen before is opened once, with the EMR's test patient, and mapped.
 2. **Review.** Keep each flagged value or type a correction; leave out a screen that is not wanted.
-3. **Enter into the EMR.** Locked until every flag is resolved. The console shows each screen as every value
-   is typed and read back.
-4. **Save.** Locked until entry has finished and anything the page refused is reviewed.
+   Correcting the patient's name or birth date changes the patient the EMR is searched for.
+3. **Enter and save.** Locked until every flag is resolved. The console shows the EMR at every step and
+   logs each one, marking which a saved route took and which Jev chose. A value the page refuses stops the
+   run before that screen is saved; once it is fixed or kept, the run carries on.
 
-One note with demographics, vitals and three lab panels reads in about 12 s (19 Jev requests) and enters 65
-values in about 12 s. The server enforces the same order. One browser serves the console, so it is for one
-reviewer at a time.
+On OpenEMR, one note with demographics, vitals and three lab panels reads in about 5 s (19 Jev requests,
+layouts saved). Registering the patient, creating the visit, and entering and saving vitals and 45 lab
+values took 53 s, with every step after the first run replayed from saved routes. OpenEMR's own record of the
+visit matched the note, value for value. One browser serves the console, so it is for one reviewer at a time.
+
+What it took to make OpenEMR's real UI work without OpenEMR code, each fixed in general rather than for one
+screen:
+
+- **Menus built of plain `div`s.** jev-ultrafast lists links, buttons and form controls. Elements with a
+  click binding in their markup (onclick, Knockout, Angular, Vue), focusable ones, and ones with a pointer
+  cursor are also read as clickable, as browser-use's own reader does.
+- **A button named by its value.** `<button value="true">Confirm Create New Patient</button>` read as "true".
+  Buttons are now named by their text, as browsers name them.
+- **Only the viewport.** Jev now sees the whole page, as a person filling a form does by scrolling. A long
+  page is cut to the 150 controls most useful for getting around, so a request fits.
+- **Acting instead of stopping.** jev-ultrafast's step question pressed a blank form's Create button when
+  only opening the form was asked. A separate Jev question, given the steps taken, now decides whether the
+  goal is reached, and a save also counts as done once the filled form has left the screen.
+- **Typed values reformatted.** A date picker shows `2026-10-29` as `2026-10-29 00:00`; read-back accepts a
+  date shown at midnight as the date typed, and nothing looser.
+- **Identical-looking fields.** OpenEMR's per-result Code cells shared one key in the mapping cache; fields
+  that look alike are now told apart by order. Mapping inside OpenEMR's frames scores 263 of 263 fields
+  against the answer key (38 new patient, 33 vitals, 192 lab results).
 
 ## Targets
 
@@ -153,8 +188,13 @@ which is how the answer keys were written.
 ## Limits
 
 - All patients are synthetic. Do not point the bench at real patient data.
-- jev-ultrafast handles common HTML and ARIA controls, not frames or shadow roots. Screens inside
-  OpenEMR's frames need their direct URL.
+- The `jev` baseline is jev-ultrafast unchanged: common HTML and ARIA controls, not frames or shadow
+  roots, so the bench opens OpenEMR's screens by their direct URL. The console's own steps ([steps.py](steps.py))
+  read every frame.
+- Saved routes and the provisional thresholds in [steps.py](steps.py) (goal reached, popup answers) and
+  [pipeline.py](pipeline.py) (right patient) have been tried on one EMR and a handful of runs. A route recorded
+  on an unusual path (a popup) can carry odd steps; it is rewritten whenever a run takes different steps.
+- Lab reading has been tried on a few notes, not a held-out set with answer keys.
 - With d1-3B standing in for Jev, the `jev` baseline measures jev-ultrafast's loop with an open model.
   It is much weaker that way: on the local form it fell from 100% to 79% of fields, and stopped early on
   half the cases.
