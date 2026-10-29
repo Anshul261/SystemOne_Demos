@@ -1,8 +1,15 @@
-"""Where the agents type: a list of screens, each with the answer key the scorer reads back.
+"""The EMRs: each a list of screens, described twice, for two users.
 
-An answer key maps a case's field keys to controls, by ARIA role and accessible name or table row. Only the scorer
-uses it; the agents under test see the page and the note, nothing else. Unscored fields are still open to
-the agents, so a wrong entry there is not counted.
+The bench (bench.py) opens each screen by its address and scores what the agents typed against an answer key:
+a case's field keys mapped to controls, by ARIA role and accessible name or table row. Only the scorer uses
+it; the agents under test see the page and the note, nothing else.
+
+The console (app.py, emr.py) reaches each screen the way a person does, through the EMR's own menus, and saves
+with its own buttons. Its screens are described as goals in plain language, which Jev pursues (steps.py), not
+as scripts. Goals may use the EMR's own words ("Pending Review", "Sign Results") where Jev could not otherwise
+know which of its screens is meant; they never say where to click. Two things stay as code, and neither is
+entry: signing in (credentials never go to a model) and placing lab orders (test setup: results only arrive
+for orders).
 """
 
 import json
@@ -20,20 +27,20 @@ import labs
 
 @dataclass(frozen=True)
 class Screen:
+    # For the bench: where the screen is, and how to score it.
     url: str
     answers: dict[str, dict | list[dict]]  # field key -> named(), in_row(), any_of(), or a list joined in order
     prepare: callable = None  # prepare(page): puts the screen in its starting state, the same for every agent
     derived: list[dict] = field(default_factory=list)  # fields the page fills itself, ignored as agent extras
-    title: str = ""  # how the review console names the screen
-    save: callable = None  # save(page) -> what was saved, used only by the review console after approval
-    setup: callable = None  # setup(page, record): EMR-side preparation a record needs, such as placing lab orders
-    # The console's way in: goals Jev reaches through the EMR's own screens (steps.py), and setup(page, record)
-    # calls between them; the goal that saves the screen; whether the screen is in a patient's chart (checked
-    # before saving) and needs the patient's visit for this note.
-    open: tuple = ()
-    save_goal: str = ""
-    patient: bool = False
-    visit: bool = False
+    save: callable = None  # save(page) -> what was saved: a scripted save, for a screen with no save_goal
+    setup: callable = None  # setup(page, record): the bench's preparation by address, such as placing lab orders
+
+    # For the console.
+    title: str = ""  # how the console names the screen
+    open: tuple = ()  # how to reach it: goals Jev pursues in order, and setup(page, record) calls between them
+    save_goal: str = ""  # the goal that saves it with the EMR's own button
+    patient: bool = False  # in a patient's chart: Jev checks it shows the right patient before saving
+    visit: bool = False  # inside a visit: today's visit is created first, once per note
 
 
 def named(role: str, name: str, nth: int = 0) -> dict:
@@ -244,6 +251,7 @@ def order_panels(page, record: dict) -> None:
         tab.close()
 
 
+# Goals name the values they need in braces; emr.patient_of supplies them, and a goal is offered only those.
 PATIENT_GOAL = "the patient {first name} {last name} (born {birth date})"
 
 

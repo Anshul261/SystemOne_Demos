@@ -18,21 +18,17 @@ scripts do the rest ([pipeline.py](pipeline.py)):
    screen shows the right patient, then the EMR's own button saves. Later screens need earlier saves (vitals
    need a visit, a visit needs the registered patient), so each screen is opened only when its turn comes.
 
-How Jev gets around ([steps.py](steps.py)) is pieced together from jev-ultrafast and Browser Harness.
-jev-ultrafast's page snapshot and its Jev questions ("which operation, on which control") run over every
-frame of the page, and each action is taken only on the element that was observed. A route that reached a
-goal is kept as data, the way Browser Harness keeps domain skills, and replayed without Jev while its
-controls still match. Jev picks any step that no longer matches, such as a different patient's row, and a
-separate Jev question confirms the goal is reached. Popups are answered by Jev against the goal, never
-blindly. Jev never writes text: when it types, it picks which of the given values goes in the field.
+How Jev gets around ([steps.py](steps.py)) is assembled from jev-ultrafast and Browser Harness rather than
+written from scratch. jev-ultrafast supplies the page snapshot and Jev's step questions; routes that reached a
+goal are kept and replayed, the way Browser Harness keeps domain skills. An EMR's specifics live in its target
+([targets.py](targets.py)) as plain-language goals ("From the Procedures menu, open Pending Review").
 
-An EMR's specifics live in its target ([targets.py](targets.py)), as plain-language goals rather than
-scripts: "From the Procedures menu, open Pending Review". Two things there are not entry. Signing in uses
-credentials from `.env`, which never go to a model. Lab orders are placed by a setup script, because results
-only arrive for orders and ordering is test setup, not part of entering a note.
+**[ARCHITECTURE.md](ARCHITECTURE.md)** explains why it is built this way. It lists the rules every part
+keeps and each decision with the evidence behind it, including what failed on OpenEMR and how it was fixed.
+It also gives the provenance of every threshold and the known gaps.
 
-Supporting modules: [forms.py](forms.py) reads screens and fills or reads controls, and [models.py](models.py)
-calls the models. The review console ([app.py](app.py)) runs both workflows for a person; the bench
+Supporting modules: [emr.py](emr.py) works in the EMR screen by screen, [forms.py](forms.py) reads screens and
+fills or reads controls, and [models.py](models.py) calls the models. The review console ([app.py](app.py)) runs both workflows for a person; the bench
 ([bench.py](bench.py)) runs them end to end with no person and scores the result.
 
 The bench compares two agents on the same synthetic patients and screens:
@@ -153,24 +149,7 @@ layouts saved). Registering the patient, creating the visit, and entering and sa
 values took 53 s, with every step after the first run replayed from saved routes. OpenEMR's own record of the
 visit matched the note, value for value. One browser serves the console, so it is for one reviewer at a time.
 
-What it took to make OpenEMR's real UI work without OpenEMR code, each fixed in general rather than for one
-screen:
-
-- **Menus built of plain `div`s.** jev-ultrafast lists links, buttons and form controls. Elements with a
-  click binding in their markup (onclick, Knockout, Angular, Vue), focusable ones, and ones with a pointer
-  cursor are also read as clickable, as browser-use's own reader does.
-- **A button named by its value.** `<button value="true">Confirm Create New Patient</button>` read as "true".
-  Buttons are now named by their text, as browsers name them.
-- **Only the viewport.** Jev now sees the whole page, as a person filling a form does by scrolling. A long
-  page is cut to the 150 controls most useful for getting around, so a request fits.
-- **Acting instead of stopping.** jev-ultrafast's step question pressed a blank form's Create button when
-  only opening the form was asked. A separate Jev question, given the steps taken, now decides whether the
-  goal is reached, and a save also counts as done once the filled form has left the screen.
-- **Typed values reformatted.** A date picker shows `2026-10-29` as `2026-10-29 00:00`; read-back accepts a
-  date shown at midnight as the date typed, and nothing looser.
-- **Identical-looking fields.** OpenEMR's per-result Code cells shared one key in the mapping cache; fields
-  that look alike are now told apart by order. Mapping inside OpenEMR's frames scores 263 of 263 fields
-  against the answer key (38 new patient, 33 vitals, 192 lab results).
+What it took to make OpenEMR's real UI work without OpenEMR code is in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Targets
 

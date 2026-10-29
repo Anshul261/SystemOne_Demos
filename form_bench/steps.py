@@ -1,10 +1,20 @@
-"""Getting around an EMR without scripts written for it: Jev picks each step, the way jev-ultrafast does.
+"""Getting around an EMR without scripts written for it: Jev picks each step, and the steps that worked are
+kept and replayed. See ARCHITECTURE.md for why it is built this way.
 
-observe() reads every frame of the page with jev-ultrafast's snapshot (the visible text and every control,
-with the page's own element identity), and pursue() asks jev-ultrafast's Jev questions which operation and
-which control move a goal forward, then acts on exactly that element, checking first that it is the one
-observed. Text is never generated: when Jev chooses to type, it picks which of the values the caller gave
-goes in the field.
+The pieces, in the order a step happens:
+
+1. See the page (observe). jev-ultrafast's page snapshot, run in every frame: the visible text and every
+   control, each with the page's own element identity. A few patches make it see what a person sees.
+2. Choose a step. A saved route's next step, if its control is on the page. Otherwise Jev, through
+   jev-ultrafast's questions: which operation, and which control.
+3. Act (act). On exactly the element that was observed, after checking it has not changed.
+4. Stop. When Jev, given the page and the steps taken, says the goal is reached (or the caller's own check
+   says so), when three steps change nothing, or when the step budget runs out.
+
+Procedures keeps, per goal, the steps that reached it, as data (the way browser-harness keeps domain skills).
+
+Two rules hold throughout. Jev never writes text: when it types, it picks which of the caller's values goes
+in the field, and a goal is offered only the values it names. And no popup is answered blindly.
 """
 
 import json
@@ -19,10 +29,19 @@ from playwright.sync_api import Page
 
 from models import system_one
 
-# jev-ultrafast's snapshot lists links, buttons and form controls. Pages also make plain elements clickable (a
-# menu built of divs, as in OpenEMR): those with a click binding in their markup (onclick, Knockout, Angular,
-# Vue), focusable ones, and those shown with a pointer cursor, the way browser-use's own reader finds them,
-# are marked first and read as menu items (ranked below real buttons). And Jev sees the whole page, not only what is scrolled into view.
+# Provisional thresholds, each chosen from a handful of runs on OpenEMR (ARCHITECTURE.md, "Thresholds").
+REACHED = 0.8  # the goal counts as reached when Jev is this sure
+POPUP_YES = 0.8  # a confirm popup is answered OK only when Jev is this sure that serves the goal
+MOST = 150  # controls one Jev request can weigh; a lab screen has several hundred
+BUDGET = 14  # steps per attempt at a goal
+ATTEMPTS = 3  # attempts at a goal, each told which earlier paths failed
+
+
+# 1. Seeing the page ------------------------------------------------------------------------------------------
+
+# Pages make plain elements clickable too: OpenEMR's menus are divs with a Knockout click binding. Mark those
+# before the snapshot runs, the way browser-use's own reader finds them: a click binding in the markup
+# (onclick, Knockout, Angular, Vue), focusable, or a pointer cursor its parent does not share.
 MARK_CLICKABLE = """(() => { if (!document.body) return;
   const native = 'a[href],button,input,select,textarea,summary,label,[role],[data-jev-clickable]';
   for (const e of document.body.querySelectorAll('*')) {
@@ -35,31 +54,46 @@ MARK_CLICKABLE = """(() => { if (!document.body) return;
     e.setAttribute('data-jev-clickable', '');
   } })()"""
 
+# Changes to jev-ultrafast's snapshot.js, each (why, its text, ours). Applied to its source when this module
+# loads; an assertion stops everything if jev-ultrafast changes underneath.
+SNAPSHOT_PATCHES = [
+    ("read the marked elements",
+     "roles.map(role=>'[role=\"'+role+'\"]').join(',');",
+     "roles.map(role=>'[role=\"'+role+'\"]').join(',')+',[data-jev-clickable]';"),
+    ("as menu items, so real buttons and links rank above them",
+     "    return null;\n  };",
+     "    if (e.hasAttribute('data-jev-clickable')) return 'menuitem';\n    return null;\n  };"),
+    ("controls on the whole page, not only the viewport: a person filling a form scrolls to its Save button",
+     "r.height<=0 || x<0 || y<0 || x>=innerWidth || y>=innerHeight) continue;",
+     "r.height<=0) continue;"),
+    ("text on the whole page too",
+     "r.width>0 && r.height>0 && r.bottom>0 && r.top<innerHeight && r.right>0 && r.left<innerWidth",
+     "r.width>0 && r.height>0"),
+    ("room for a whole long page (fit() then cuts it to what one request can weigh)",
+     "actions.length-250", "actions.length-800"),
+    ("", "actions.splice(250)", "actions.splice(800)"),
+    ("a <button> named by its text, as browsers name it: OpenEMR's confirm button has value=\"true\"",
+     "(['button','submit','reset'].includes(e.type) ? e.value : '')",
+     "(e.tagName==='INPUT' && ['button','submit','reset'].includes(e.type) ? e.value : '')"),
+]
+
 
 def _snapshot() -> str:
     source = Path(jev_ultrafast.__file__).with_name("snapshot.js").read_text()
-    for old, new in (("roles.map(role=>'[role=\"'+role+'\"]').join(',');",
-                      "roles.map(role=>'[role=\"'+role+'\"]').join(',')+',[data-jev-clickable]';"),
-                     ("    return null;\n  };", "    if (e.hasAttribute('data-jev-clickable')) return 'menuitem';\n    return null;\n  };"),
-                     # the whole page, as a person filling a form sees it by scrolling; a click scrolls to its control
-                     ("r.height<=0 || x<0 || y<0 || x>=innerWidth || y>=innerHeight) continue;", "r.height<=0) continue;"),
-                     ("r.width>0 && r.height>0 && r.bottom>0 && r.top<innerHeight && r.right>0 && r.left<innerWidth", "r.width>0 && r.height>0"),
-                     ("actions.length-250", "actions.length-800"), ("actions.splice(250)", "actions.splice(800)"),
-                     # a <button> is named by its text, as browsers name it, not by its value ("true")
-                     ("(['button','submit','reset'].includes(e.type) ? e.value : '')",
-                      "(e.tagName==='INPUT' && ['button','submit','reset'].includes(e.type) ? e.value : '')")):
-        assert old in source, "jev-ultrafast's snapshot changed"
-        source = source.replace(old, new)
+    for _why, theirs, ours in SNAPSHOT_PATCHES:
+        assert theirs in source, f"jev-ultrafast's snapshot changed: {theirs!r} is gone"
+        source = source.replace(theirs, ours)
     return source
 
 
 SNAPSHOT = _snapshot()
-GUARD = "n => window.__jevFast.guard(window.__jevFast.nodes.get(n))"
+GUARD = "n => window.__jevFast.guard(window.__jevFast.nodes.get(n))"  # what the element looks like now
 ELEMENT = "n => window.__jevFast.nodes.get(n)"
 
 
 def observe(page: Page) -> dict:
-    """What a person sees: every frame's visible text and controls, in one list Jev chooses from."""
+    """The page as Jev sees it: every frame's text and controls in one list, each control tagged with its
+    frame. Returns {url, title, text, actions, frames, guards, look}; look is what "the page changed" means."""
     texts, actions, scrolls, frames, guards = [], [], [], [], {}
     for frame in page.frames:
         try:
@@ -87,12 +121,9 @@ def observe(page: Page) -> dict:
             "guards": guards, "look": (text, tuple((a["label"], a.get("value")) for a in actions))}
 
 
-MOST = 150  # what one Jev request can weigh: a long form (a lab screen) has several times more controls
-
-
 def rank(action: dict) -> int:
-    """Which controls Jev sees first on a long page: buttons and links, then empty fields, then the rest.
-    Entry types the values itself, so filled fields matter least to getting around."""
+    """Which controls matter most for getting around: buttons and links, then empty fields, then the rest.
+    Filled fields matter least, since entry types the values itself."""
     if action["kind"] == "click":
         return 0 if action.get("role") in ("button", "link") else 2
     if action["kind"] == "fill":
@@ -101,14 +132,35 @@ def rank(action: dict) -> int:
 
 
 def fit(actions: list[dict]) -> list[dict]:
-    """At most MOST controls, the most useful for getting around first, kept in page order. Clicks that only
-    focus a field Jev can type in go first."""
+    """At most MOST controls, the highest ranked, kept in page order. Clicks that only focus a field Jev can
+    type in go first. (A whole lab screen exceeded both Jev's 255 options per choice and its token limit.)"""
     if len(actions) <= MOST:
         return actions
     typed = {a["node"] for a in actions if a["kind"] == "fill"}
     useful = [a for a in actions if not (a["kind"] == "click" and a["node"] in typed)]
     keep = set(map(id, sorted(useful, key=rank)[:MOST]))
     return [a for a in useful if id(a) in keep]
+
+
+FIELDS = ("() => [...document.querySelectorAll('input:not([type=hidden]):not([type=button]):not([type=submit]),"
+          "select,textarea')].filter(e => e.checkVisibility()).length")
+
+
+def form_frame(page: Page):
+    """The frame holding the form on screen: the visible one with the most fields."""
+    def fields(frame):
+        try:
+            shown = frame == page.main_frame or frame.frame_element().is_visible()
+            return frame.evaluate(FIELDS) if shown else 0
+        except PlaywrightError:
+            return 0
+    return max(page.frames, key=fields)
+
+
+# 2. Acting ---------------------------------------------------------------------------------------------------
+
+class StaleStep(RuntimeError):
+    """The element changed between being chosen and being acted on."""
 
 
 def act(seen: dict, action: dict, text: str | None = None) -> None:
@@ -131,12 +183,10 @@ def act(seen: dict, action: dict, text: str | None = None) -> None:
         element.fill(text, timeout=5000)
 
 
-class StaleStep(RuntimeError):
-    pass
-
+# 3. Jev's judgments, besides choosing a step ----------------------------------------------------------------
 
 def value_for(goal: str, action: dict, inputs: dict[str, str]) -> str | None:
-    """Which of the caller's values goes in the field Jev chose to type in (its name), or None."""
+    """Which of the caller's values goes in the field Jev chose to type in: its name, or None."""
     if not inputs:
         return None
     none = "None of these values belongs in this field."
@@ -146,174 +196,177 @@ def value_for(goal: str, action: dict, inputs: dict[str, str]) -> str | None:
     return None if answer["choice"] == none else answer["choice"].split(":")[0]
 
 
+def reached(seen: dict, goal: str, steps: list[dict]) -> bool:
+    """Whether the goal is reached, judged from the page and the steps already taken. Asked separately
+    because jev-ultrafast's step question leans toward acting (it pressed a blank form's Create button when
+    only opening the form was asked), and with the steps because a page alone may not show it (an emptied
+    review list after Sign Results)."""
+    taken = "; ".join(f"{s['kind']} {s['label']!r}" for s in steps) or "none yet"
+    answer = system_one(f"Steps already taken: {taken}\n\nThe page now:\n{seen['text']}", {"reached": {
+        "type": "noul", "instructions": {
+            "task": "Has this goal been fully reached, as the page shows it now, so that no further step is needed?",
+            "goal": goal}}})
+    return answer["reached"]["noul"] >= REACHED
+
+
+def answer_popups(page: Page, goal: str, history: list[dict]):
+    """Answer the page's popups while pursuing a goal, never blindly (browser-harness's lesson on dialogs).
+    An alert only informs, and leaving a page is allowed. A confirm or prompt ("A visit already exists for
+    this patient today. Continue?") is answered OK only when Jev is sure that serves the goal. Each popup goes
+    into the history Jev sees. Returns the handler, to remove when the goal is done."""
+    def handle(dialog):
+        ok = dialog.type in ("alert", "beforeunload")
+        if not ok:
+            yes = system_one(f"Goal: {goal}\nThe page asks: {dialog.message}", {"yes": {
+                "type": "noul", "instructions": "Does answering yes (OK) to what the page asks serve the goal, "
+                                                "without creating a duplicate or changing anything the goal does not ask for?"}})
+            ok = yes["yes"]["noul"] >= POPUP_YES
+        history.append({"action": f"The page showed a {dialog.type} popup: {dialog.message[:300]}", "kind": "popup",
+                        "text": "OK" if ok else "Cancel", "page_changed": None})
+        dialog.accept() if ok else dialog.dismiss()
+    page.on("dialog", handle)
+    return handle
+
+
+def for_patient(page: Page, name: str, born: str) -> float:
+    """How sure Jev is that the page shows this patient as the one it is for. (Asked as "is the form being
+    filled in for this patient" it gave 0.65 for the right patient; this wording gave 0.90, and 0.02 for a
+    wrong name or birth date.)"""
+    return system_one(observe(page)["text"], {"patient": {"type": "noul", "instructions": {
+        "task": "Does the page show this patient (same name and date of birth) as the patient it is for?",
+        "patient": f"{name}, born {born}"}}})["patient"]["noul"]
+
+
+# 4. Pursuing a goal ------------------------------------------------------------------------------------------
+
+class Blocked(RuntimeError):
+    """The goal could not be reached; args[1] is the steps taken."""
+
+
 def plain(label: str) -> str:
     return " ".join(label.split())
 
 
 def planned(seen: dict, step: dict) -> dict | None:
-    """The control a saved step acts on, found again by what it is and says, if it is on the page."""
+    """The control a saved step acts on, found again by its kind and what it says, if it is on the page."""
     return next((a for a in seen["actions"] if a["kind"] == step["kind"] and plain(a["label"]) == step["label"]
                  and (step["kind"] != "select" or a["value"] == step["value"])), None)
 
 
-def answer_popups(page: Page, goal: str, history: list[dict]):
-    """Never answer a browser popup blindly (browser-harness's dialogs lesson): an alert only informs and is
-    closed; a confirm or prompt ("A visit already exists for this patient today. Continue?") is answered by
-    Jev against the goal, and declined unless Jev is sure. Leaving a page is allowed. Each popup goes into the
-    history Jev sees. Returns the handler, to remove when done."""
-    def handle(dialog):
-        accept = dialog.type in ("alert", "beforeunload")
-        if not accept:
-            yes = system_one(f"Goal: {goal}\nThe page asks: {dialog.message}", {"yes": {
-                "type": "noul", "instructions": "Does answering yes (OK) to what the page asks serve the goal, "
-                                                "without creating a duplicate or changing anything the goal does not ask for?"}})["yes"]["noul"]
-            accept = yes >= POPUP_YES
-        history.append({"action": f"The page showed a {dialog.type} popup: {dialog.message[:300]}", "kind": "popup",
-                        "text": "OK" if accept else "Cancel", "page_changed": None})
-        dialog.accept() if accept else dialog.dismiss()
-    page.on("dialog", handle)
-    return handle
-
-
-POPUP_YES = 0.8  # provisional: a confirm is declined unless Jev is this sure answering yes serves the goal
-
-
-REACHED = 0.8  # provisional: the goal counts as reached, with no further step, when Jev is this sure
-
-
-def reached(seen: dict, goal: str, steps: list[dict]) -> bool:
-    """Whether the goal is reached, from the page and the steps already taken. Asked on its own because the
-    step question leans toward acting: it pressed a blank form's Create button when only opening the form
-    was asked."""
-    taken = "; ".join(f"{s['kind']} {s['label']!r}" for s in steps) or "none yet"
-    return system_one(f"Steps already taken: {taken}\n\nThe page now:\n{seen['text']}", {"reached": {"type": "noul", "instructions": {
-        "task": "Has this goal been fully reached, as the page shows it now, so that no further step is needed?",
-        "goal": goal}}})["reached"]["noul"] >= REACHED
-
-
-def pursue(page: Page, goal: str, inputs: dict[str, str] | None = None, plan: list[dict] = (),
-           avoid: list[list[dict]] = (), budget: int = 14, on_step=None, done=None) -> list[dict]:
-    """Take steps until Jev sees the goal reached; returns the steps taken, raises Blocked.
-
-    A plan (the steps that reached this goal before) is followed without asking Jev while its controls are
-    on the page; Jev picks any step the plan cannot, and confirms the goal is reached at the end. avoid lists
-    earlier attempts that did not reach it, so Jev can choose differently. on_step(step), when given, hears
-    each step once it is taken. done(), when given, says from the page itself that the goal is reached."""
-    inputs, history, steps, plan = inputs or {}, [], [], list(plan)
+def briefing(goal: str, inputs: dict[str, str], avoid: list[list[dict]]) -> str:
+    """The goal as jev-ultrafast's step question is told it: with the values it may type and the paths
+    that already failed."""
     told = goal
     if inputs:
         told += "\nValues you may type: " + "; ".join(f"{k}: {v}" for k, v in inputs.items())
     for path in avoid:
         told += "\nAn earlier attempt took these steps and did not reach the goal: " + " -> ".join(
             f"{s['kind']} {s['label']!r}" for s in path)
+    return told
+
+
+def pursue(page: Page, goal: str, inputs: dict[str, str] | None = None, plan: list[dict] = (),
+           avoid: list[list[dict]] = (), budget: int = BUDGET, on_step=None, done=None) -> list[dict]:
+    """Take steps until the goal is reached; returns the steps taken, raises Blocked.
+
+    plan: the steps that reached this goal before, followed without asking Jev while their controls are on
+    the page. A planned step that is not there (a different patient's row) is chosen afresh by Jev.
+    avoid: earlier attempts that failed, so Jev can choose differently.
+    on_step(step): told of each step once taken. done(): the caller's own sign the goal is reached."""
+    inputs, plan = inputs or {}, list(plan)
+    told = briefing(goal, inputs, avoid)
+    history: list[dict] = []  # what jev-ultrafast's step question sees: steps, failed tries and popups
+    steps: list[dict] = []  # what was done, as kept in a route
     handler = answer_popups(page, goal, history)
     try:
-        return _pursue(page, goal, told, inputs, history, steps, plan, budget, on_step, done)
+        last = None
+        for _ in range(budget):
+            seen = observe(page)
+            moves = [h for h in history if h["kind"] != "popup"]
+            if moves:
+                moves[-1]["page_changed"] = seen["look"] != last
+                if len(moves) >= 3 and not any(h["page_changed"] for h in moves[-3:]):
+                    raise Blocked(f"Three steps changed nothing on the way to: {goal}", steps)
+            last = seen["look"]
+
+            action = planned(seen, plan[0]) if plan else None
+            if action:  # the saved route's next step
+                step = plan.pop(0)
+                name = step["input"] if step["kind"] == "fill" else None
+                probability = None
+            else:  # Jev's step
+                plan = plan[1:]
+                if (done and steps and done()) or reached(seen, goal, steps):
+                    return steps
+                decision = choose(seen, told, history)
+                if decision["choice"] == "DONE":
+                    return steps
+                if decision["choice"] == "BLOCKED":
+                    raise Blocked(f"Jev found no way to: {goal}", steps)
+                action = next(a for a in seen["actions"] if a["id"] == decision["choice"])
+                probability = decision["probabilities"].get(decision["choice"])
+                name = value_for(goal, action, inputs) if action["kind"] == "fill" else None
+                if action["kind"] == "fill" and name not in inputs:  # nothing it may type belongs there
+                    history.append({"action": action["label"], "kind": "fill", "text": None, "page_changed": False})
+                    continue
+            text = inputs.get(name) if name else None
+
+            try:
+                act(seen, action, text)
+            except (StaleStep, PlaywrightError) as error:
+                history.append({"action": action["label"], "kind": action["kind"], "text": str(error)[:80],
+                                "page_changed": False})
+                continue
+            page.wait_for_timeout(400)
+            steps.append({"kind": action["kind"], "label": plain(action["label"]),
+                          "value": action.get("value") if action["kind"] == "select" else None,
+                          "input": name, "probability": probability})
+            history.append({"action": action["label"], "kind": action["kind"], "text": text, "page_changed": None})
+            if on_step:
+                on_step(steps[-1])
+        raise Blocked(f"Not reached in {budget} steps: {goal}", steps)
     finally:
         page.remove_listener("dialog", handler)
 
 
-def _pursue(page, goal, told, inputs, history, steps, plan, budget, on_step, done):
-    last = None
-    for _ in range(budget):
-        seen = observe(page)
-        moves = [h for h in history if h["kind"] != "popup"]
-        if moves:
-            moves[-1]["page_changed"] = seen["look"] != last
-            if len(moves) >= 3 and not any(h["page_changed"] for h in moves[-3:]):
-                raise Blocked(f"Three steps changed nothing on the way to: {goal}", steps)
-        last = seen["look"]
-        action = planned(seen, plan[0]) if plan else None
-        if action:
-            step = plan.pop(0)
-            text, name = (inputs.get(step["input"]), step["input"]) if step["kind"] == "fill" else (None, None)
-            p = None
-        else:
-            plan = plan[1:]  # a step that is not on the page is chosen afresh (a different patient's row)
-            if (done and steps and done()) or reached(seen, goal, steps):
-                return steps
-            decision = choose(seen, told, history)
-            if decision["choice"] == "DONE":
-                return steps
-            if decision["choice"] == "BLOCKED":
-                raise Blocked(f"Jev found no way to: {goal}", steps)
-            action = next(a for a in seen["actions"] if a["id"] == decision["choice"])
-            p = decision["probabilities"].get(decision["choice"])
-            name = value_for(goal, action, inputs) if action["kind"] == "fill" else None
-            text = inputs.get(name)
-            if action["kind"] == "fill" and text is None:
-                history.append({"action": action["label"], "kind": "fill", "text": None, "page_changed": False})
-                continue
-        try:
-            act(seen, action, text)
-        except (StaleStep, PlaywrightError) as error:
-            history.append({"action": action["label"], "kind": action["kind"], "text": str(error)[:80],
-                            "page_changed": False})
-            continue
-        page.wait_for_timeout(400)
-        steps.append({"kind": action["kind"], "label": plain(action["label"]), "value": action.get("value")
-                      if action["kind"] == "select" else None, "input": name, "probability": p})
-        history.append({"action": action["label"], "kind": action["kind"], "text": text, "page_changed": None})
-        if on_step:
-            on_step(steps[-1])
-    raise Blocked(f"Not reached in {budget} steps: {goal}", steps)
-
-
-class Blocked(RuntimeError):
-    """The goal could not be reached; args[1] is the steps taken."""
-
+# 5. Remembering routes ---------------------------------------------------------------------------------------
 
 class Procedures:
     """What Jev learned about getting things done in one EMR, kept as data the way browser-harness keeps
-    domain skills: a goal and the steps that reached it. Followed without Jev while the screens still match;
-    a step that no longer matches is chosen by Jev again, and the steps that worked are saved."""
+    domain skills: per task, the steps that last reached it. A route is rewritten whenever a run takes
+    different steps, so it follows the EMR as it changes."""
 
     def __init__(self, path: Path):
         self.path = path
         self.known = json.loads(path.read_text()) if path.exists() else {}
 
-    def do(self, page: Page, task: str, inputs: dict[str, str] | None = None, start=None, attempts: int = 3,
+    def do(self, page: Page, task: str, inputs: dict[str, str] | None = None, start=None, attempts: int = ATTEMPTS,
            on_step=None, done=None) -> dict:
-        """Reach a goal: the task with the inputs in it ("Open {first name} {last name}'s chart"), kept under
-        the task so the steps serve every patient. start(page), when given, returns to where the task begins,
-        for another attempt. Returns {"steps", "asked": whether Jev chose any step, "attempts"}."""
+        """Reach a task's goal. A task names the values it needs ("Open {first name} {last name}'s chart") and
+        its route is kept under the task, so one route serves every patient. Only the values a task names are
+        offered to it: given every value, Jev typed the patient's name into a form it was only asked to open.
+
+        start(page), when given, returns to where the task begins for another attempt; each attempt is told
+        the paths that failed. Returns {"steps", "asked": whether Jev chose any step, "attempts"}."""
         named = set(re.findall(r"{([^{}]+)}", task))
-        inputs = {k: v for k, v in (inputs or {}).items() if k in named}  # a goal may type only what it names
+        inputs = {k: v for k, v in (inputs or {}).items() if k in named}
         goal, failed = task.format_map(inputs), []
+        route = self.known.get(task, {}).get("steps", [])
         for attempt in range(1, attempts + 1):
             try:
-                taken = pursue(page, goal, inputs, plan=self.known.get(task, {}).get("steps", []), avoid=failed,
-                                on_step=on_step, done=done)
+                taken = pursue(page, goal, inputs, plan=route, avoid=failed, on_step=on_step, done=done)
             except Blocked as error:
                 failed.append(error.args[1])
                 if not start or attempt == attempts:
                     raise
                 start(page)
                 continue
-            kept = [{k: v for k, v in s.items() if k != "probability"} for s in taken]
-            if kept != self.known.get(task, {}).get("steps"):
-                self.known[task] = {"steps": kept}
-                self.path.parent.mkdir(parents=True, exist_ok=True)
-                self.path.write_text(json.dumps(self.known, indent=1))
+            self.keep(task, taken)
             return {"steps": taken, "asked": any(s["probability"] is not None for s in taken), "attempts": attempt}
 
-
-FIELDS = "() => [...document.querySelectorAll('input:not([type=hidden]):not([type=button]):not([type=submit]),select,textarea')].filter(e => e.checkVisibility()).length"
-
-
-def form_frame(page: Page):
-    """The frame holding the form on screen: the visible one with the most fields."""
-    def fields(frame):
-        try:
-            shown = frame == page.main_frame or frame.frame_element().is_visible()
-            return frame.evaluate(FIELDS) if shown else 0
-        except PlaywrightError:
-            return 0
-    return max(page.frames, key=fields)
-
-
-def for_patient(page: Page, name: str, born: str) -> float:
-    """How sure Jev is that the screen is filling in this patient's chart, from what the page shows."""
-    return system_one(observe(page)["text"], {"patient": {"type": "noul", "instructions": {
-        "task": "Does the page show this patient (same name and date of birth) as the patient it is for?",
-        "patient": f"{name}, born {born}"}}})["patient"]["noul"]
+    def keep(self, task: str, taken: list[dict]) -> None:
+        route = [{k: v for k, v in s.items() if k != "probability"} for s in taken]
+        if route != self.known.get(task, {}).get("steps"):
+            self.known[task] = {"steps": route}
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self.path.write_text(json.dumps(self.known, indent=1))

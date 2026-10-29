@@ -193,7 +193,7 @@ def record() -> Path:
 
 def read_back() -> list[Path]:
     """Open the visit in OpenEMR and photograph its own summary: the vitals and the lab results it saved."""
-    import pipeline
+    import emr
     from mapping import whole
     from targets import openemr, openemr_home
 
@@ -203,7 +203,7 @@ def read_back() -> list[Path]:
         browser = p.chromium.launch()
         page = browser.new_context(ignore_https_errors=True, viewport={"width": 1280, "height": 860}).new_page()
         openemr_home(page)
-        pipeline.procedures(target).do(page, "Open today's visit ({today}) of the patient {first name} {last name} "
+        emr.procedures(target).do(page, "Open today's visit ({today}) of the patient {first name} {last name} "
                                        "(born {birth date}). Do not create a new visit.",
                                        PATIENT | {"today": date.today().isoformat()})
         page.wait_for_timeout(2500)

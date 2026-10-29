@@ -3,11 +3,11 @@
     uv run --env-file .env uvicorn app:app --port 8050
 
 1. Read: Jev turns the note into the patient record (layer1.py).
-2. Plan: the EMR screens the record needs, from each screen's layout (looked at once by Jev and kept), with the
-   value for every field (pipeline.py).
+2. Plan: the EMR screens the record needs, from each screen's layout (looked at once by Jev and kept: emr.py),
+   with the value for every field (pipeline.py).
 3. Review: every value with how sure Jev is; flagged ones must be kept or corrected; a screen can be left out.
-4. Enter and save, screen by screen: Jev reaches each screen through the EMR's own menus (steps.py), the
-   values are typed and read back, Jev checks the screen is the patient's, and the EMR's own button saves it.
+4. Enter and save, screen by screen (emr.py): Jev reaches each screen through the EMR's own menus (steps.py),
+   the values are typed and read back, Jev checks the screen is the patient's, and the EMR's own button saves.
    A value the page refuses stops the run before that screen is saved, for the reviewer to fix.
 
 The server enforces the order: no entry with an open flag. One browser serves the console, so it is meant for
@@ -30,6 +30,7 @@ from playwright.sync_api import sync_playwright
 from pydantic import BaseModel
 
 import entry
+import emr
 import pipeline
 from cases import load_cases
 from forms import fill, label, shown
@@ -160,7 +161,7 @@ def read(request: ReadRequest):
     def learn(k):
         page = worker.context(target).new_page()
         try:
-            return pipeline.layout(page, target, k)
+            return emr.layout(page, target, k)
         finally:
             page.close()
 
@@ -180,7 +181,7 @@ def read(request: ReadRequest):
                         screens.append(planned | {"resolved": set(), "skip": False, "entered": False, "saved": False})
                         yield line("screen", started, title=planned["title"], values=len(planned["values"]),
                                    flags=len(planned["flags"]))
-            patient = pipeline.patient_of(reading["record"], target)
+            patient = emr.patient_of(reading["record"], target)
             session = {"id": uuid.uuid4().hex, "target": request.target, "name": NAMES.get(request.target),
                        "screens": screens, "record": reading["record"], "patient": patient, "page": None,
                        "visit": False, "spent": spent.report()}
@@ -232,7 +233,7 @@ def edit(request: EditRequest):
     else:
         screen["values"][request.index] = value
     screen["resolved"].add(request.index)
-    names = {v: k for k, v in pipeline.NAMES.items()}  # a corrected name or birth date is the patient's too
+    names = {v: k for k, v in emr.NAMES.items()}  # a corrected name or birth date is the patient's too
     held = pipeline.record_key(screen["mapping"][request.index]) if screen.get("mapping") else None
     if held in names and isinstance(value, str) and value:
         session["patient"][names[held]] = value
@@ -273,8 +274,57 @@ class SessionRequest(BaseModel):
     session: str
 
 
-def picture(page) -> str:
-    return entry.frame(page)
+VERBS = {"click": "Clicked", "fill": "Typed in", "select": "Chose", "scroll": "Scrolled"}
+
+
+def described(step: dict) -> str:
+    """A step through the EMR in words: "Clicked New/Search"."""
+    return "Waited for the page to update" if step["kind"] == "wait" else f"{VERBS[step['kind']]} {step['label']}"
+
+
+def enter_and_save(session: dict, target, todo: list[dict], say) -> None:
+    """The work behind /api/enter, on the browser thread. For each screen in order: today's visit first if
+    the screen needs one, then reach the screen and enter its values, stop if the page refused any, else
+    check the patient and save. say(event, **details) reports each step to the console."""
+    patient = session["patient"]
+    who = f"{patient['first name']} {patient['last name']}"
+    page = session["page"]
+    if page is None:
+        page = session["page"] = worker.context(target).new_page()
+        if target.home:
+            say("moving", text=f"Signing in to {session['name']}")
+            target.home(page)
+
+    for screen in todo:
+        k, spec = screen["k"], target.screens[screen["k"]]
+        say("screen", screen=k, title=screen["title"])
+
+        def moved(step, k=k):  # a step through the EMR's menus, and whether Jev chose it or a saved route did
+            say("moving", screen=k, frame=entry.frame(page), text=described(step),
+                by_jev=step["probability"] is not None)
+
+        if not screen["entered"]:
+            if spec.visit and target.visit and not session["visit"]:
+                say("moving", screen=k, text=f"Creating today's visit for {who}")
+                emr.make_visit(page, target, patient, moved)
+                session["visit"] = True
+            problems = emr.enter(page, target, screen, session["record"], patient, moved,
+                                 lambda event, k=k: say("field", **event, screen=k))
+            screen["entered"] = True
+            screen["flags"] |= problems
+            screen["resolved"] -= set(problems)
+            say("entered", screen=view(screen))
+        if open_flags(screen):  # the page refused a value: the reviewer decides before this screen is saved
+            say("stopped", screen=view(screen))
+            return
+
+        say("moving", screen=k, frame=entry.frame(page), text=f"Checking {screen['title']} is {who}'s, then saving")
+        result = emr.save(page, target, screen, patient, moved)
+        values = [shown(f, screen["values"][i]) for i, f in screen.get("live", {}).items()]
+        screen["saved"] = True
+        say("saved", screen=view(screen), result=result, frame=entry.frame(page),
+            shown=emr.shown_after(page, values), entered=len(values))
+    say("finished")
 
 
 @app.post("/api/enter")
@@ -289,60 +339,19 @@ def start_entry(request: SessionRequest):
     if not todo:
         raise HTTPException(409, "Nothing is left to enter.")
     target = TARGETS[session["target"]]()
-    patient = session["patient"]
     steps: queue.Queue = queue.Queue()
-
-    def say(event: str, **details):
-        steps.put((event, details))
 
     def run():
         try:
-            page = session["page"]
-            if page is None:
-                page = session["page"] = worker.context(target).new_page()
-                if target.home:
-                    say("moving", text=f"Signing in to {session['name']}")
-                    target.home(page)
-            for screen in todo:
-                spec = target.screens[screen["k"]]
-                say("screen", screen=screen["k"], title=screen["title"])
-                move = lambda step, k=screen["k"]: say("moving", screen=k, frame=picture(page), text=(  # noqa: E731
-                    f"{'Scrolled' if step['kind'] == 'scroll' else 'Chose' if step['kind'] == 'select' else 'Typed in' if step['kind'] == 'fill' else 'Clicked'} "
-                    f"{step['label']}"), by_jev=step["probability"] is not None)
-                if not screen["entered"]:
-                    if spec.visit and target.visit and not session["visit"]:
-                        say("moving", screen=screen["k"], text=f"Creating today's visit for {patient['first name']} {patient['last name']}")
-                        pipeline.make_visit(page, target, patient, move)
-                        session["visit"] = True
-                    problems = pipeline.enter(page, target, screen, session["record"], patient, move,
-                                              lambda step, k=screen["k"]: steps.put(step | {"screen": k}))
-                    screen["entered"] = True
-                    screen["flags"] |= problems
-                    screen["resolved"] -= set(problems)
-                    say("entered", screen=view(screen))
-                if open_flags(screen):
-                    say("stopped", screen=view(screen))
-                    return
-                say("moving", screen=screen["k"], frame=picture(page),
-                    text=f"Checking {screen['title']} is {patient['first name']} {patient['last name']}'s, then saving")
-                saved = pipeline.save(page, target, screen, patient, move)
-                values = [shown(f, screen["values"][i]) for i, f in screen.get("live", {}).items()]
-                screen["saved"] = True
-                say("saved", screen=view(screen), result=saved, frame=picture(page),
-                    shown=pipeline.shown_after(page, values), entered=len(values))
-            say("finished")
-        except Exception as error:  # noqa: BLE001
-            say("error", message=f"{type(error).__name__}: {error}")
+            enter_and_save(session, target, todo, lambda event, **details: steps.put((event, details)))
+        except Exception as error:  # noqa: BLE001 - shown in the console instead of a broken stream
+            steps.put(("error", {"message": f"{type(error).__name__}: {error}"}))
 
     def events():
         started = time.perf_counter()
         threading.Thread(target=lambda: worker.run(run), daemon=True).start()
         while True:
-            step = steps.get()
-            if isinstance(step, dict):
-                yield line("field", started, **step)
-                continue
-            event, details = step
+            event, details = steps.get()
             if event == "finished":
                 yield line("done", started, screens=[view(s) for s in session["screens"]])
                 end(session)
